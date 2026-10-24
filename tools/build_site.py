@@ -120,7 +120,7 @@ td.cat{font:700 18px var(--f-display);color:var(--celeste)}
 MENU = [("/", "Calculadora monotributo"), ("/escalas-monotributo-2026", "Escalas 2026"),
         ("/recategorizacion-monotributo-febrero-2027", "Recategorización"),
         ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre"), ("/aumento-alquiler", "Aumento de alquiler"),
-        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones"), ("/calculadora-liquidacion-final", "Liquidación final")]
+        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones"), ("/calculadora-liquidacion-final", "Liquidación final"), ("/calculadora-ganancias-sueldo", "Ganancias en el sueldo")]
 
 def layout(slug, title, desc, body, og_type="article", extra_head="", script=""):
     url = f"{BASE}/{slug}" if slug else f"{BASE}/"
@@ -583,6 +583,7 @@ f"""<span class="etiqueta">Cuotas desde agosto 2026</span><h1>¿Cuánto se paga 
 
 def main():
     ARTS.update(__import__("seo_extra").ARTS_EXTRA)
+    gan = __import__("gan_page"); ARTS.update(gan.ARTS_GAN)
     os.makedirs(PUB, exist_ok=True)
     w = lambda name, s: open(os.path.join(PUB, name), "w", encoding="utf-8").write(s)
     w("estilo.css", CSS)
@@ -592,12 +593,13 @@ def main():
     w("aguinaldo.html", layout("aguinaldo", "Calculadora de aguinaldo diciembre 2026", "Calculá tu aguinaldo de diciembre 2026: bruto, descuentos y neto, y el proporcional si entraste en el semestre. Vence el 18 de diciembre.", AGU_BODY, "website", script=AGU_JS))
     w("calculadora-vacaciones.html", layout("calculadora-vacaciones", "Calculadora de vacaciones 2026: días que te corresponden y cuánto cobrás", "Calculá gratis cuántos días de vacaciones te corresponden según tu antigüedad, cuánto te pagan (sueldo / 25) y hasta cuándo te tienen que avisar. Ley de Contrato de Trabajo y Ley 27.802.", VAC_BODY, "website", script=VAC_JS))
     w("calculadora-liquidacion-final.html", layout("calculadora-liquidacion-final", "Calculadora de liquidación final e indemnización por despido 2026", "Calculá gratis la liquidación final: indemnización por antigüedad, preaviso, integración del mes, aguinaldo y vacaciones proporcionales. Despido sin causa o renuncia, con la Ley 27.802.", LIQ_BODY, "website", script=LIQ_JS))
+    w("calculadora-ganancias-sueldo.html", layout("calculadora-ganancias-sueldo", "Calculadora de Ganancias en el sueldo 2026: retención y deducciones SIRADIG", "Calculá gratis cuánto Ganancias te retienen del sueldo en 2026 con las escalas oficiales de ARCA, y cuánto ahorrás cargando alquiler, gastos médicos, hijos y otras deducciones en el SIRADIG.", gan.GAN_BODY, "website", script=gan.GAN_JS))
     w("sueldo-empleada-domestica.html", layout("sueldo-empleada-domestica", "Sueldo de empleada doméstica noviembre y diciembre 2026", "Cuánto pagarle a tu empleada doméstica en noviembre y diciembre 2026: valor hora y mensual de cada categoría, con antigüedad y zona desfavorable. Escala oficial Resolución 6/2026.", SUE_BODY, "website", script=SUE_JS))
     for slug, (t, d, b) in ARTS.items():
         w(f"{slug}.html", layout(slug, t, d, b))
-    urls = ["", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica", "calculadora-vacaciones", "calculadora-liquidacion-final"] + list(ARTS)
+    urls = ["", "qr", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica", "calculadora-vacaciones", "calculadora-liquidacion-final", "calculadora-ganancias-sueldo"] + list(ARTS)
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{BASE}/{u}</loc><lastmod>{HOY}</lastmod></url>\n" for u in urls) + "</urlset>\n")
-    w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nSitemap: {BASE}/sitemap.xml\n")
+    w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nDisallow: /q/\nDisallow: /qr/\nSitemap: {BASE}/sitemap.xml\n")
     print("ok", len(urls), "páginas")
 
 if __name__ == "__main__":
