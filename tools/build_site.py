@@ -584,6 +584,7 @@ f"""<span class="etiqueta">Cuotas desde agosto 2026</span><h1>¿Cuánto se paga 
 def main():
     ARTS.update(__import__("seo_extra").ARTS_EXTRA)
     gan = __import__("gan_page"); ARTS.update(gan.ARTS_GAN)
+    ARTS.update(__import__("packs_arts").ARTS_PACKS)
     os.makedirs(PUB, exist_ok=True)
     w = lambda name, s: open(os.path.join(PUB, name), "w", encoding="utf-8").write(s)
     w("estilo.css", CSS)

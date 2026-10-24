@@ -6,4 +6,5 @@ python3 tools/build_alq_xlsx.py
 python3 tools/build_cp_xlsx.py
 python3 tools/build_vac_xlsx.py
 python3 tools/build_liq_xlsx.py
+python3 tools/build_gan_xlsx.py
 python3 tools/build_site.py
