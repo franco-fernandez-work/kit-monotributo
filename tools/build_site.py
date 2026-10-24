@@ -120,7 +120,7 @@ td.cat{font:700 18px var(--f-display);color:var(--celeste)}
 MENU = [("/", "Calculadora monotributo"), ("/escalas-monotributo-2026", "Escalas 2026"),
         ("/recategorizacion-monotributo-febrero-2027", "Recategorización"),
         ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre"), ("/aumento-alquiler", "Aumento de alquiler"),
-        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica")]
+        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones")]
 
 def layout(slug, title, desc, body, og_type="article", extra_head="", script=""):
     url = f"{BASE}/{slug}" if slug else f"{BASE}/"
@@ -402,6 +402,75 @@ function calc(){const v=E[$("mes").value][+$("cat").value],mod=+$("mod").value,p
 ["mes","cat","mod","forma","zona"].forEach(id=>$(id).addEventListener("change",calc));["horas","ant"].forEach(id=>$(id).addEventListener("input",calc));calc();
 </script>"""
 
+def oferta_vac():
+    return """<section class="oferta" aria-labelledby="of-vac"><div><span class="etiqueta">Planilla para Excel y Google Sheets</span><h2 id="of-vac">Planilla de Vacaciones del Equipo</h2>
+<p>Para empleadores y PyMEs: cargás a cada persona una vez y la planilla te arma el año de vacaciones.</p>
+<ul><li>Días que le corresponden a cada persona, con antigüedad al 31/12 y proporcional si entró en el año</li><li>Monto de cada licencia (sueldo / 25) y fecha límite para pagarla</li><li>Cronograma de octubre a septiembre con cuántas personas están afuera cada mes</li><li>Aviso de vacaciones listo para imprimir y firmar, con la fecha límite de entrega</li></ul></div>
+<div class="compra"><a class="boton" href="/comprar?p=vacaciones">Comprar la planilla <span class="num">$ 4.999</span></a><span class="nota">Pagás con Mercado Pago y la descargás al instante. Hasta 50 personas.</span></div></section>"""
+
+# ---------- Vacaciones ----------
+VAC_BODY = """<section class="heroe">
+<div><span class="etiqueta">Ley de Contrato de Trabajo, art. 150 a 155</span>
+<h1>¿Cuántos días de vacaciones te corresponden y cuánto te pagan?</h1>
+<p class="bajada">Poné cuándo entraste y tu sueldo bruto. Te digo los días, el monto y, si ya sabés cuándo te vas, hasta qué fecha te tienen que avisar.</p>
+<ul class="puntos"><li><span class="num">14–35</span><span><b>Días corridos según la antigüedad</b> que tenés al 31 de diciembre.</span></li>
+<li><span class="num">÷25</span><span><b>Cada día se paga sueldo mensual / 25</b>, y se cobra antes de irte.</span></li>
+<li><span class="num">30</span><span><b>Días de aviso por escrito</b> como mínimo antes de que empiecen.</span></li></ul></div>
+<form class="comp" id="vac" aria-labelledby="vac-t" onsubmit="return false">
+<div class="comp-cab"><span id="vac-t">Licencia anual ordinaria</span><span>Empleado/a mensualizado/a</span></div>
+<div class="comp-cuerpo">
+<div class="fila2"><div class="campo"><label for="ingreso">Fecha de ingreso</label><div class="entrada"><input id="ingreso" type="date" value="2021-03-01"></div></div>
+<div class="campo"><label for="anio">Vacaciones del año</label><div class="entrada"><select id="anio"></select></div></div></div>
+<div class="fila2"><div class="campo"><label for="sueldo">Sueldo bruto mensual</label><div class="entrada"><span>$</span><input id="sueldo" inputmode="numeric" autocomplete="off" value="1.200.000"></div></div>
+<div class="campo"><label for="inicio">Querés empezar el (opcional)</label><div class="entrada"><input id="inicio" type="date"></div></div></div>
+<div class="resultado" aria-live="polite"><div class="sello" id="sello"><div><b id="r-dias">–</b><small>DÍAS</small></div></div>
+<dl class="datos"><div><dt>Antigüedad al 31/12</dt><dd id="r-ant">–</dd></div><div><dt>Valor de cada día</dt><dd id="r-dia">–</dd></div><div><dt>Total bruto a cobrar</dt><dd id="r-bruto">–</dd></div><div><dt>Aviso hasta el</dt><dd id="r-aviso">–</dd></div></dl></div>
+<p class="estado" id="r-estado"></p>
+<div class="escala" aria-hidden="true"><div class="escala-barra" id="barra" style="grid-template-columns:repeat(4,1fr)"><span data-d="14">14</span><span data-d="21">21</span><span data-d="28">28</span><span data-d="35">35</span></div><div class="escala-pie"><span>hasta 5 años</span><span>hasta 10</span><span>hasta 20</span><span>más de 20</span></div></div>
+</div></form></section>
+<h2>Cómo se calculan las vacaciones</h2>
+<div class="lectura"><p>Los días dependen de la antigüedad que tengas al 31 de diciembre del año de las vacaciones:</p>
+<div class="tabla-wrap"><table style="min-width:0"><thead><tr><th>Antigüedad</th><th>Días corridos</th></tr></thead><tbody><tr><td>Hasta 5 años</td><td>14</td></tr><tr><td>Más de 5 y hasta 10</td><td>21</td></tr><tr><td>Más de 10 y hasta 20</td><td>28</td></tr><tr><td>Más de 20</td><td>35</td></tr></tbody></table></div>
+<p style="margin-top:18px">El pago de cada día es el sueldo mensual dividido 25:</p>
+<p class="num" style="background:var(--hoja);border:1px solid var(--linea);padding:14px 16px;border-radius:4px;overflow-x:auto">vacaciones = sueldo mensual / 25 × días que te corresponden</p>
+<p>Con $ 1.200.000 de sueldo y 21 días, el día vale $ 48.000 y cobrás $ 1.008.000. Es más que un mes de sueldo repartido por días porque se divide por 25 y no por 30.</p>
+<h3>¿Y si entré hace menos de 6 meses?</h3><p>Para cobrar el período completo tenés que haber trabajado al menos la mitad de los días hábiles del año. Si no llegás, te corresponde un día de descanso por cada 20 días trabajados. La calculadora lo aplica sola.</p>
+<h3>¿Cuándo me las tienen que dar?</h3><p>Entre el 1 de octubre y el 30 de abril, salvo que acuerden otras fechas. El empleador tiene que avisarte por escrito con 30 días de anticipación como mínimo. Antes de la reforma de la Ley 27.802 eran 45.</p>
+<h3>¿Se pueden dividir?</h3><p>Sí, pero solo si vos y el empleador lo acuerdan, en tramos de al menos 7 días corridos cada uno. El total de días no cambia.</p>
+<h3>¿Cuándo se cobran?</h3><p>Antes de que empiecen. El empleador tiene que pagar la licencia por adelantado, antes del primer día.</p>
+<h3>¿Los feriados y los fines de semana cuentan?</h3><p>Sí. Son días corridos, así que cuentan todos los días del calendario.</p>
+<p class="nota">Cálculo para sueldos mensuales. Si cobrás por jornal, con comisiones, o tu convenio colectivo mejora estos días, valen las reglas de tu convenio.</p></div>
+""" + oferta_vac()
+VAC_JS = """<script>
+const $=id=>document.getElementById(id);
+const f=n=>"$ "+Math.round(n).toLocaleString("es-AR");
+const hoy=new Date(),an0=hoy.getMonth()<4?hoy.getFullYear()-1:hoy.getFullYear();
+$("anio").innerHTML=[an0,an0+1].map(y=>`<option value="${y}">${y}-${y+1}</option>`).join("");
+const fl=d=>d.toLocaleDateString("es-AR",{day:"numeric",month:"long",year:"numeric"});
+const mas=(d,n)=>new Date(d.getFullYear()+n,d.getMonth(),d.getDate());
+function calc(){const iv=$("ingreso").value,Y=+$("anio").value,s=Number(($("sueldo").value||"0").replace(/\\D/g,"")),est=$("r-estado");
+ document.querySelectorAll("#barra span").forEach(x=>x.classList.remove("on"));
+ ["r-ant","r-dia","r-bruto","r-aviso"].forEach(i=>$(i).textContent="–");$("r-dias").textContent="?";
+ if(!iv){est.textContent="Poné la fecha de ingreso.";est.className="estado";return}
+ const ing=new Date(iv+"T00:00:00"),corte=new Date(Y,11,31),ini0=new Date(Y,0,1);
+ if(ing>corte){est.textContent="Todavía no habías ingresado ese año.";est.className="estado mal";return}
+ const trab=Math.round((corte-(ing>ini0?ing:ini0))/864e5)+1;
+ let a=corte.getFullYear()-ing.getFullYear();if(mas(ing,a)>corte)a--;
+ $("r-ant").textContent=a+(a===1?" año":" años");
+ let d,txt;
+ if(trab<183){d=Math.floor(trab/20);txt="Trabajaste "+trab+" días del año: te toca 1 día cada 20 trabajados."}
+ else{d=corte<=mas(ing,5)?14:corte<=mas(ing,10)?21:corte<=mas(ing,20)?28:35;txt="Tenés el período completo de vacaciones.";
+  document.querySelector(`#barra span[data-d="${d}"]`).classList.add("on")}
+ $("r-dias").textContent=d;est.className="estado bien";est.textContent=txt;
+ if(s){$("r-dia").textContent=f(s/25);$("r-bruto").textContent=f(s/25*d)}
+ const iniv=$("inicio").value;
+ if(iniv){const i=new Date(iniv+"T00:00:00"),lim=new Date(i-30*864e5);$("r-aviso").textContent=fl(lim);
+  if(lim<new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate())){est.className="estado mal";est.textContent=txt+" El aviso de 30 días ya venció para esa fecha: hay que acordar otra o postergar el inicio."}}
+}
+$("sueldo").addEventListener("input",e=>{const x=e.target.value.replace(/\\D/g,"");e.target.value=x?Number(x).toLocaleString("es-AR"):"";calc()});
+["ingreso","anio","inicio"].forEach(id=>$(id).addEventListener("change",calc));calc();
+</script>"""
+
 # ---------- Artículos ----------
 ARTS = {
 "escalas-monotributo-2026": ("Escalas del Monotributo 2026: topes y cuotas vigentes",
@@ -435,6 +504,7 @@ f"""<span class="etiqueta">Cuotas desde agosto 2026</span><h1>¿Cuánto se paga 
 }
 
 def main():
+    ARTS.update(__import__("seo_extra").ARTS_EXTRA)
     os.makedirs(PUB, exist_ok=True)
     w = lambda name, s: open(os.path.join(PUB, name), "w", encoding="utf-8").write(s)
     w("estilo.css", CSS)
@@ -442,10 +512,11 @@ def main():
     w("precios-mercado-libre.html", layout("precios-mercado-libre", "Calculadora de precios para Mercado Libre 2026", "Calculá a cuánto publicar en Mercado Libre Clásica, Premium y venta directa para ganar el margen que querés, con comisiones, costo fijo e Ingresos Brutos.", ML_BODY, "website", script=ML_JS))
     w("aumento-alquiler.html", layout("aumento-alquiler", "Calculadora de aumento de alquiler por IPC 2026", "Calculá cuánto te aumenta el alquiler con el IPC oficial del INDEC: alquiler de hoy, todos los ajustes y la fecha del próximo, para contratos que se actualizan cada 3, 4, 6 o 12 meses.", ALQ_BODY, "website", script=ALQ_JS))
     w("aguinaldo.html", layout("aguinaldo", "Calculadora de aguinaldo diciembre 2026", "Calculá tu aguinaldo de diciembre 2026: bruto, descuentos y neto, y el proporcional si entraste en el semestre. Vence el 18 de diciembre.", AGU_BODY, "website", script=AGU_JS))
+    w("calculadora-vacaciones.html", layout("calculadora-vacaciones", "Calculadora de vacaciones 2026: días que te corresponden y cuánto cobrás", "Calculá gratis cuántos días de vacaciones te corresponden según tu antigüedad, cuánto te pagan (sueldo / 25) y hasta cuándo te tienen que avisar. Ley de Contrato de Trabajo y Ley 27.802.", VAC_BODY, "website", script=VAC_JS))
     w("sueldo-empleada-domestica.html", layout("sueldo-empleada-domestica", "Sueldo de empleada doméstica noviembre y diciembre 2026", "Cuánto pagarle a tu empleada doméstica en noviembre y diciembre 2026: valor hora y mensual de cada categoría, con antigüedad y zona desfavorable. Escala oficial Resolución 6/2026.", SUE_BODY, "website", script=SUE_JS))
     for slug, (t, d, b) in ARTS.items():
         w(f"{slug}.html", layout(slug, t, d, b))
-    urls = ["", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica"] + list(ARTS)
+    urls = ["", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica", "calculadora-vacaciones"] + list(ARTS)
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{BASE}/{u}</loc><lastmod>{HOY}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nSitemap: {BASE}/sitemap.xml\n")
     print("ok", len(urls), "páginas")
