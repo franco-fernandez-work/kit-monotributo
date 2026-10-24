@@ -6,6 +6,8 @@ import alquileres from "../private/alquileres.xlsx";
 import casas from "../private/casas.xlsx";
 import vacaciones from "../private/vacaciones.xlsx";
 import liquidacion from "../private/liquidacion.xlsx";
+import ganancias from "../private/ganancias.xlsx";
+import { manejarQR } from "./qr.js";
 
 const PRODUCTOS = {
   kit: {
@@ -31,6 +33,10 @@ const PRODUCTOS = {
   liquidacion: {
     ref: "liquidacion2026", titulo: "Planilla de Liquidación Final e Indemnización (planilla Excel / Google Sheets)",
     nombre: "Planilla de Liquidación Final", precio: 5999, archivo: liquidacion, filename: "Planilla-Liquidacion-Final.xlsx", volver: "/calculadora-liquidacion-final",
+  },
+  ganancias: {
+    ref: "ganancias2026", titulo: "Planilla de Ganancias en el Sueldo 2026 (planilla Excel / Google Sheets)",
+    nombre: "Planilla de Ganancias en el Sueldo", precio: 5999, archivo: ganancias, filename: "Planilla-Ganancias-Sueldo-2026.xlsx", volver: "/calculadora-ganancias-sueldo",
   },
 };
 const IPC_URL = "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&format=json&limit=120&sort=desc";
@@ -64,8 +70,11 @@ async function pagoValido(env, id) {
 }
 
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
+
+    const qr = await manejarQR(req, env, ctx);
+    if (qr) return qr;
 
     if (url.pathname === "/api/ipc") {
       // Proxy con caché de la serie oficial del INDEC para la calculadora de alquileres.
