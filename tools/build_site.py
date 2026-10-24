@@ -119,7 +119,8 @@ td.cat{font:700 18px var(--f-display);color:var(--celeste)}
 
 MENU = [("/", "Calculadora monotributo"), ("/escalas-monotributo-2026", "Escalas 2026"),
         ("/recategorizacion-monotributo-febrero-2027", "Recategorización"),
-        ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre"), ("/aumento-alquiler", "Aumento de alquiler")]
+        ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre"), ("/aumento-alquiler", "Aumento de alquiler"),
+        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica")]
 
 def layout(slug, title, desc, body, og_type="article", extra_head="", script=""):
     url = f"{BASE}/{slug}" if slug else f"{BASE}/"
@@ -305,6 +306,102 @@ $("monto").addEventListener("input",e=>{const d=e.target.value.replace(/\\D/g,""
 ["inicio","frec","rez"].forEach(id=>$(id).addEventListener("change",calc));
 </script>"""
 
+from escalas_cp import CATS as CP_CATS, ESCALAS as CP_ESC
+CP_MESES = {10: "Octubre", 11: "Noviembre", 12: "Diciembre"}
+
+def oferta_cp():
+    return """<section class="oferta" aria-labelledby="of-cp"><div><span class="etiqueta">Planilla para Excel y Google Sheets</span><h2 id="of-cp">Planilla Casas Particulares 2026</h2>
+<p>Todo lo que tenés que calcular como empleador de una trabajadora de casas particulares, con las escalas oficiales cargadas.</p>
+<ul><li>Sueldo del mes por hora o mensual, con antigüedad y zona desfavorable</li><li>Recibo de sueldo listo para imprimir y firmar</li><li>Aguinaldo, también proporcional si entró o se fue a mitad de semestre</li><li>Vacaciones y liquidación final por despido o renuncia</li></ul></div>
+<div class="compra"><a class="boton" href="/comprar?p=casas">Comprar la planilla <span class="num">$ 4.999</span></a><span class="nota">Pagás con Mercado Pago y la descargás al instante. Escalas editables para cuando cambien.</span></div></section>"""
+
+def tabla_cp(mes):
+    filas = "".join(f'<tr><td>{c}</td><td>{ars(v[0]) if v[0] else "–"}</td><td>{ars(v[1])}</td><td>{ars(v[2]) if v[2] else "–"}</td><td>{ars(v[3])}</td></tr>' for c, v in zip(CP_CATS, CP_ESC[(2026, mes)]))
+    return f'<div class="tabla-wrap"><table><thead><tr><th>Categoría</th><th>Hora con retiro</th><th>Hora sin retiro</th><th>Mes con retiro</th><th>Mes sin retiro</th></tr></thead><tbody>{filas}</tbody></table></div>'
+
+# ---------- Aguinaldo ----------
+AGU_BODY = """<section class="heroe">
+<div><span class="etiqueta">Segunda cuota 2026</span>
+<h1>¿Cuánto cobrás de aguinaldo en diciembre?</h1>
+<p class="bajada">Poné tu mejor sueldo bruto de julio a diciembre. Si empezaste a trabajar en el semestre, poné la fecha y te calculo el proporcional.</p>
+<ul class="puntos"><li><span class="num">18/12</span><span><b>Fecha límite de pago</b> de la segunda cuota, con 4 días hábiles de gracia.</span></li>
+<li><span class="num">50%</span><span><b>De la mejor remuneración</b> mensual del semestre.</span></li>
+<li><span class="num">184</span><span><b>Días del semestre.</b> Si trabajaste menos, cobrás la parte proporcional.</span></li></ul></div>
+<form class="comp" id="agu" aria-labelledby="agu-t" onsubmit="return false">
+<div class="comp-cab"><span id="agu-t">Sueldo anual complementario</span><span>Jul a dic 2026</span></div>
+<div class="comp-cuerpo">
+<div class="campo"><label for="sueldo">Mejor sueldo bruto del semestre</label><div class="entrada"><span>$</span><input id="sueldo" inputmode="numeric" autocomplete="off" value="1.000.000"></div></div>
+<div class="fila2"><div class="campo"><label for="ingreso">Fecha de ingreso (si fue después del 1/7)</label><div class="entrada"><input id="ingreso" type="date" min="2026-07-01" max="2026-12-31"></div></div>
+<div class="campo"><label for="tipo">Tipo de trabajo</label><div class="entrada"><select id="tipo"><option value="0.17">Empleado/a registrado/a</option><option value="0">Casas particulares</option></select></div></div></div>
+<div class="resultado" aria-live="polite"><div class="sello" id="sello"><div><b style="font-size:30px">SAC</b><small>2ª CUOTA</small></div></div>
+<dl class="datos"><div><dt>Aguinaldo bruto</dt><dd id="r-bruto">–</dd></div><div><dt>Descuentos</dt><dd id="r-desc">–</dd></div><div><dt>Te queda en mano</dt><dd id="r-neto">–</dd></div><div><dt>Días computados</dt><dd id="r-dias">–</dd></div></dl></div>
+<p class="estado" id="r-estado"></p>
+</div></form></section>
+<h2>Cómo se calcula el aguinaldo</h2>
+<div class="lectura"><p class="num" style="background:var(--hoja);border:1px solid var(--linea);padding:14px 16px;border-radius:4px;overflow-x:auto">aguinaldo = mejor sueldo bruto del semestre / 2 × días trabajados / 184</p>
+<p>Se toma la remuneración bruta más alta de julio a diciembre, con todos los conceptos remunerativos: básico, antigüedad, horas extra, presentismo y comisiones. Las sumas no remunerativas no cuentan.</p>
+<h3>¿Qué descuentos tiene?</h3><p>Los mismos aportes que el sueldo: 11% de jubilación, 3% de obra social y 3% de PAMI, en total 17%. En casas particulares los aportes se pagan con montos fijos a ARCA y no se descuenta un porcentaje del aguinaldo.</p>
+<h3>¿Cuándo se paga?</h3><p>La segunda cuota vence el 18 de diciembre. Por la ley de contrato de trabajo, el empleador tiene hasta 4 días hábiles más para pagarla.</p>
+<h3>¿Y si me voy antes de diciembre?</h3><p>Cobrás el aguinaldo proporcional en la liquidación final, con la misma cuenta y los días trabajados hasta tu salida.</p></div>
+""" + oferta_cp()
+AGU_JS = """<script>
+const $=id=>document.getElementById(id);
+const f=n=>"$ "+Math.round(n).toLocaleString("es-AR");
+function calc(){const s=Number(($("sueldo").value||"0").replace(/\\D/g,"")),t=+$("tipo").value;
+ let dias=184;const ing=$("ingreso").value;if(ing){const d=new Date(ing+"T00:00:00"),fin=new Date("2026-12-31T00:00:00");dias=Math.max(0,Math.min(184,Math.round((fin-d)/864e5)+1))}
+ const b=s/2*dias/184,d=b*t;$("r-bruto").textContent=f(b);$("r-desc").textContent=t?"− "+f(d):"Aportes fijos a ARCA";$("r-neto").textContent=f(b-d);$("r-dias").textContent=dias+" de 184";
+ $("r-estado").textContent=dias<184?"Proporcional a los días trabajados desde tu ingreso.":"Semestre completo."}
+$("sueldo").addEventListener("input",e=>{const d=e.target.value.replace(/\\D/g,"");e.target.value=d?Number(d).toLocaleString("es-AR"):"";calc()});
+["ingreso","tipo"].forEach(id=>$(id).addEventListener("change",calc));calc();
+</script>"""
+
+# ---------- Sueldo empleada doméstica ----------
+CP_JS_DATA = json.dumps({str(m): CP_ESC[(2026, m)] for m in CP_MESES})
+SUE_BODY = f"""<section class="heroe">
+<div><span class="etiqueta">Escala oficial Resolución 6/2026</span>
+<h1>¿Cuánto le tenés que pagar a tu empleada doméstica?</h1>
+<p class="bajada">Elegí el mes, la categoría y si trabaja por hora o mensual. Te calculo el sueldo mínimo con antigüedad y zona desfavorable.</p>
+<ul class="puntos"><li><span class="num">1%</span><span><b>Por año de antigüedad</b> con el mismo empleador, sobre el básico.</span></li>
+<li><span class="num">31%</span><span><b>Zona desfavorable</b> en la Patagonia y en Patagones.</span></li>
+<li><span class="num">+1,6%</span><span><b>Aumento de diciembre</b> sobre noviembre.</span></li></ul></div>
+<form class="comp" id="sue" aria-labelledby="sue-t" onsubmit="return false">
+<div class="comp-cab"><span id="sue-t">Sueldo de casas particulares</span><span>Mínimos oficiales</span></div>
+<div class="comp-cuerpo">
+<div class="fila2"><div class="campo"><label for="mes">Mes</label><div class="entrada"><select id="mes">{"".join(f'<option value="{m}"{" selected" if m == 11 else ""}>{n} 2026</option>' for m, n in CP_MESES.items())}</select></div></div>
+<div class="campo"><label for="cat">Categoría</label><div class="entrada"><select id="cat">{"".join(f'<option value="{i}"{" selected" if i == 4 else ""}>{c}</option>' for i, c in enumerate(CP_CATS))}</select></div></div></div>
+<div class="fila2"><div class="campo"><label for="mod">Modalidad</label><div class="entrada"><select id="mod"><option value="0">Con retiro</option><option value="1">Sin retiro (vive en la casa)</option></select></div></div>
+<div class="campo"><label for="forma">Forma de pago</label><div class="entrada"><select id="forma"><option value="h">Por hora</option><option value="m">Mensual</option></select></div></div></div>
+<div class="fila2"><div class="campo"><label for="horas">Horas por semana</label><div class="entrada"><input id="horas" inputmode="numeric" value="12"></div></div>
+<div class="campo"><label for="ant">Años de antigüedad</label><div class="entrada"><input id="ant" inputmode="numeric" value="0"></div></div></div>
+<div class="campo"><label for="zona">Zona</label><div class="entrada"><select id="zona"><option value="0">General</option><option value="0.31">Zona desfavorable (+31%)</option></select></div></div>
+<div class="resultado" aria-live="polite"><div class="sello" id="sello"><div><b id="r-hora" style="font-size:22px">–</b><small>POR HORA</small></div></div>
+<dl class="datos"><div><dt>Básico del mes</dt><dd id="r-bas">–</dd></div><div><dt>Antigüedad</dt><dd id="r-ant">–</dd></div><div><dt>Zona</dt><dd id="r-zona">–</dd></div><div><dt>Total a pagar</dt><dd id="r-tot">–</dd></div></dl></div>
+<p class="estado" id="r-estado"></p>
+</div></form></section>
+<h2>Escala de noviembre 2026</h2>
+<p class="lectura">Salarios mínimos de la Comisión Nacional de Trabajo en Casas Particulares. Con retiro: no vive en la casa. Sin retiro: vive en la casa.</p>
+{tabla_cp(11)}
+<h2>Escala de diciembre 2026</h2>
+{tabla_cp(12)}
+<div class="lectura"><h2>Preguntas frecuentes</h2>
+<h3>¿Cómo calculo las horas del mes?</h3><p>La calculadora multiplica las horas semanales por 4,33, el promedio de semanas de un mes. Si llevás la cuenta exacta de horas trabajadas, usá esa.</p>
+<h3>¿Qué más tengo que pagar?</h3><p>Los aportes y contribuciones a ARCA, que son montos fijos según las horas semanales, y el seguro de riesgos del trabajo. En diciembre, además, la segunda cuota del aguinaldo. <a href="/aguinaldo">Calculá el aguinaldo</a>.</p>
+<h3>¿Y si la escala cambia?</h3><p>La Comisión Nacional de Trabajo en Casas Particulares fija nuevos valores varias veces al año. Actualizamos esta página cuando se publican.</p></div>
+""" + oferta_cp()
+SUE_JS = """<script>
+const E=""" + CP_JS_DATA + """;
+const $=id=>document.getElementById(id);
+const f=n=>"$ "+Math.round(n).toLocaleString("es-AR");
+function calc(){const v=E[$("mes").value][+$("cat").value],mod=+$("mod").value,porHora=$("forma").value==="h";
+ const vh=v[mod],vm=v[2+mod];$("horas").closest(".campo").style.opacity=porHora?1:.45;
+ if(!(porHora?vh:vm)){["r-bas","r-ant","r-zona","r-tot"].forEach(i=>$(i).textContent="–");$("r-hora").textContent="–";$("r-estado").textContent="Los caseros solo tienen modalidad sin retiro.";return}
+ const hs=Number(($("horas").value||"0").replace(/\\D/g,"")),a=Number(($("ant").value||"0").replace(/\\D/g,"")),z=+$("zona").value;
+ const bas=porHora?vh*hs*4.33:vm,ant=bas*a/100,zo=bas*z;
+ $("r-hora").textContent=vh?f(vh):"–";$("r-bas").textContent=f(bas);$("r-ant").textContent=f(ant);$("r-zona").textContent=f(zo);$("r-tot").textContent=f(bas+ant+zo);
+ $("r-estado").textContent=porHora?hs+" horas por semana, unas "+Math.round(hs*4.33)+" por mes.":"Sueldo mensual por jornada completa.";}
+["mes","cat","mod","forma","zona"].forEach(id=>$(id).addEventListener("change",calc));["horas","ant"].forEach(id=>$(id).addEventListener("input",calc));calc();
+</script>"""
+
 # ---------- Artículos ----------
 ARTS = {
 "escalas-monotributo-2026": ("Escalas del Monotributo 2026: topes y cuotas vigentes",
@@ -344,9 +441,11 @@ def main():
     w("index.html", layout("", "Calculadora de categoría de Monotributo 2026", "Calculá gratis tu categoría de Monotributo con las escalas vigentes de agosto 2026 a enero 2027: cuota, tope y margen antes de la recategorización de febrero.", HOME_BODY, "website", script=HOME_JS))
     w("precios-mercado-libre.html", layout("precios-mercado-libre", "Calculadora de precios para Mercado Libre 2026", "Calculá a cuánto publicar en Mercado Libre Clásica, Premium y venta directa para ganar el margen que querés, con comisiones, costo fijo e Ingresos Brutos.", ML_BODY, "website", script=ML_JS))
     w("aumento-alquiler.html", layout("aumento-alquiler", "Calculadora de aumento de alquiler por IPC 2026", "Calculá cuánto te aumenta el alquiler con el IPC oficial del INDEC: alquiler de hoy, todos los ajustes y la fecha del próximo, para contratos que se actualizan cada 3, 4, 6 o 12 meses.", ALQ_BODY, "website", script=ALQ_JS))
+    w("aguinaldo.html", layout("aguinaldo", "Calculadora de aguinaldo diciembre 2026", "Calculá tu aguinaldo de diciembre 2026: bruto, descuentos y neto, y el proporcional si entraste en el semestre. Vence el 18 de diciembre.", AGU_BODY, "website", script=AGU_JS))
+    w("sueldo-empleada-domestica.html", layout("sueldo-empleada-domestica", "Sueldo de empleada doméstica noviembre y diciembre 2026", "Cuánto pagarle a tu empleada doméstica en noviembre y diciembre 2026: valor hora y mensual de cada categoría, con antigüedad y zona desfavorable. Escala oficial Resolución 6/2026.", SUE_BODY, "website", script=SUE_JS))
     for slug, (t, d, b) in ARTS.items():
         w(f"{slug}.html", layout(slug, t, d, b))
-    urls = ["", "precios-mercado-libre", "aumento-alquiler"] + list(ARTS)
+    urls = ["", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica"] + list(ARTS)
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{BASE}/{u}</loc><lastmod>{HOY}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nSitemap: {BASE}/sitemap.xml\n")
     print("ok", len(urls), "páginas")
