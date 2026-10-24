@@ -2,6 +2,7 @@
 // /gracias verifica el pago y /descargar entrega el archivo solo si el pago está aprobado.
 import kit from "../private/kit.xlsx";
 import vendedores from "../private/vendedores.xlsx";
+import alquileres from "../private/alquileres.xlsx";
 
 const PRODUCTOS = {
   kit: {
@@ -12,7 +13,12 @@ const PRODUCTOS = {
     ref: "vendedores2026", titulo: "Calculadora de Precios para Vendedores 2026 (planilla Excel / Google Sheets)",
     nombre: "Calculadora de Precios para Vendedores", precio: 4999, archivo: vendedores, filename: "Calculadora-Precios-Vendedores-2026.xlsx", volver: "/precios-mercado-libre",
   },
+  alquileres: {
+    ref: "alquileres2026", titulo: "Planilla de Alquileres 2026 (planilla Excel / Google Sheets)",
+    nombre: "Planilla de Alquileres 2026", precio: 3999, archivo: alquileres, filename: "Planilla-Alquileres-2026.xlsx", volver: "/aumento-alquiler",
+  },
 };
+const IPC_URL = "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&format=json&limit=120&sort=desc";
 const porRef = (ref) => Object.values(PRODUCTOS).find((p) => p.ref === ref);
 const DIAS_DESCARGA = 30;
 const api = (env) => env.MP_API || "https://api.mercadopago.com";
@@ -45,6 +51,14 @@ async function pagoValido(env, id) {
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
+
+    if (url.pathname === "/api/ipc") {
+      // Proxy con caché de la serie oficial del INDEC para la calculadora de alquileres.
+      const r = await fetch(env.IPC_URL || IPC_URL, { cf: { cacheTtl: 21600, cacheEverything: true } }).catch(() => null);
+      if (!r?.ok) return Response.json({ error: "IPC no disponible" }, { status: 502 });
+      const { data } = await r.json();
+      return Response.json({ datos: data.filter(([, v]) => v != null).reverse() }, { headers: { "cache-control": "public, max-age=21600" } });
+    }
 
     if (url.pathname === "/comprar") {
       const prod = PRODUCTOS[url.searchParams.get("p") || "kit"];
