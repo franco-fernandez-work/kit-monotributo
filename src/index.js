@@ -3,6 +3,7 @@
 import kit from "../private/kit.xlsx";
 import vendedores from "../private/vendedores.xlsx";
 import alquileres from "../private/alquileres.xlsx";
+import casas from "../private/casas.xlsx";
 
 const PRODUCTOS = {
   kit: {
@@ -16,6 +17,10 @@ const PRODUCTOS = {
   alquileres: {
     ref: "alquileres2026", titulo: "Planilla de Alquileres 2026 (planilla Excel / Google Sheets)",
     nombre: "Planilla de Alquileres 2026", precio: 3999, archivo: alquileres, filename: "Planilla-Alquileres-2026.xlsx", volver: "/aumento-alquiler",
+  },
+  casas: {
+    ref: "casas2026", titulo: "Planilla Casas Particulares 2026 (planilla Excel / Google Sheets)",
+    nombre: "Planilla Casas Particulares 2026", precio: 4999, archivo: casas, filename: "Planilla-Casas-Particulares-2026.xlsx", volver: "/sueldo-empleada-domestica",
   },
 };
 const IPC_URL = "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&format=json&limit=120&sort=desc";
