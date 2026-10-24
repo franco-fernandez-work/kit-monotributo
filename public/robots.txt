@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /comprar
+Disallow: /gracias
+Disallow: /descargar
+Sitemap: https://kit-monotributo.fernandezfrancowork.workers.dev/sitemap.xml
