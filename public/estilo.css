@@ -63,6 +63,7 @@ main.wrap{padding-block:44px 0}
 .datos{display:grid;gap:4px;font-size:15px;min-width:0}
 .datos div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dotted var(--linea);padding-bottom:4px}
 .datos dt{color:var(--tinta-2)}
+.datos dd{white-space:nowrap}
 .datos dd{margin:0;font:600 15px var(--f-num);font-variant-numeric:tabular-nums;text-align:right}
 .estado{font-size:15px;margin:0}
 .estado.mal{color:var(--sello)} .estado.bien{color:var(--ok)}
