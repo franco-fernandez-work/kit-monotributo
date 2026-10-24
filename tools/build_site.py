@@ -120,7 +120,7 @@ td.cat{font:700 18px var(--f-display);color:var(--celeste)}
 MENU = [("/", "Calculadora monotributo"), ("/escalas-monotributo-2026", "Escalas 2026"),
         ("/recategorizacion-monotributo-febrero-2027", "Recategorización"),
         ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre"), ("/aumento-alquiler", "Aumento de alquiler"),
-        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones")]
+        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones"), ("/calculadora-liquidacion-final", "Liquidación final")]
 
 def layout(slug, title, desc, body, og_type="article", extra_head="", script=""):
     url = f"{BASE}/{slug}" if slug else f"{BASE}/"
@@ -471,6 +471,84 @@ $("sueldo").addEventListener("input",e=>{const x=e.target.value.replace(/\\D/g,"
 ["ingreso","anio","inicio"].forEach(id=>$(id).addEventListener("change",calc));calc();
 </script>"""
 
+# ---------- Liquidación final ----------
+def oferta_liq():
+    return """<section class="oferta" aria-labelledby="of-liq"><div><span class="etiqueta">Planilla para Excel y Google Sheets</span><h2 id="of-liq">Planilla de Liquidación Final</h2>
+<p>Para empleadores y PyMEs: cargás fechas y sueldo y la planilla arma toda la liquidación de cada egreso.</p>
+<ul><li>Indemnización del art. 245 con tope del convenio y piso del 67%</li><li>Preaviso, integración del mes, aguinaldo y vacaciones proporcionales</li><li>Despido sin causa o renuncia, y período de prueba configurable</li><li>Recibo de liquidación final listo para imprimir y firmar, hasta 30 personas</li></ul></div>
+<div class="compra"><a class="boton" href="/comprar?p=liquidacion">Comprar la planilla <span class="num">$ 5.999</span></a><span class="nota">Pagás con Mercado Pago y la descargás al instante.</span></div></section>"""
+
+LIQ_BODY = """<section class="heroe">
+<div><span class="etiqueta">Ley de Contrato de Trabajo y Ley 27.802</span>
+<h1>Liquidación final: cuánto te corresponde si te despiden o renunciás</h1>
+<p class="bajada">Poné las fechas y el sueldo. Te digo la indemnización, el preaviso, el aguinaldo y las vacaciones proporcionales que te deben.</p>
+<ul class="puntos"><li><span class="num">1×</span><span><b>Un sueldo por año de antigüedad</b> o fracción mayor de tres meses, si te despiden sin causa.</span></li>
+<li><span class="num">1–2</span><span><b>Meses de preaviso</b>: uno hasta 5 años de antigüedad y dos con más.</span></li>
+<li><span class="num">0</span><span><b>Indemnización si renunciás</b>, pero cobrás igual aguinaldo y vacaciones proporcionales.</span></li></ul></div>
+<form class="comp" id="liq" aria-labelledby="liq-t" onsubmit="return false">
+<div class="comp-cab"><span id="liq-t">Liquidación final</span><span>Sueldo mensual</span></div>
+<div class="comp-cuerpo">
+<div class="fila2"><div class="campo"><label for="tipo">Cómo termina</label><div class="entrada"><select id="tipo"><option value="d">Despido sin causa</option><option value="r">Renuncia</option></select></div></div>
+<div class="campo"><label for="sueldo">Mejor sueldo bruto mensual</label><div class="entrada"><span>$</span><input id="sueldo" inputmode="numeric" autocomplete="off" value="1.500.000"></div></div></div>
+<div class="fila2"><div class="campo"><label for="ingreso">Fecha de ingreso</label><div class="entrada"><input id="ingreso" type="date" value="2019-03-04"></div></div>
+<div class="campo"><label for="egreso">Fecha de egreso</label><div class="entrada"><input id="egreso" type="date"></div></div></div>
+<div class="fila2"><div class="campo"><label for="conv">Promedio del convenio (opcional)</label><div class="entrada"><span>$</span><input id="conv" inputmode="numeric" autocomplete="off" placeholder="para el tope"></div></div>
+<div class="campo"><label for="gozadas">Vacaciones ya gozadas este año</label><div class="entrada"><input id="gozadas" inputmode="numeric" value="0"><span style="padding:0 14px 0 0">días</span></div></div></div>
+<div class="resultado" aria-live="polite"><div class="sello" id="sello"><div><b id="r-tot">–</b><small>BRUTO</small></div></div>
+<dl class="datos"><div><dt>Indemnización (art. 245)</dt><dd id="r-ind">–</dd></div><div><dt>Preaviso e integración</dt><dd id="r-pre">–</dd></div><div><dt>Aguinaldo proporcional</dt><dd id="r-sac">–</dd></div><div><dt>Vacaciones proporcionales</dt><dd id="r-vac">–</dd></div></dl></div>
+<p class="estado" id="r-estado"></p>
+</div></form></section>
+<h2>Qué se paga en cada caso</h2>
+<div class="lectura"><div class="tabla-wrap"><table style="min-width:0"><thead><tr><th>Rubro</th><th>Despido sin causa</th><th>Renuncia</th></tr></thead><tbody>
+<tr><td>Indemnización por antigüedad (art. 245)</td><td>Sí</td><td>No</td></tr>
+<tr><td>Preaviso (art. 231 y 232)</td><td>Sí, si no se dio</td><td>No</td></tr>
+<tr><td>Integración del mes de despido (art. 233)</td><td>Sí</td><td>No</td></tr>
+<tr><td>Aguinaldo proporcional (art. 123)</td><td>Sí</td><td>Sí</td></tr>
+<tr><td>Vacaciones no gozadas (art. 156)</td><td>Sí</td><td>Sí</td></tr>
+<tr><td>Días trabajados del mes</td><td>Sí</td><td>Sí</td></tr></tbody></table></div>
+<h3>¿Cómo se calcula la indemnización?</h3><p>Es un mes de la mejor remuneración mensual normal y habitual por cada año de servicio o fracción mayor de tres meses, con un mínimo de un mes. La Ley 27.802 mantiene la fórmula pero deja fuera de la base el aguinaldo, las vacaciones y los premios que no se pagan todos los meses.</p>
+<h3>¿Hay tope?</h3><p>Sí: la base no puede superar tres veces el promedio salarial del convenio aplicable. Aun con tope, la base no baja del 67% de tu mejor remuneración. Si cargás el promedio de tu convenio, la calculadora lo aplica.</p>
+<p class="num" style="background:var(--hoja);border:1px solid var(--linea);padding:14px 16px;border-radius:4px;overflow-x:auto">indemnización = base × años de antigüedad (fracción mayor de 3 meses = 1 año)</p>
+<h3>¿Y el preaviso y la integración?</h3><p>Si te despiden sin darte preaviso, te pagan 1 mes de sueldo (hasta 5 años de antigüedad) o 2 meses (más de 5). Si el despido no cae el último día del mes, también te pagan los días que faltan hasta fin de mes, y un doceavo de aguinaldo sobre ambos.</p>
+<h3>¿Qué pasa en el período de prueba?</h3><p>Con la reforma, durante los primeros 6 meses el despido no genera indemnización ni preaviso. Seguís cobrando los días trabajados, el aguinaldo y las vacaciones proporcionales. Algunos convenios fijan plazos distintos.</p>
+<h3>¿Cómo se calculan las vacaciones no gozadas?</h3><p>Se toman los días que te corresponden por antigüedad, en proporción a lo trabajado en el año, menos los que ya tomaste. Cada día vale sueldo mensual / 25.</p>
+<p class="nota">Cálculo orientativo para sueldos mensuales. No incluye descuentos, remuneración variable, jornal ni mejoras de tu convenio. La indemnización puede discutirse y los criterios judiciales cambian: consultá a un contador o abogado laboral antes de pagar o firmar.</p></div>
+""" + oferta_liq()
+LIQ_JS = """<script>
+const $=id=>document.getElementById(id);
+const f=n=>"$ "+Math.round(n).toLocaleString("es-AR");
+const mas=(d,m)=>{const x=new Date(d.getFullYear(),d.getMonth()+m,d.getDate());if(x.getDate()!==d.getDate())x.setDate(0);return x};
+const num=v=>Number((v||"0").replace(/[^0-9]/g,""));
+const hoy=new Date();$("egreso").value=hoy.toISOString().slice(0,10);
+function calc(){const est=$("r-estado"),des=$("tipo").value==="d",s=num($("sueldo").value),cv=num($("conv").value),g=num($("gozadas").value);
+ ["r-tot","r-ind","r-pre","r-sac","r-vac"].forEach(i=>$(i).textContent="–");
+ if(!$("ingreso").value||!$("egreso").value||!s){est.className="estado";est.textContent="Completá fechas y sueldo.";return}
+ const ing=new Date($("ingreso").value+"T00:00:00"),egr=new Date($("egreso").value+"T00:00:00");
+ if(egr<ing){est.className="estado mal";est.textContent="La fecha de egreso es anterior al ingreso.";return}
+ const prueba=mas(ing,6)>egr,afuera=des&&!prueba;
+ let y=egr.getFullYear()-ing.getFullYear();if(mas(ing,12*y)>egr)y--;
+ const anios=afuera?Math.max(1,y+(mas(ing,12*y+3)<egr?1:0)):0;
+ const base=cv?Math.max(Math.min(s,3*cv),0.67*s):s,ind=anios*base;
+ const pre=afuera?(egr>mas(ing,60)?2:1)*s:0;
+ const fin=new Date(egr.getFullYear(),egr.getMonth()+1,0),integ=afuera?s/30*(fin.getDate()-egr.getDate()):0;
+ const sacPre=(pre+integ)/12;
+ const m1=egr.getMonth()<6,i0=new Date(egr.getFullYear(),m1?0:6,1),f0=new Date(egr.getFullYear(),m1?6:12,0);
+ const dias=Math.round((egr-(ing>i0?ing:i0))/864e5)+1,sac=s/2*dias/(Math.round((f0-i0)/864e5)+1);
+ const corte=new Date(egr.getFullYear(),11,31),da=corte<=mas(ing,60)?14:corte<=mas(ing,120)?21:corte<=mas(ing,240)?28:35;
+ const trab=Math.round((egr-(ing>new Date(egr.getFullYear(),0,1)?ing:new Date(egr.getFullYear(),0,1)))/864e5)+1;
+ const dv=Math.max(0,da*trab/365-g),vac=dv*s/25,sacVac=vac/12;
+ const mes=Math.min(s,s/30*egr.getDate());
+ const tot=ind+pre+integ+sacPre+sac+vac+sacVac+mes;
+ $("r-tot").textContent=f(tot);$("r-ind").textContent=f(ind);$("r-pre").textContent=f(pre+integ+sacPre);$("r-sac").textContent=f(sac);$("r-vac").textContent=f(vac+sacVac);
+ est.className="estado bien";
+ est.textContent=!des?"Renuncia: sin indemnización ni preaviso. Incluye "+f(mes)+" por los días trabajados del mes, si no los cobraste."
+  :prueba?"Dentro del período de prueba (6 meses): sin indemnización ni preaviso. Incluye "+f(mes)+" por los días del mes."
+  :"Antigüedad: "+y+(y===1?" año":" años")+", "+anios+" a indemnizar. Incluye "+f(mes)+" por los días trabajados del mes, si no los cobraste. Importe bruto, sin descuentos."}
+$("sueldo").addEventListener("input",e=>{const x=e.target.value.replace(/[^0-9]/g,"");e.target.value=x?Number(x).toLocaleString("es-AR"):"";calc()});
+$("conv").addEventListener("input",e=>{const x=e.target.value.replace(/[^0-9]/g,"");e.target.value=x?Number(x).toLocaleString("es-AR"):"";calc()});
+["tipo","ingreso","egreso"].forEach(id=>$(id).addEventListener("change",calc));$("gozadas").addEventListener("input",calc);calc();
+</script>"""
+
 # ---------- Artículos ----------
 ARTS = {
 "escalas-monotributo-2026": ("Escalas del Monotributo 2026: topes y cuotas vigentes",
@@ -513,10 +591,11 @@ def main():
     w("aumento-alquiler.html", layout("aumento-alquiler", "Calculadora de aumento de alquiler por IPC 2026", "Calculá cuánto te aumenta el alquiler con el IPC oficial del INDEC: alquiler de hoy, todos los ajustes y la fecha del próximo, para contratos que se actualizan cada 3, 4, 6 o 12 meses.", ALQ_BODY, "website", script=ALQ_JS))
     w("aguinaldo.html", layout("aguinaldo", "Calculadora de aguinaldo diciembre 2026", "Calculá tu aguinaldo de diciembre 2026: bruto, descuentos y neto, y el proporcional si entraste en el semestre. Vence el 18 de diciembre.", AGU_BODY, "website", script=AGU_JS))
     w("calculadora-vacaciones.html", layout("calculadora-vacaciones", "Calculadora de vacaciones 2026: días que te corresponden y cuánto cobrás", "Calculá gratis cuántos días de vacaciones te corresponden según tu antigüedad, cuánto te pagan (sueldo / 25) y hasta cuándo te tienen que avisar. Ley de Contrato de Trabajo y Ley 27.802.", VAC_BODY, "website", script=VAC_JS))
+    w("calculadora-liquidacion-final.html", layout("calculadora-liquidacion-final", "Calculadora de liquidación final e indemnización por despido 2026", "Calculá gratis la liquidación final: indemnización por antigüedad, preaviso, integración del mes, aguinaldo y vacaciones proporcionales. Despido sin causa o renuncia, con la Ley 27.802.", LIQ_BODY, "website", script=LIQ_JS))
     w("sueldo-empleada-domestica.html", layout("sueldo-empleada-domestica", "Sueldo de empleada doméstica noviembre y diciembre 2026", "Cuánto pagarle a tu empleada doméstica en noviembre y diciembre 2026: valor hora y mensual de cada categoría, con antigüedad y zona desfavorable. Escala oficial Resolución 6/2026.", SUE_BODY, "website", script=SUE_JS))
     for slug, (t, d, b) in ARTS.items():
         w(f"{slug}.html", layout(slug, t, d, b))
-    urls = ["", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica", "calculadora-vacaciones"] + list(ARTS)
+    urls = ["", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica", "calculadora-vacaciones", "calculadora-liquidacion-final"] + list(ARTS)
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{BASE}/{u}</loc><lastmod>{HOY}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nSitemap: {BASE}/sitemap.xml\n")
     print("ok", len(urls), "páginas")
