@@ -81,6 +81,7 @@ main.wrap{padding-block:44px 0}
 .datos{display:grid;gap:4px;font-size:15px;min-width:0}
 .datos div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dotted var(--linea);padding-bottom:4px}
 .datos dt{color:var(--tinta-2)}
+.datos dd{white-space:nowrap}
 .datos dd{margin:0;font:600 15px var(--f-num);font-variant-numeric:tabular-nums;text-align:right}
 .estado{font-size:15px;margin:0}
 .estado.mal{color:var(--sello)} .estado.bien{color:var(--ok)}
@@ -118,7 +119,7 @@ td.cat{font:700 18px var(--f-display);color:var(--celeste)}
 
 MENU = [("/", "Calculadora monotributo"), ("/escalas-monotributo-2026", "Escalas 2026"),
         ("/recategorizacion-monotributo-febrero-2027", "Recategorización"),
-        ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre")]
+        ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre"), ("/aumento-alquiler", "Aumento de alquiler")]
 
 def layout(slug, title, desc, body, og_type="article", extra_head="", script=""):
     url = f"{BASE}/{slug}" if slug else f"{BASE}/"
@@ -246,6 +247,65 @@ function calc(){const base=num("costo")+num("envio"),imp=pct("iibb"),m=pct("marg
 ["margen","iibb","cc","cp"].forEach(id=>$(id).addEventListener("input",calc));calc();
 </script>"""
 
+def oferta_alq():
+    return """<section class="oferta" aria-labelledby="of-alq"><div><span class="etiqueta">Planilla para Excel y Google Sheets</span><h2 id="of-alq">Planilla de Alquileres 2026</h2>
+<p>Para propietarios con uno o varios alquileres: cada contrato se actualiza solo con el IPC y ves quién te debe.</p>
+<ul><li>Alquiler vigente, aumento acumulado y fecha del próximo ajuste de cada contrato</li><li>IPC del INDEC ya cargado, mes a mes</li><li>Registro de cobros de alquiler, expensas, ABL y servicios, con atrasados marcados</li><li>Resumen anual de lo cobrado y lo pendiente por propiedad</li></ul></div>
+<div class="compra"><a class="boton" href="/comprar?p=alquileres">Comprar la planilla <span class="num">$ 3.999</span></a><span class="nota">Pagás con Mercado Pago y la descargás al instante.</span></div></section>"""
+
+# ---------- Alquileres ----------
+ALQ_BODY = """<section class="heroe">
+<div><span class="etiqueta">Con el IPC oficial del INDEC</span>
+<h1>¿Cuánto te aumenta el alquiler?</h1>
+<p class="bajada">Poné el monto con el que arrancó el contrato, cuándo empezó y cada cuántos meses se actualiza. Te calculo el alquiler de hoy y todos los ajustes, con el IPC publicado.</p>
+<ul class="puntos"><li><span class="num">IPC</span><span><b>El INDEC lo publica a mediados de mes.</b> Por eso cada ajuste usa el índice de dos meses antes.</span></li>
+<li><span class="num">3·4·6</span><span><b>La frecuencia la fija tu contrato.</b> Desde fines de 2023 se pacta libremente.</span></li>
+<li><span class="num">ICL</span><span><b>Contratos de 2020 a 2023</b> suelen ajustar por ICL del BCRA, no por IPC.</span></li></ul></div>
+<form class="comp" id="alq" aria-labelledby="alq-t" onsubmit="return false">
+<div class="comp-cab"><span id="alq-t">Actualización de alquiler</span><span id="alq-fuente">IPC INDEC</span></div>
+<div class="comp-cuerpo">
+<div class="fila2"><div class="campo"><label for="monto">Alquiler inicial</label><div class="entrada"><span>$</span><input id="monto" inputmode="numeric" autocomplete="off" value="600.000"></div></div>
+<div class="campo"><label for="inicio">Inicio del contrato</label><div class="entrada"><input id="inicio" type="month" value="2026-01"></div></div></div>
+<div class="fila2"><div class="campo"><label for="frec">Se actualiza cada</label><div class="entrada"><select id="frec"><option value="3" selected>3 meses</option><option value="4">4 meses</option><option value="6">6 meses</option><option value="12">12 meses</option><option value="1">mes</option></select></div></div>
+<div class="campo"><label for="rez">IPC que usa el ajuste</label><div class="entrada"><select id="rez"><option value="1" selected>Hasta 2 meses antes</option><option value="0">Hasta el mes anterior</option></select></div></div></div>
+<div class="resultado" aria-live="polite"><div class="sello" id="sello"><div><b id="r-pct" style="font-size:30px">–</b><small>AJUSTE</small></div></div>
+<dl class="datos"><div><dt>Alquiler de hoy</dt><dd id="r-hoy">–</dd></div><div><dt>Aumento desde el inicio</dt><dd id="r-acum">–</dd></div><div><dt>Próximo ajuste</dt><dd id="r-prox">–</dd></div><div><dt>Último IPC publicado</dt><dd id="r-ult">–</dd></div></dl></div>
+<p class="estado" id="r-estado">Cargando el IPC del INDEC…</p>
+<div class="tabla-wrap"><table style="min-width:0;white-space:nowrap"><thead><tr><th>Desde</th><th>IPC usado</th><th>Aumento</th><th>Alquiler</th></tr></thead><tbody id="r-tabla"></tbody></table></div>
+</div></form></section>
+<h2>Cómo se calcula</h2>
+<div class="lectura"><p>En cada ajuste el alquiler se multiplica por la inflación acumulada del período. Con el índice de nivel del INDEC alcanza con una división:</p>
+<p class="num" style="background:var(--hoja);border:1px solid var(--linea);padding:14px 16px;border-radius:4px;overflow-x:auto">alquiler nuevo = alquiler inicial × IPC del mes base del ajuste / IPC del mes base del inicio</p>
+<p>El mes base es el último IPC publicado antes del ajuste. Como el INDEC publica cada índice a mediados del mes siguiente, un ajuste de abril usa el IPC de febrero. Algunos contratos usan el del mes anterior: elegí la opción que diga el tuyo.</p>
+<h3>¿Mi contrato ajusta por IPC o por ICL?</h3><p>Los contratos firmados entre julio de 2020 y diciembre de 2023 bajo la Ley de Alquileres suelen ajustar por el Índice de Contratos de Locación (ICL) que publica el BCRA. Los firmados después pactan libremente el índice y la frecuencia, y la mayoría eligió el IPC. Lo que vale siempre es la cláusula de tu contrato.</p>
+<h3>¿Y si todavía no salió el IPC?</h3><p>El ajuste queda marcado como pendiente. Volvé cuando el INDEC lo publique: la calculadora se actualiza sola.</p></div>
+""" + oferta_alq()
+ALQ_JS = """<script>
+const $=id=>document.getElementById(id);
+const f=n=>"$ "+Math.round(n).toLocaleString("es-AR");
+const MESES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const mi=s=>{const[y,m]=s.split("-").map(Number);return y*12+m-1};
+const ms=i=>MESES[i%12]+" "+Math.floor(i/12);
+let IPC={},ULT=0;
+function calc(){const d=$("monto").value.replace(/\\D/g,""),monto=Number(d),ini=$("inicio").value;
+ if(!monto||!ini||!ULT)return;const n=+$("frec").value,rez=+$("rez").value,a0=mi(ini),hoy=new Date(),h=hoy.getFullYear()*12+hoy.getMonth();
+ const b0=a0-1-rez,i0=IPC[b0];let filas=[`<tr><td>${ms(a0)}</td><td>–</td><td>–</td><td>${f(monto)}</td></tr>`],prev=monto,vig=monto,pctVig=null,prox=null;
+ if(!i0){$("r-estado").textContent="No hay IPC publicado para "+ms(b0)+". Probá con una fecha de inicio más reciente.";return}
+ for(let a=a0+n;a<=h+n;a+=n){const b=a-1-rez,ib=IPC[b];
+  if(!ib){filas.push(`<tr><td>${ms(a)}</td><td>${ms(b)}</td><td colspan="2">Se conoce a mediados de ${ms(b+1)}</td></tr>`);if(a<=h){vig=null}if(!prox)prox=a;break}
+  const v=monto*ib/i0,p=v/prev-1;filas.push(`<tr><td>${ms(a)}</td><td>${ms(b)}</td><td>+${(p*100).toFixed(1).replace(".",",")}%</td><td>${f(v)}</td></tr>`);
+  if(a<=h){vig=v;pctVig=p}else if(!prox)prox=a;prev=v}
+ $("r-tabla").innerHTML=filas.join("");
+ $("r-hoy").textContent=vig?f(vig):"Pendiente";$("r-acum").textContent=vig?"+"+((vig/monto-1)*100).toFixed(1).replace(".",",")+"%":"–";
+ $("r-pct").textContent=pctVig!=null?"+"+Math.round(pctVig*100)+"%":"–";$("r-prox").textContent=prox?ms(prox):"–";
+ $("r-estado").textContent=vig?"Calculado con el IPC nivel general del INDEC.":"El ajuste de este mes espera el próximo IPC.";}
+fetch("/api/ipc").then(r=>r.ok?r.json():Promise.reject()).then(j=>{j.datos.forEach(([d,v])=>{IPC[mi(d.slice(0,7))]=v});ULT=Math.max(...Object.keys(IPC).map(Number));$("r-ult").textContent=ms(ULT);calc()})
+ .catch(()=>{$("r-estado").textContent="No pudimos traer el IPC del INDEC. Probá recargar en unos minutos."});
+$("monto").addEventListener("input",e=>{const d=e.target.value.replace(/\\D/g,"");e.target.value=d?Number(d).toLocaleString("es-AR"):"";calc()});
+["inicio","frec","rez"].forEach(id=>$(id).addEventListener("change",calc));
+</script>"""
+
+# ---------- Artículos ----------
 ARTS = {
 "escalas-monotributo-2026": ("Escalas del Monotributo 2026: topes y cuotas vigentes",
 "Tabla completa de categorías del Monotributo A a K vigentes desde agosto 2026: tope de ingresos brutos anuales y cuota mensual para servicios y venta de bienes.",
@@ -283,9 +343,10 @@ def main():
     w("estilo.css", CSS)
     w("index.html", layout("", "Calculadora de categoría de Monotributo 2026", "Calculá gratis tu categoría de Monotributo con las escalas vigentes de agosto 2026 a enero 2027: cuota, tope y margen antes de la recategorización de febrero.", HOME_BODY, "website", script=HOME_JS))
     w("precios-mercado-libre.html", layout("precios-mercado-libre", "Calculadora de precios para Mercado Libre 2026", "Calculá a cuánto publicar en Mercado Libre Clásica, Premium y venta directa para ganar el margen que querés, con comisiones, costo fijo e Ingresos Brutos.", ML_BODY, "website", script=ML_JS))
+    w("aumento-alquiler.html", layout("aumento-alquiler", "Calculadora de aumento de alquiler por IPC 2026", "Calculá cuánto te aumenta el alquiler con el IPC oficial del INDEC: alquiler de hoy, todos los ajustes y la fecha del próximo, para contratos que se actualizan cada 3, 4, 6 o 12 meses.", ALQ_BODY, "website", script=ALQ_JS))
     for slug, (t, d, b) in ARTS.items():
         w(f"{slug}.html", layout(slug, t, d, b))
-    urls = ["", "precios-mercado-libre"] + list(ARTS)
+    urls = ["", "precios-mercado-libre", "aumento-alquiler"] + list(ARTS)
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{BASE}/{u}</loc><lastmod>{HOY}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nSitemap: {BASE}/sitemap.xml\n")
     print("ok", len(urls), "páginas")
