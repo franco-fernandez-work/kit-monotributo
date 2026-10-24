@@ -1,1 +1,8 @@
-{"name":"kit-monotributo","main":"src/index.js","compatibility_date":"2026-09-01","assets":{"directory":"./public","binding":"ASSETS"},"rules":[{"type":"Data","globs":["**/*.xlsx"],"fallthrough":false}]}
+{
+  "name": "kit-monotributo",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+  "d1_databases": [{ "binding": "DB", "database_name": "qr-dinamicos" }],
+  "rules": [{ "type": "Data", "globs": ["**/*.xlsx"], "fallthrough": false }]
+}
