@@ -5,6 +5,7 @@ import vendedores from "../private/vendedores.xlsx";
 import alquileres from "../private/alquileres.xlsx";
 import casas from "../private/casas.xlsx";
 import vacaciones from "../private/vacaciones.xlsx";
+import liquidacion from "../private/liquidacion.xlsx";
 
 const PRODUCTOS = {
   kit: {
@@ -26,6 +27,10 @@ const PRODUCTOS = {
   vacaciones: {
     ref: "vacaciones2026", titulo: "Planilla de Vacaciones del Equipo (planilla Excel / Google Sheets)",
     nombre: "Planilla de Vacaciones del Equipo", precio: 4999, archivo: vacaciones, filename: "Planilla-Vacaciones-Equipo.xlsx", volver: "/calculadora-vacaciones",
+  },
+  liquidacion: {
+    ref: "liquidacion2026", titulo: "Planilla de Liquidación Final e Indemnización (planilla Excel / Google Sheets)",
+    nombre: "Planilla de Liquidación Final", precio: 5999, archivo: liquidacion, filename: "Planilla-Liquidacion-Final.xlsx", volver: "/calculadora-liquidacion-final",
   },
 };
 const IPC_URL = "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&format=json&limit=120&sort=desc";
