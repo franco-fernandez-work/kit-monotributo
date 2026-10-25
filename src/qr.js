@@ -289,7 +289,10 @@ export async function manejarQR(req, env, ctx) {
         auto_recurring: { frequency: 1, frequency_type: "months", transaction_amount: PRECIO, currency_id: "ARS" },
       }),
     }).catch(() => null);
-    if (!r?.ok) return landing(url.origin, "No pudimos abrir Mercado Pago. Probá de nuevo en unos minutos.", valores);
+    if (!r?.ok) {
+      const det = r ? (await r.text().catch(() => "")).slice(0, 200) : "sin respuesta";
+      return landing(url.origin, `No pudimos abrir Mercado Pago. Probá de nuevo en unos minutos. [${r?.status || 0} ${det}]`, valores);
+    }
     const pre = await r.json();
     await d.prepare("INSERT INTO qr (id, token, email, dest, preapproval, st, st_at, created) VALUES (?,?,?,?,?,?,?,?)").bind(id, token, email, v.url, pre.id, "pending", ahora(), ahora()).run();
     return Response.redirect(pre.init_point, 303);
