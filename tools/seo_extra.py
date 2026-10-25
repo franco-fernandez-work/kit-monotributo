@@ -15,7 +15,7 @@ ES = '<p>Escalas vigentes de agosto 2026 a enero 2027: <a href="/escalas-monotri
 
 # 1 servicios vs bienes
 serv = tabla(["Cat.", "Servicios", "Venta de bienes", "Diferencia"], [(c, ars(s), ars(b), ars(s - b)) for c, _, s, b in CATS])
-p1 = head("Monotributo 2026", "Monotributo: servicios o venta de bienes, ¿cuál pagás?", "Hasta la categoría C pagás lo mismo. Desde la D, quien presta servicios paga una cuota más alta que quien vende productos.") + \
+p1 = head("Monotributo 2026", "Monotributo: servicios o venta de bienes, ¿cuál pagás?", "En las categorías A y B pagás lo mismo. Desde la C, quien presta servicios paga una cuota más alta que quien vende productos.") + \
  "<h2>Cuota mensual según tu actividad</h2>" + serv + lec("<h2>Cómo se decide</h2><ul><li>Si <b>prestás servicios</b> (diseño, clases, programación, oficios), pagás la columna de servicios.</li><li>Si <b>vendés cosas muebles</b> que comprás o fabricás, pagás la de venta de bienes.</li><li>Quien hace las dos cosas paga según la actividad de mayor facturación.</li></ul>" + ES) + B.oferta_kit()
 
 # 2 cuánto puedo facturar por mes
@@ -52,10 +52,10 @@ p8 = head("Alquileres", "Cómo se calcula el aumento de alquiler por IPC", "Si t
 ARTS_EXTRA = {
  "monotributo-servicios-o-venta-de-bienes": ("Monotributo 2026: cuota de servicios vs venta de bienes", "Cuánto pagás de Monotributo si prestás servicios o vendés bienes, categoría por categoría, con las escalas de agosto 2026 a enero 2027.", p1),
  "cuanto-puedo-facturar-por-mes-monotributo": ("Cuánto puedo facturar por mes en el Monotributo 2026", "Tope anual y promedio mensual de facturación de cada categoría del Monotributo, escalas vigentes de agosto 2026 a enero 2027.", p2),
- "que-pasa-si-me-paso-del-tope-monotributo": ("Qué pasa si me paso del tope del Monotributo", "Qué ocurre si superás tu categoría o el tope de la categoría K: recategorización, exclusión y cómo evitarlo.", p3),
- "como-calcular-precio-mercado-libre": ("Cómo calcular el precio de venta en Mercado Libre", "La fórmula para poner precio en Mercado Libre sin perder margen: comisión, costo fijo e impuestos, con un ejemplo paso a paso.", p4),
- "mercado-libre-clasica-o-premium": ("Mercado Libre: publicación Clásica o Premium", "Diferencias entre Clásica y Premium en Mercado Libre y cómo elegir según tu ganancia neta.", p5),
+ "que-pasa-si-me-paso-del-tope-monotributo": ("Qué pasa si me paso del tope del Monotributo en 2026", "Si superás tu categoría, subís en la recategorización. Si superás el tope de la K ($ 126.610.838,75 al año), quedás excluido. Qué pasa y cómo evitarlo.", p3),
+ "como-calcular-precio-mercado-libre": ("Cómo calcular el precio de venta en Mercado Libre: fórmula y ejemplo", "La fórmula para poner precio en Mercado Libre sin perder margen: comisión, costo fijo e impuestos, con un ejemplo paso a paso.", p4),
+ "mercado-libre-clasica-o-premium": ("Mercado Libre: ¿Clásica o Premium? Cuál conviene", "Premium cobra más comisión porque incluye cuotas sin interés para el comprador. Cómo comparar la ganancia neta de Clásica y Premium al precio que necesitás.", p5),
  "aguinaldo-cuando-se-paga": ("Aguinaldo: cuándo se paga y cómo se calcula", "El aguinaldo de diciembre vence el 18: cómo se calcula (50% de la mejor remuneración del semestre) y cuándo es proporcional.", p6),
  "vacaciones-empleada-domestica": ("Empleada doméstica: vacaciones, aguinaldo y registro", "Días de vacaciones según antigüedad y obligaciones del empleador de casas particulares (Ley 26.844).", p7),
- "como-calcular-aumento-alquiler-ipc": ("Cómo calcular el aumento de alquiler por IPC", "La fórmula para actualizar un alquiler con el IPC del INDEC, con un ejemplo paso a paso.", p8),
+ "como-calcular-aumento-alquiler-ipc": ("Cómo calcular el aumento de alquiler por IPC: fórmula y ejemplo", "La fórmula para actualizar el alquiler con el IPC del INDEC: se multiplica por la inflación acumulada del período. Ejemplo paso a paso y calculadora gratis.", p8),
 }

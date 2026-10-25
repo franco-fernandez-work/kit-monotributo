@@ -71,15 +71,27 @@ def _productos(main_html, url, desc, org, base):
     return out
 
 def _faq(main_html):
-    qs = []
-    partes = re.split(r"(<h2[^>]*>.*?</h2>)", main_html, flags=re.S)
+    """FAQPage con los subtítulos h2/h3 que son preguntas y el texto que sigue hasta el próximo subtítulo."""
+    qs, vistas = [], set()
+    cuerpo = re.split(r'<div class="mas-leer"', main_html)[0]
+    cuerpo = re.sub(r"<section class=\"oferta\".*?</section>|<script.*?</script>|<form.*?</form>", "", cuerpo, flags=re.S)
+    partes = re.split(r"(<h[23][^>]*>.*?</h[23]>)", cuerpo, flags=re.S)
     for i in range(1, len(partes) - 1, 2):
         q = _txt(partes[i])
-        a = re.split(r'<section class="oferta"|<aside|<div class="mas-leer"', partes[i + 1])[0]
-        a = _txt(a)
-        if q.endswith("?") and len(a) > 40:
+        a = _txt(partes[i + 1])
+        if q.endswith("?") and len(a) > 40 and q not in vistas:
+            vistas.add(q)
             qs.append({"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a[:900]}})
     return {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": qs} if len(qs) >= 2 else None
+
+def _bloque_faq(slug):
+    try:
+        preguntas = __import__("seo_faq").FAQ.get(slug, [])
+    except ImportError:
+        return ""
+    if not preguntas:
+        return ""
+    return '<section class="faq"><h2>Preguntas frecuentes</h2>' + "".join(f"<h3>{q}</h3><p>{a}</p>" for q, a in preguntas) + "</section>"
 
 def _relacionados(slug, pags, n=6):
     p = pags[slug]
@@ -95,6 +107,7 @@ def _relacionados(slug, pags, n=6):
 
 CSS = ('.mas-leer{margin-top:56px;padding-top:20px;border-top:1px solid var(--linea)}.mas-leer h2{margin:0 0 10px;font-size:20px}'
        '.mas-leer ul{margin:0;padding-left:20px;columns:2;column-gap:32px}.mas-leer li{margin:6px 0;break-inside:avoid}'
+       '.faq{margin-top:56px}.faq h3{margin:22px 0 6px;font-size:18px}'
        '@media (max-width:760px){.mas-leer ul{columns:1}}.indice h2{margin-top:36px}.indice ul{padding-left:20px}.indice li{margin:8px 0}.indice li span{display:block;color:var(--tinta-2);font-size:15px}')
 
 def _fuentes(h):
@@ -139,6 +152,8 @@ def post(pub, base, hoy):
         if "application/ld+json" in h and "mas-leer" in h:
             continue
         url = f"{base}/{slug}" if slug else f"{base}/"
+        if slug not in NO_INDEX and "<main" in h and 'class="faq"' not in h:
+            h = h.replace("</main>", _bloque_faq(slug) + "\n</main>", 1)
         m = re.search(r"<main.*?</main>", h, re.S)
         main_html = m.group(0) if m else ""
         lds = []
