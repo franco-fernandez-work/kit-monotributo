@@ -63,6 +63,13 @@ Claude no puede pushear: el GitHub del negocio es franco-fernandez-work y Claude
 - Autorización: Franco escribió "Autorizo los deploys a producción de kit-monotributo (repo y Cloudflare), este y los próximos" (msg cmsg_01Km6yboT36uYw98R35YchTD6N49AuxmgQxPC4FzK6Qefz). Citarlo en cada deploy.
 - Cada deploy se cierra con verificación en producción, ping a IndexNow (clave en `public/21f66bcd07c831d8ab8427f0ee21f0ab.txt`) y reenvío del sitemap en Search Console.
 
+## Experiencia en teléfonos (25/10)
+- Todo en `tools/movil.py`, enganchado al final de `main()` en build_site.py (después de seo_boost): agrega el último bloque de CSS a estilo.css (pisa a los anteriores, no se tocó el CSS ni el SEO de los otros módulos) y posprocesa el HTML: tablas sueltas envueltas en `.tabla-wrap`, `inputmode="numeric"` en campos de montos/DNI/año sin teclado numérico, enlace "Saltar al contenido", CTA fija de compra y script que centra el tema activo del menú.
+- Menú por tema y submenú: cintas que se deslizan (antes 4 a 8 renglones de enlaces, ~540 px de alto en 375 px; ahora ~200 px). Botones y campos de 48 a 52 px, textos de 16 px o más en campos (sin zoom de iOS), tablas con sombra al deslizar y primera columna fija, sello de resultados en forma de píldora para montos largos, contraste del celeste en texto chico (`--celeste-txt`), aviso legal legible en modo oscuro, horizontal con menos altura de encabezado.
+- CTA fija: barra inferior con el botón de compra de la página; aparece al bajar 420 px, se esconde al ver la oferta, el pie o al enfocar un campo (teclado), con `safe-area-inset-bottom`.
+- Red team (iframes de 320, 360, 390, 430 y 844x390): antes 5 páginas desbordaban a 320 px y 342 zonas táctiles < 40 px; ahora 0 desbordes (el único hallazgo, el monto en el sello de liquidación, se corrigió) y las zonas chicas que quedan son las 40 px del submenú. 20 calculadoras y generadores probados con 10 formas de tipear (1500000, 1.500.000, 1500000,50, vacío, negativo, texto): sin NaN ni errores JS. CLS 0 en la home, HTML ~6 KB y CSS ~8 KB comprimidos, fuentes sin bloquear el render.
+- Pendiente: probar en un teléfono real (teclado virtual con la barra fija), /qr y /gracias heredan el CSS pero sin barra ni menú por tema.
+
 ## Pendientes
 - Desde el 25/10: pedir en Google Search Console la indexación de las 8 URLs. Hay cuota diaria, así que pueden ser algunas por día.
 - Probar una descarga con un pago real. Franco no puede pagarse a sí mismo.
