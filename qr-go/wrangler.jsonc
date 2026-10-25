@@ -2,5 +2,5 @@
   "name": "qr-go",
   "main": "src/index.js",
   "compatibility_date": "2026-09-01",
-  "d1_databases": [{ "binding": "DB", "database_name": "qr-dinamicos" }]
+  "d1_databases": [{ "binding": "DB", "database_name": "qr-dinamicos", "database_id": "d905bf90-8e86-4a31-9a67-765c5c4720b4" }]
 }
