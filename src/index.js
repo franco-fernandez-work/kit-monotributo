@@ -27,6 +27,7 @@ import guiaJubilacion from "../private/guia-jubilacion.pdf";
 import guiaSalir from "../private/guia-salir.pdf";
 import guiaMudanza from "../private/guia-mudanza.pdf";
 import guiaRenovar from "../private/guia-renovar.pdf";
+import guiaCosta from "../private/guia-costa.pdf";
 import presupuesto from "../private/presupuesto.xlsx";
 import cole from "../private/cole.xlsx";
 import siradig from "../private/siradig.xlsx";
@@ -114,6 +115,8 @@ const PRODUCTOS = {
     precio: 2999, archivo: guiaMudanza, filename: "Guia-Mudanza-Sin-Estafas.pdf", mime: "application/pdf", volver: "/mudanza-calculadora-metros-cubicos" },
   renovar: { ref: "renovar2026", titulo: "Guía: Se vence tu alquiler (PDF)", nombre: "Guía: Se vence tu alquiler",
     precio: 2999, archivo: guiaRenovar, filename: "Guia-Se-Vence-Tu-Alquiler.pdf", mime: "application/pdf", volver: "/renovar-alquiler-o-mudarse" },
+  costa: { ref: "costa2026", titulo: "Guía: Vender en la costa o en ferias (PDF)", nombre: "Guía: Vender en la costa o en ferias",
+    precio: 2999, archivo: guiaCosta, filename: "Guia-Vender-En-La-Costa-Ferias.pdf", mime: "application/pdf", volver: "/vender-en-la-costa-feria-punto-de-equilibrio" },
   presupuesto: { ref: "presupuesto2026", titulo: "Presupuesto Familiar 2027 con IPC (planilla Excel / Google Sheets)", nombre: "Presupuesto Familiar 2027 con IPC",
     precio: 3999, archivo: presupuesto, filename: "Presupuesto-Familiar-2027-IPC.xlsx", volver: "/presupuesto-familiar-2027-inflacion" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
