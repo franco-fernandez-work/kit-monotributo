@@ -1,7 +1,7 @@
 """Experiencia en teléfonos: CSS final (gana por orden sobre el resto) y posproceso del HTML.
 build_site.main() llama a post(pub) al final, después de seo_boost.post. No cambia contenido ni SEO:
 solo envuelve tablas, agrega inputmode a campos numéricos, enlace de salto, CTA fija de compra y el script que centra el tema activo del menú."""
-import glob, os, re
+import glob, html, json, os, re
 
 CSS = r"""
 /* ===== móvil (último bloque: pisa a los anteriores) ===== */
@@ -172,6 +172,41 @@ addEventListener('scroll',ver,{passive:true});mq.addEventListener&&mq.addEventLi
 })();
 </script>"""
 
+
+TEMAS_JS = r"""(function(){
+var T=window.TEMAS||{},menu=document.querySelector('nav.menu');if(!menu)return;
+var actual=location.pathname.replace(/\.html$/,'')||'/';
+function sub(){var n=document.querySelector('nav.submenu');if(!n){n=document.createElement('nav');n.className='submenu';n.setAttribute('aria-label','En este tema');menu.parentNode.insertBefore(n,menu.nextSibling)}return n}
+menu.addEventListener('click',function(e){var a=e.target.closest('a[href^="/guias#"]');if(!a||e.metaKey||e.ctrlKey||e.shiftKey)return;
+var k=a.getAttribute('href').split('#')[1],l=T[k];if(!l)return;e.preventDefault();
+menu.querySelectorAll('a[aria-current]').forEach(function(x){x.removeAttribute('aria-current')});a.setAttribute('aria-current','true');
+var n=sub();n.innerHTML='';n.setAttribute('aria-label','En este tema: '+a.textContent);
+l.forEach(function(it){var b=document.createElement('a');b.href=it[0];b.textContent=it[1];if(it[0]===actual)b.setAttribute('aria-current','page');n.appendChild(b)});
+n.scrollLeft=0;a.scrollIntoView&&a.scrollIntoView({block:'nearest',inline:'center'})});
+})();"""
+
+def _temas(pub):
+    """temas.js: pages de cada tema (de /guias) con la etiqueta corta del submenú, para que tocar un tema cambie las burbujas sin salir de la página."""
+    lab = {}
+    for p in glob.glob(os.path.join(pub, "*.html")):
+        h = open(p, encoding="utf-8").read()
+        m = re.search(r'<nav class="submenu"[^>]*>(.*?)</nav>', h, re.S)
+        if m:
+            for href, t in re.findall(r'<a href="([^"]+)">(.*?)</a>', m.group(1)):
+                lab[href] = html.unescape(t)
+    g = os.path.join(pub, "guias.html")
+    if not os.path.exists(g):
+        return
+    T = {}
+    for k, body in re.findall(r'<h2 id="(\w+)">.*?</h2><ul>(.*?)</ul>', open(g, encoding="utf-8").read(), re.S):
+        its = []
+        for href, t in re.findall(r'<li><a href="([^"]+)">(.*?)</a>', body)[:10]:
+            t = html.unescape(re.sub(r"<[^>]+>", "", t)).lstrip("¿")
+            t = lab.get(href) or (t if len(t) <= 34 else t[:32].rsplit(" ", 1)[0] + "…")
+            its.append([href, t])
+        T[k] = its
+    open(os.path.join(pub, "temas.js"), "w", encoding="utf-8").write("window.TEMAS=" + json.dumps(T, ensure_ascii=False, separators=(",", ":")) + ";\n" + TEMAS_JS)
+
 # campos que piden teclado numérico (id/data-k que contienen estas palabras)
 NUM = re.compile(r'(monto|precio|sena|seña|importe|sueldo|costo|valor|total|km|anio|año|dni|cuit|cuil|cantidad|dias|horas|meses|edad|hijos|metros|m2|ambientes|stock|unidades)', re.I)
 
@@ -201,9 +236,10 @@ def _post_html(h):
     h = _tablas(h)
     h = h.replace("<body>", '<body><a class="saltar" href="#contenido">Saltar al contenido</a>', 1)
     h = h.replace('<main class="wrap">', '<main class="wrap" id="contenido" tabindex="-1">', 1)
-    return h.replace("</body>", JS + "</body>", 1) if "</body>" in h else h
+    return h.replace("</body>", JS + '<script src="/temas.js" defer></script></body>', 1) if "</body>" in h else h
 
 def post(pub):
+    _temas(pub)
     n = 0
     for p in glob.glob(os.path.join(pub, "*.html")):
         h = open(p, encoding="utf-8").read()
