@@ -1,4 +1,5 @@
 import { revocado } from "./legal.js";
+import { limitar, pagoInexistente, marcarInexistente } from "./limite.js";
 // Créditos del generador de recibos y presupuestos: cada pago aprobado de Mercado Pago (ref recibos2026) da 10 documentos.
 // D1 guarda cuántos se usaron por pago. El PDF se arma en el navegador; el servidor solo descuenta el crédito.
 const REF = "recibos2026", PRECIO = 990, CREDITOS = 10;
@@ -13,9 +14,10 @@ function db(env) {
 }
 
 async function pagoOk(env, id) {
+  if (await pagoInexistente(env, id)) return false;
   try {
     const r = await fetch(`${api(env)}/v1/payments/${id}`, { headers: { Authorization: `Bearer ${env.MP_ACCESS_TOKEN}` } });
-    if (!r.ok) return false;
+    if (!r.ok) { if (r.status === 404) await marcarInexistente(env, id); return false; }
     const p = await r.json();
     return p.external_reference === REF && p.status === "approved" && p.transaction_amount >= PRECIO;
   } catch { return false; }
@@ -33,12 +35,13 @@ async function pack(env, d, id) {
   return { id, restan: row.total - row.usados };
 }
 
-const ids = (v) => [...new Set(String(v || "").split(",").filter((x) => /^\d{1,20}$/.test(x)))].slice(0, 20);
+const ids = (v) => [...new Set(String(v || "").split(",").filter((x) => /^\d{1,20}$/.test(x)))].slice(0, 5);
 
 export async function manejarRecibos(req, env) {
   const url = new URL(req.url);
   if (!url.pathname.startsWith("/recibos/api/")) return null;
   if (!env.DB) return json({ error: "Servicio no disponible" }, 503);
+  if (await limitar(env, req, "recibos", 120, 3600)) return json({ error: "Demasiados pedidos seguidos. Probá de nuevo en un rato." }, 429);
   const d = await db(env);
 
   if (url.pathname === "/recibos/api/saldo" && req.method === "GET") {

@@ -1,5 +1,7 @@
-// Botón de arrepentimiento (Res. SCI 424/2020): POST /arrepentimiento/enviar verifica el pago en Mercado Pago,
-// registra la solicitud en D1, revoca la descarga y ordena el reembolso total. Sin intervención humana.
+// Botón de arrepentimiento (Disp. 954/2025): POST /arrepentimiento/enviar verifica el pago en Mercado Pago,
+// registra la solicitud en D1 y revoca la descarga. Reembolso total automático si todavía no descargó el archivo ni usó
+// créditos; si ya lo hizo, queda registrada la solicitud sin reembolso (art. 1116 inc. c CCyC; Disp. 954/2025 art. 3 inc. a). Sin intervención humana.
+import { limitar, yaDescargo } from "./limite.js";
 const PLAZO_DIAS = 10;
 const api = (env) => env.MP_API || "https://api.mercadopago.com";
 const json = (o, status = 200) => Response.json(o, { status, headers: { "cache-control": "no-store" } });
@@ -47,7 +49,7 @@ async function bajaQR(env, d, ref) {
 }
 
 const fechaAR = (t) => new Date(t * 1000).toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires" });
-const fin = (fila) => ({ ok: true, codigo: fila.codigo, fecha: fechaAR(fila.created), mensaje: fila.reembolso === "ordenado" ? "Registramos tu arrepentimiento. El reembolso total ya fue ordenado a Mercado Pago y la descarga quedó desactivada. Guardá el código de constancia." : "Registramos tu arrepentimiento y desactivamos la descarga. El reembolso no se pudo ordenar en este momento: volvé a enviar el formulario con el mismo código de pago en unos minutos y se reintenta solo." });
+const fin = (fila) => ({ ok: true, codigo: fila.codigo, fecha: fechaAR(fila.created), mensaje: fila.reembolso === "denegado" ? "Registramos tu solicitud de arrepentimiento y desactivamos el enlace de descarga. Como ya descargaste el archivo o usaste créditos, no corresponde el reembolso automático: es la excepción del art. 1116 inc. c del Código Civil y Comercial (art. 3 inc. a de la Disposición 954/2025), que se informa antes de pagar. Guardá el código de constancia por si querés hacer un reclamo ante Defensa del Consumidor." : fila.reembolso === "ordenado" ? "Registramos tu arrepentimiento. El reembolso total ya fue ordenado a Mercado Pago y la descarga quedó desactivada. Guardá el código de constancia." : "Registramos tu arrepentimiento y desactivamos la descarga. El reembolso no se pudo ordenar en este momento: volvé a enviar el formulario con el mismo código de pago en unos minutos y se reintenta solo." });
 
 export async function manejarLegal(req, env, refsValidas) {
   const url = new URL(req.url);
@@ -56,6 +58,7 @@ export async function manejarLegal(req, env, refsValidas) {
   if (!env.DB) return json({ ok: false, mensaje: "Servicio no disponible. Probá de nuevo más tarde." }, 503);
   const b = await req.json().catch(() => ({}));
   if (b.web) return json({ ok: true, mensaje: "Recibido." });
+  if (await limitar(env, req, "arrep", 10, 3600)) return json({ ok: false, mensaje: "Hiciste muchos intentos seguidos. Probá de nuevo en una hora." }, 429);
   const pago = limpio(b.pago, 20).replace(/\s/g, "");
   const nombre = limpio(b.nombre, 120);
   if (!/^\d{5,20}$/.test(pago)) return json({ ok: false, mensaje: "Ingresá el código de pago de Mercado Pago (solo números)." }, 400);
@@ -76,11 +79,12 @@ export async function manejarLegal(req, env, refsValidas) {
     if (Date.now() - Date.parse(p.date_approved) > PLAZO_DIAS * 864e5) return json({ ok: false, mensaje: "Pasaron más de 10 días corridos desde el pago, así que ya no corre el plazo de arrepentimiento. Te quedan el reclamo ante Defensa del Consumidor y la baja de la suscripción desde Mercado Pago." }, 410);
     const codigo = "ARR-" + crypto.randomUUID().slice(0, 8).toUpperCase();
     const ahora = Math.floor(Date.now() / 1000);
-    await d.prepare("INSERT OR IGNORE INTO arrepentimientos (pago,codigo,nombre,email,motivo,reembolso,created) VALUES (?,?,?,?,?,?,?)").bind(pago, codigo, nombre, email, limpio(b.motivo, 300), "pendiente", ahora).run();
+    const descargado = await yaDescargo(env, pago).catch(() => false);
+    await d.prepare("INSERT OR IGNORE INTO arrepentimientos (pago,codigo,nombre,email,motivo,reembolso,created) VALUES (?,?,?,?,?,?,?)").bind(pago, codigo, nombre, email, limpio(b.motivo, 300), descargado ? "denegado" : "pendiente", ahora).run();
     await bajaQR(env, d, String(p.external_reference));
     fila = await d.prepare("SELECT * FROM arrepentimientos WHERE pago=?").bind(pago).first();
   }
-  if (fila.reembolso !== "ordenado" && env.ARREP_REEMBOLSO !== "0" && (await reembolsar(env, pago))) {
+  if (fila.reembolso === "pendiente" && env.ARREP_REEMBOLSO !== "0" && (await reembolsar(env, pago))) {
     await d.prepare("UPDATE arrepentimientos SET reembolso='ordenado' WHERE pago=?").bind(pago).run();
     fila.reembolso = "ordenado";
   }

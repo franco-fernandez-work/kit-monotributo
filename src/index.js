@@ -36,10 +36,11 @@ import cole from "../private/cole.xlsx";
 import siradig from "../private/siradig.xlsx";
 import packAlqEstud from "../private/pack-alqestud.zip";
 import packSiradigCombo from "../private/pack-siradigcombo.zip";
-import { manejarQR } from "./qr.js";
+import { manejarQR, refrescarQR } from "./qr.js";
 import { manejarRecibos } from "./recibos.js";
 import { manejarPedidos } from "./pedidos.js";
 import { manejarLegal, revocado } from "./legal.js";
+import { limitar, pagoInexistente, marcarInexistente, registrarDescarga, MAX_DESCARGAS } from "./limite.js";
 
 const PRODUCTOS = {
   kit: {
@@ -82,7 +83,7 @@ const PRODUCTOS = {
     precio: 8999, archivo: packKitGuia, filename: "Kit-Monotributista-y-Guia.zip", mime: "application/zip", volver: "/guia-primer-ano-monotributo" },
   reclamos: { ref: "reclamos2026", titulo: "Pack 8 Cartas de Reclamo de Consumo (modelos Word)", nombre: "Pack Reclamos de Consumo",
     precio: 2999, archivo: packReclamos, filename: "Pack-Reclamos-de-Consumo.zip", mime: "application/zip", volver: "/generador-reclamo-consumidor" },
-  telegramas: { ref: "telegramas2026", titulo: "Pack 10 Telegramas y Cartas Documento Laborales (modelos Word)", nombre: "Pack Telegramas Laborales",
+  telegramas: { ref: "telegramas2026", titulo: "Pack 9 Telegramas y Cartas Documento Laborales (modelos Word)", nombre: "Pack Telegramas Laborales",
     precio: 4999, archivo: packTelegramas, filename: "Pack-Telegramas-Laborales.zip", mime: "application/zip", volver: "/telegrama-renuncia-modelo" },
   boletoauto: { ref: "boletoauto2026", titulo: "Pack Compraventa de Auto Usado: boleto, recibos y checklists (modelos Word)", nombre: "Pack Compraventa de Auto Usado",
     precio: 3999, archivo: packBoletoAuto, filename: "Pack-Compraventa-Auto-Usado.zip", mime: "application/zip", volver: "/boleto-compraventa-auto-usado" },
@@ -90,8 +91,8 @@ const PRODUCTOS = {
     precio: 2999, archivo: packAlqTemp, filename: "Pack-Alquiler-Temporario-Verano.zip", mime: "application/zip", volver: "/alquiler-temporario-verano" },
   viajemenor: { ref: "viajemenor2026", titulo: "Pack Autorización de Viaje de Menores (modelos Word)", nombre: "Pack Autorización de Viaje de Menores",
     precio: 2999, archivo: packViajeMenor, filename: "Pack-Autorizacion-Viaje-Menores.zip", mime: "application/zip", volver: "/autorizacion-viaje-menores" },
-  alimentos: { ref: "alimentos2026", titulo: "Pack Documentos de Cuota Alimentaria (modelos Word)", nombre: "Pack Documentos de Cuota Alimentaria",
-    precio: 3999, archivo: packAlimentos, filename: "Pack-Cuota-Alimentaria.zip", mime: "application/zip", volver: "/cuota-alimentaria-aguinaldo" },
+  alimentos: { ref: "alimentos2026", titulo: "Planilla de Gastos del Hijo y Guía de Cuota Alimentaria (modelo Word)", nombre: "Planilla de Gastos del Hijo (cuota alimentaria)",
+    precio: 3999, archivo: packAlimentos, filename: "Planilla-Gastos-del-Hijo.zip", mime: "application/zip", volver: "/cuota-alimentaria-aguinaldo" },
   alqestud: { ref: "alqestud2026", titulo: "Pack Alquiler para Estudiantes (modelos Word)", nombre: "Pack Alquiler para Estudiantes",
     precio: 2999, archivo: packAlqEstud, filename: "Pack-Alquiler-Estudiantes.zip", mime: "application/zip", volver: "/contrato-alquiler-estudiante" },
   cole: { ref: "cole2026", titulo: "Planilla Anual del Gasto Escolar (planilla Excel / Google Sheets)", nombre: "Planilla Anual del Gasto Escolar",
@@ -143,26 +144,38 @@ const html = (body, status = 200) =>
     { status, headers: { "content-type": "text/html; charset=utf-8" } }
   );
 
-async function pagoValido(env, id) {
-  if (!/^\d{1,20}$/.test(id || "")) return null;
-  if (await revocado(env, id)) return null;
+// Devuelve { prod, estado }: prod si el pago está aprobado, vigente y no revocado; estado = status de Mercado Pago.
+async function consultarPago(env, id) {
+  if (!/^\d{1,20}$/.test(id || "")) return { prod: null, estado: "inexistente" };
+  if (await revocado(env, id)) return { prod: null, estado: "revocado" };
+  if (await pagoInexistente(env, id)) return { prod: null, estado: "inexistente" };
   let p;
   try {
     const r = await fetch(`${api(env)}/v1/payments/${id}`, {
       headers: { Authorization: `Bearer ${env.MP_ACCESS_TOKEN}` },
     });
-    if (!r.ok) return null;
+    if (!r.ok) {
+      if (r.status === 404) await marcarInexistente(env, id);
+      return { prod: null, estado: "inexistente" };
+    }
     p = await r.json();
   } catch {
-    return null;
+    return { prod: null, estado: "error" };
   }
   const prod = porRef(p.external_reference);
+  if (!prod) return { prod: null, estado: "inexistente" };
   const vigente = Date.now() - Date.parse(p.date_approved) < DIAS_DESCARGA * 864e5;
-  const ok = prod && p.status === "approved" && p.transaction_amount >= prod.precio && vigente;
-  return ok ? prod : null;
+  const ok = p.status === "approved" && p.transaction_amount >= prod.precio && vigente;
+  return { prod: ok ? prod : null, estado: p.status === "approved" && !vigente ? "vencido" : p.status };
 }
+const pagoValido = async (env, id) => (await consultarPago(env, id)).prod;
+
+const demasiados = () => html("<h1>Demasiados intentos</h1><p>Hiciste muchos pedidos seguidos desde esta conexión. Probá de nuevo en un rato.</p>", 429);
 
 export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(refrescarQR(env));
+  },
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
 
@@ -186,6 +199,14 @@ export default {
     if (url.pathname === "/comprar") {
       const prod = PRODUCTOS[url.searchParams.get("p") || "kit"];
       if (!prod) return html('<h1>Ese producto no existe</h1><p><a class="boton" href="/">Volver al inicio</a></p>', 404);
+      if (url.searchParams.get("ok") !== "1") {
+        // Aviso previo al pago: entrega inmediata y fin del reembolso una vez descargado (art. 1116 inc. c CCyC, Disp. 954/2025 art. 3 inc. a).
+        const pre = `/comprar?p=${encodeURIComponent(url.searchParams.get("p") || "kit")}&ok=1`;
+        const aviso = prod.app
+          ? "Cada documento que generes usa un crédito, y los créditos ya usados no se reembolsan."
+          : "Apenas descargues el archivo, la compra se considera entregada y ya no podés arrepentirte con reembolso.";
+        return html(`<span class="etiqueta">Antes de pagar</span><h1>${prod.nombre}</h1><p>Precio: <b>$ ${prod.precio.toLocaleString("es-AR")}</b>, pago único con Mercado Pago.</p><p><b>Entrega inmediata.</b> ${aviso} Es la excepción del art. 1116 inc. c del Código Civil y Comercial para archivos digitales de uso permanente. Hasta que descargues, podés usar el <a href="/arrepentimiento">botón de arrepentimiento</a> dentro de los 10 días y se te reembolsa el 100%. Detalle en la <a href="/devoluciones">política de devoluciones</a>.</p><p><a class="boton" href="${pre}">Entendido, ir a pagar</a> <a href="${prod.volver}">Volver</a></p>`);
+      }
       const r = await fetch(`${api(env)}/checkout/preferences`, {
         method: "POST",
         headers: { Authorization: `Bearer ${env.MP_ACCESS_TOKEN}`, "content-type": "application/json" },
@@ -206,21 +227,36 @@ export default {
       return Response.redirect(pref.init_point, 303);
     }
 
+    if (url.pathname === "/recuperar") {
+      const id = (url.searchParams.get("id") || "").replace(/\s/g, "");
+      if (!id) return html(`<span class="etiqueta">Recuperar compra</span><h1>¿Perdiste la descarga?</h1><p>Ingresá el <b>número de operación</b> que figura en el comprobante de Mercado Pago (también en el mail del pago o en Tu actividad). Te llevamos de nuevo a tu página de descarga. Si pagaste en efectivo, aparece cuando el pago se acredita.</p><form method="get" action="/recuperar" class="arr-form"><label for="id">Número de operación</label><input id="id" name="id" inputmode="numeric" pattern="[0-9]{5,20}" required autocomplete="off" placeholder="Solo números"><button class="boton" type="submit">Buscar mi compra</button></form>`);
+      if (!/^\d{5,20}$/.test(id)) return html('<h1>Número no válido</h1><p>El número de operación tiene solo dígitos. Revisalo en tu comprobante de Mercado Pago.</p><p><a class="boton" href="/recuperar">Probar de nuevo</a></p>', 400);
+      if (await limitar(env, req, "recuperar", 15, 3600)) return demasiados();
+      return Response.redirect(`${url.origin}/gracias?payment_id=${id}`, 303);
+    }
+
     if (url.pathname === "/gracias") {
       const id = url.searchParams.get("payment_id");
       const status = url.searchParams.get("status") || url.searchParams.get("collection_status");
-      const prod = await pagoValido(env, id);
+      if (await limitar(env, req, "gracias", 60, 3600)) return demasiados();
+      const { prod, estado: est } = await consultarPago(env, id);
       if (prod?.app)
-        return html(`<span class="etiqueta">Pago aprobado</span><h1>Ya tenés 10 documentos</h1><p>Se cargaron en tu navegador. Si cambiás de dispositivo, usá siempre este enlace.</p><p><a class="boton" href="${prod.app}?pago=${id}">Crear mis documentos</a></p><p class="nota">Guardá esta página: el código ${id} es tu llave y no se recupera.</p>`);
+        return html(`<span class="etiqueta">Pago aprobado</span><h1>Ya tenés 10 documentos</h1><p>Se cargaron en tu navegador. Si cambiás de dispositivo, usá siempre este enlace.</p><p><a class="boton" href="${prod.app}?pago=${id}">Crear mis documentos</a></p><p class="nota">Guardá esta página: el código ${id} es tu llave. Si la perdés, lo recuperás en <a href="/recuperar">/recuperar</a> con el número de operación de tu comprobante de Mercado Pago.</p>`);
       if (prod)
-        return html(`<span class="etiqueta">Pago aprobado</span><h1>Gracias por tu compra</h1><p>Ya podés descargar <b>${prod.nombre}</b>.</p><p><a class="boton" href="/descargar?payment_id=${id}">${prod.mime === "application/pdf" ? "Descargar la guía (PDF)" : prod.mime ? "Descargar el pack (ZIP)" : "Descargar la planilla"}</a></p><p class="nota">Guardá esta página: el enlace funciona durante ${DIAS_DESCARGA} días.${prod.mime ? "" : " Para abrirla en Google Sheets: Archivo, Importar, Subir."}</p>`);
-      if (status === "pending" || status === "in_process")
-        return html(`<span class="etiqueta">Pago en proceso</span><h1>Tu pago se está acreditando</h1><p>Cuando Mercado Pago lo apruebe, volvé a abrir esta misma página y vas a ver el botón de descarga. Guardala en favoritos.</p>`);
-      return html(`<h1>No encontramos un pago aprobado</h1><p>Si acabás de pagar, recargá esta página en un minuto.</p><p><a class="boton" href="/">Volver al inicio</a></p>`, 404);
+        return html(`<span class="etiqueta">Pago aprobado</span><h1>Gracias por tu compra</h1><p>Ya podés descargar <b>${prod.nombre}</b>.</p><p><a class="boton" href="/descargar?payment_id=${id}">${prod.mime === "application/pdf" ? "Descargar la guía (PDF)" : prod.mime ? "Descargar el pack (ZIP)" : "Descargar la planilla"}</a></p><p class="nota">Guardá esta página: el enlace funciona durante ${DIAS_DESCARGA} días y permite hasta ${MAX_DESCARGAS} descargas. Si la perdés, entrá a <a href="/recuperar">/recuperar</a> con el número de operación de tu comprobante de Mercado Pago.${prod.mime ? "" : " Para abrirla en Google Sheets: Archivo, Importar, Subir."}</p>`);
+      if (est === "pending" || est === "in_process" || est === "authorized" || status === "pending" || status === "in_process")
+        return html(`<span class="etiqueta">Pago en proceso</span><h1>Tu pago se está acreditando</h1><p>Si pagaste en efectivo (Rapipago, Pago Fácil), puede demorar hasta unas horas. Cuando Mercado Pago lo apruebe, volvé a abrir esta página o entrá a <a href="/recuperar">/recuperar</a> con el número de operación de tu comprobante, y vas a ver el botón de descarga. Guardala en favoritos.</p>`);
+      if (est === "vencido")
+        return html(`<h1>El enlace de descarga venció</h1><p>El enlace funciona durante ${DIAS_DESCARGA} días desde el pago aprobado.</p>`, 410);
+      return html(`<h1>No encontramos un pago aprobado</h1><p>Si acabás de pagar, recargá esta página en un minuto. Si perdiste el enlace, usá <a href="/recuperar">/recuperar</a> con el número de operación de tu comprobante de Mercado Pago.</p><p><a class="boton" href="/">Volver al inicio</a></p>`, 404);
     }
 
     if (url.pathname === "/descargar") {
-      const prod = await pagoValido(env, url.searchParams.get("payment_id"));
+      if (await limitar(env, req, "descargar", 20, 3600)) return demasiados();
+      const idd = url.searchParams.get("payment_id");
+      const prod = await pagoValido(env, idd);
+      if (prod?.archivo && !(await registrarDescarga(env, idd)))
+        return html(`<h1>Llegaste al límite de descargas</h1><p>Cada pago permite ${MAX_DESCARGAS} descargas. Si ya bajaste el archivo, buscalo en la carpeta de descargas de tu dispositivo.</p>`, 429);
       if (!prod || !prod.archivo) return html("<h1>Enlace no válido o vencido</h1><p>El enlace de descarga funciona solo con un pago aprobado y durante 30 días.</p>", 403);
       return new Response(prod.archivo, {
         headers: {

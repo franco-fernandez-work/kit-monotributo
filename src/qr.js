@@ -1,12 +1,18 @@
 // QR dinámicos con suscripción de Mercado Pago (preapproval, ARS). D1 guarda QR y escaneos.
 // /q/<id> redirige mientras la suscripción esté autorizada; el panel se maneja con un enlace secreto (sin mails ni soporte).
 import qrcode from "./vendor/qrcode.cjs";
+import { limitar, limitarClave } from "./limite.js";
 
 const PRECIO = 2999;
 const REFRESCO = 3600; // s entre consultas a MP por QR
 const DOH = "https://security.cloudflare-dns.com/dns-query";
 const ACORTADORES = /(^|\.)(bit\.ly|tinyurl\.com|t\.co|goo\.gl|is\.gd|cutt\.ly|rb\.gy|shorturl\.at|ow\.ly|buff\.ly|t\.ly|rebrand\.ly|tiny\.cc|s\.id|v\.gd|qrco\.de|qr\.io)$/i;
 const api = (env) => env.MP_API || "https://api.mercadopago.com";
+// Las redirecciones /q/<id> las sirve un worker aparte (qr-go): si un destino de phishing hace que Google marque ese host,
+// la tienda no se ve afectada. Acá solo quedan el alta, el panel y la edición; /q/<id> de acá redirige al worker nuevo.
+const QR_HOST = (env) => (env.QR_HOST || "https://qr-go.fernandezfrancowork.workers.dev").replace(/\/$/, "");
+const MAX_CAMBIOS_DIA = 5;
+const EDAD_MIN_DOMINIO = 30; // días
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const ahora = () => Math.floor(Date.now() / 1000);
@@ -45,6 +51,22 @@ async function sbBloqueado(env, url) {
   return !!j.matches?.length;
 }
 
+// Edad del dominio registrable según RDAP (gratis). null si no se pudo saber.
+async function edadDominioDias(host) {
+  const partes = host.split(".");
+  const segundo = ["com", "net", "org", "gob", "gov", "edu", "mil", "int", "tur", "co"];
+  const n = partes.length >= 3 && partes[partes.length - 1].length === 2 && segundo.includes(partes[partes.length - 2]) ? 3 : 2;
+  const dom = partes.slice(-n).join(".");
+  try {
+    const r = await fetch(`https://rdap.org/domain/${encodeURIComponent(dom)}`, { headers: { accept: "application/rdap+json" }, redirect: "follow", cf: { cacheTtl: 86400, cacheEverything: true } });
+    if (!r.ok) return null;
+    const j = await r.json();
+    const ev = (j.events || []).find((e) => e.eventAction === "registration");
+    const t = ev && Date.parse(ev.eventDate);
+    return t ? (Date.now() - t) / 864e5 : null;
+  } catch { return null; }
+}
+
 // Devuelve { url } con la URL normalizada o { error }.
 async function validarDestino(env, raw, origin) {
   let u;
@@ -61,6 +83,8 @@ async function validarDestino(env, raw, origin) {
   try { v = await dohBloqueado(host); } catch { return { error: "No pudimos verificar el destino ahora. Probá de nuevo en unos minutos." }; }
   if (v === "nx") return { error: "Ese dominio no existe. Revisá que esté bien escrito." };
   if (v === "bloqueado" || (await sbBloqueado(env, u.href))) return { error: "Ese destino figura como sitio peligroso (malware o phishing), así que no podemos crear el QR." };
+  const edad = await edadDominioDias(host);
+  if (edad !== null && edad < EDAD_MIN_DOMINIO) return { error: `Ese dominio se registró hace menos de ${EDAD_MIN_DOMINIO} días. Por seguridad no aceptamos dominios tan nuevos: probá con uno más antiguo.` };
   return { url: u.href };
 }
 
@@ -85,6 +109,15 @@ async function refrescar(env, rec, forzar) {
     await (await db(env)).prepare("UPDATE qr SET st=?, st_at=? WHERE id=?").bind(rec.st, rec.st_at, rec.id).run();
   }
   return rec;
+}
+
+// Cron: mantiene al día el estado de las suscripciones para que qr-go (sin acceso a Mercado Pago) sepa cuáles están activas.
+export async function refrescarQR(env) {
+  if (!env.DB) return;
+  const d = await db(env);
+  await d.prepare("DELETE FROM qr WHERE st='pending' AND created<?").bind(ahora() - 3 * 86400).run();
+  const { results } = await d.prepare("SELECT * FROM qr WHERE st IN ('authorized','pending','paused') ORDER BY st_at ASC LIMIT 20").all();
+  for (const rec of results) await refrescar(env, rec, true);
 }
 
 // ---------- vistas ----------
@@ -151,6 +184,7 @@ function landing(origin, error = "", valores = {}) {
     <span class="etiqueta">Crear mi QR</span>
     ${error ? `<p class="err">${esc(error)}</p>` : ""}
     <form method="post" action="/qr/alta">
+      <input type="text" name="web" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <label for="u">Adónde lleva el QR</label>
       <input id="u" name="url" type="url" required placeholder="https://tuweb.com/menu" value="${esc(valores.url || "")}" autocomplete="off">
       <label for="e">Tu email (para Mercado Pago)</label>
@@ -200,7 +234,7 @@ async function panel(env, req, rec, error = "", ok = "") {
   const barras = dias.map((x) => `<i title="${x}: ${porDia[x] || 0}" style="height:${Math.max(2, ((porDia[x] || 0) / max) * 100)}%"></i>`).join("");
   const mes = dias.reduce((a, x) => a + (porDia[x] || 0), 0);
   const paises = Object.entries(porPais).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([c, n]) => `<tr><td>${esc(c)}</td><td class="num">${n}</td></tr>`).join("") || '<tr><td colspan="2" class="nota">Todavía no hay escaneos.</td></tr>';
-  const qrUrl = `${origin}/q/${rec.id}`;
+  const qrUrl = `${QR_HOST(env)}/q/${rec.id}`;
   const cuerpo = `
 <span class="etiqueta">Tu panel privado · guardalo en favoritos</span>
 <h1>Tu QR dinámico</h1>
@@ -249,27 +283,18 @@ export async function manejarQR(req, env, ctx) {
   const d = await db(env);
 
   if (p.startsWith("/q/")) {
+    // QR ya impresos con esta dirección: se mantienen funcionando saltando al worker aislado.
     const id = p.slice(3);
     if (!/^[A-Za-z0-9_-]{6,20}$/.test(id)) return mensaje("QR no válido", "Este código no existe.", 404);
-    let rec = await d.prepare("SELECT * FROM qr WHERE id=?").bind(id).first();
-    if (!rec) return mensaje("QR no válido", "Este código no existe.", 404);
-    rec = await refrescar(env, rec, false);
-    if (rec.st !== "authorized") return mensaje("Este QR está inactivo", "El dueño del código canceló su suscripción, así que ya no redirige.", 410, ["Crear mi propio QR", "/qr"]);
-    // revalidación periódica del destino contra el DNS de seguridad
-    try {
-      const host = new URL(rec.dest).hostname;
-      if ((await dohBloqueado(host)) === "bloqueado") return mensaje("Destino bloqueado", "Este QR apunta a un sitio marcado como peligroso, así que lo detuvimos para protegerte.", 451);
-    } catch {}
-    const dia = new Date().toISOString().slice(0, 10);
-    const pais = req.cf?.country || "XX";
-    ctx.waitUntil(d.prepare("INSERT INTO scans (id, day, country, n) VALUES (?,?,?,1) ON CONFLICT(id,day,country) DO UPDATE SET n=n+1").bind(id, dia, pais).run());
-    return new Response(null, { status: 302, headers: { location: rec.dest, "cache-control": "no-store", "referrer-policy": "no-referrer" } });
+    return new Response(null, { status: 302, headers: { location: `${QR_HOST(env)}/q/${id}`, "cache-control": "no-store", "referrer-policy": "no-referrer" } });
   }
 
   if (p === "/qr" && req.method === "GET") return landing(url.origin, url.searchParams.get("e") ? "Hubo un problema con el pago. Probá de nuevo." : "");
 
   if (p === "/qr/alta" && req.method === "POST") {
     const f = await req.formData().catch(() => null);
+    if (String(f?.get("web") || "")) return Response.redirect(`${url.origin}/qr`, 303);
+    if (await limitar(env, req, "qralta", 3, 3600)) return landing(url.origin, "Hiciste varios intentos seguidos. Probá de nuevo en una hora.", {});
     const email = String(f?.get("email") || "").trim().toLowerCase();
     const valores = { url: String(f?.get("url") || ""), email };
     if (!/^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/.test(email)) return landing(url.origin, "Revisá el email.", valores);
@@ -312,6 +337,7 @@ export async function manejarQR(req, env, ctx) {
     const t = String(f?.get("t") || "");
     let rec = /^[A-Za-z0-9_-]{20,40}$/.test(t) ? await d.prepare("SELECT * FROM qr WHERE token=?").bind(t).first() : null;
     if (!rec) return mensaje("Enlace no válido", "No encontramos ese panel.", 404);
+    if ((await limitar(env, req, "qredit", 30, 3600)) || (await limitarClave(env, `qrcambios:${rec.id}`, MAX_CAMBIOS_DIA, 86400))) return panel(env, req, rec, `Cambiaste el destino demasiadas veces hoy (máximo ${MAX_CAMBIOS_DIA} por día). Probá mañana.`);
     const v = await validarDestino(env, f.get("url"), url.origin);
     if (v.error) return panel(env, req, rec, v.error);
     await d.prepare("UPDATE qr SET dest=? WHERE id=?").bind(v.url, rec.id).run();
