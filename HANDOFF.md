@@ -83,3 +83,53 @@ Publicados y verificados en producción: checkouts de Mercado Pago $ 2.999 (`alq
 - Normativa NO verificada en fuente oficial: quién recibe la autorización en cada jurisdicción (Registro Civil/Migraciones), requisitos por empresa, sellado provincial de contratos, aguinaldo dentro de la cuota (depende del convenio), porcentajes de seña/depósito (usos, no ley). Revisar antes de promocionar fuerte.
 - Pendiente: indexación en Search Console de las 3 URLs nuevas.
 - Aviso de coordinación: otro hilo (legal_site.py, legal.js, FISCAL.md) subió build_site.py e index.js desde una copia vieja y pisó mis cambios; los reapliqué sobre la versión nueva. Antes de subir esos dos archivos, bajar siempre la versión de GitHub y comparar.
+
+## Ronda 3: estudiantes, vuelta al cole, SIRADIG (25/10, HUECOS.md #9, #7, #8)
+Publicados y verificados en producción: checkouts de Mercado Pago $ 2.999 (`alqestud`), $ 2.999 (`cole`), $ 3.999 (`siradig`) y $ 7.999 (`siradigcombo` = Ganancias + SIRADIG), /descargar 403 sin pago, IndexNow 200, sitemap 41 URLs. Todo en `tools/ronda3.py` (páginas, JS y archivos; `python tools/ronda3.py` arma `private/cole.xlsx`, `siradig.xlsx`, `pack-alqestud.zip` y `pack-siradigcombo.zip`: correr local y commitear, NO corre en Cloudflare; si cambia gan_data.py o ganancias.xlsx, regenerar el combo).
+- `/contrato-alquiler-estudiante`: checklist de 9 puntos y costo mensual/de ingreso. Pack: contrato de habitación, reglamento de convivencia, fianza del garante, checklist, inventario y recibo reusados de pack-alquiler.
+- `/presupuesto-vuelta-al-cole`: calculadora por nivel (precios de referencia editables, contado vs cuotas). Planilla: 3 hijos, cuota/transporte con IPC mensual, presupuesto vs real, resumen.
+- `/siradig-que-puedo-deducir`: estimador de deducciones y ahorro con escala 2026 a diciembre. Organizador: comprobantes, topes, ahorro estimado, guía. Fórmulas verificadas con la lib `formulas`.
+- NO verificado en fuente oficial: topes de prepaga (5% de la neta), intereses hipotecarios y seguro de vida (vacíos en Parámetros), fecha de cierre del SIRADIG (marzo), precios de referencia del cole, cláusulas de fianza y sellado provincial. Revisar antes de promocionar fuerte.
+- Pendiente: indexación en Search Console de las 3 URLs nuevas. Menú con 3 entradas nuevas.
+
+## QA de normativa (25/10, 23:10) — cambios LOCALES, falta subir a GitHub
+Verificado en fuente oficial:
+- ARCA, deducciones generales: seguro de vida (y retiro) tope $753.472,14 para 2026; intereses hipotecarios $20.000 anuales; prepaga 5% de la ganancia neta. Cargados en Parámetros de ganancias.xlsx (B9/B10) y siradig.xlsx (B8/B9) y en los textos.
+- ARCA SiRADIG: el F.572 vence el 31 de marzo del año siguiente (salvo prórroga). Textos actualizados.
+- Infoleg: art. 34 Ley 24.240 (texto Ley 26.361) = 10 días corridos, gastos de devolución a cargo del proveedor. Nuestros textos ya estaban bien.
+- La Res. SCI 424/2020 fue DEROGADA por la Disp. SSDCyLC 954/2025 (BO 4/9/2025, art. 10). Exige el link "BOTÓN DE ARREPENTIMIENTO" a simple vista y en el primer acceso, y código de registro en 24 h. Se reemplazó la cita en legal_pages.py, legal_data.py, legal_site.py y el pack de reclamos, y se sumó el botón al menú del encabezado (build_site.py + CSS en legal_site.py). Falta cambiar el comentario de src/legal.js (solo comentario).
+- Fianza (pack estudiantes): cláusulas compatibles con CCyC (art. 1225, la fianza sigue por la no restitución). Sellado: el texto ya remite a cada provincia. Precios del cole: rotulados como referencia editable, no oficiales. Sin cambios.
+Deploy NO hecho: el navegador integrado estaba en uso por otro hilo (Hotmart) y no lo toqué. Archivos a subir desde esta carpeta: tools/ronda3.py, build_gan_xlsx.py, gan_page.py, legal_pages.py, legal_data.py, legal_site.py, build_site.py; private/siradig.xlsx, pack-siradigcombo.zip, pack-reclamos.zip. Los .py locales coincidían con GitHub main antes de editar (comparado 25/10 23:00). Después: verificar /siradig-que-puedo-deducir (debe mostrar 753.472,14), el botón en el encabezado, y avisar a IndexNow.
+
+## Pedidos de clientes (25/10, EN CURSO, NO deployado)
+Formulario `/pedidos` ("¿No encontrás lo que buscás? Pedilo"): tipo + descripción (15-400 caracteres), sin email. Código local listo, sin probar ni subir a GitHub:
+- `src/pedidos.js` (nuevo): POST `/pedidos/enviar` guarda en D1 (tablas `pedidos` y `pedidos_votos`, se crean solas). Pedidos parecidos (Jaccard ≥ 0.5 sobre palabras clave, últimos 500) suman un voto en vez de duplicarse. Anti-spam: honeypot `web`, mínimo 3 s desde que carga la página, 5 envíos/hora por IP (hash), sin enlaces ni emails, tope de 5000 pedidos. Lectura privada: `/pedidos/admin?k=PEDIDOS_KEY` (HTML ordenado por votos; `&fmt=json` para JSON). Sin el secreto `PEDIDOS_KEY` el admin da 404.
+- `tools/pedidos_page.py` (nuevo): la página y el JS.
+- Parches de 1-2 líneas en `src/index.js` (import + `manejarPedidos`), `tools/build_site.py` (`GR.update(pedidos_page.PAGES)` + `Disallow: /pedidos/` en robots) y `tools/legal_site.py` (enlace en el pie).
+Pasos que faltan: 1) crear el secreto `PEDIDOS_KEY` (valor largo al azar) en Cloudflare > Worker kit-monotributo > Settings > Variables and Secrets y guardarlo donde Franco lo tenga; 2) subir los 2 archivos nuevos y los 3 parches a GitHub (bajar antes la versión de GitHub de index.js, build_site.py y legal_site.py y aplicar solo los parches: la copia local difiere de GitHub); 3) verificar en producción (/pedidos 200, enviar un pedido de prueba, leer /pedidos/admin) y borrar el pedido de prueba; 4) IndexNow y sitemap (la página sale en el sitemap sola); 5) los hilos de investigación leen la demanda con `curl "https://kit-monotributo.fernandezfrancowork.workers.dev/pedidos/admin?k=KEY&fmt=json"`.
+
+## Hotmart: fichas de los demás productos (25/10, en curso)
+Tipo eBook: solo admite PDF, ePub, XLS/XLSX/XLSM/XLSB, CSV (NO zip ni docx). Archivos y script en `C:\Users\Franco\Downloads\kit-monotributo-hotmart\batch` (spec.py = textos, covers.py = portadas, srv2.py = servidor local puerto 8913, relay.html?k=<slug> pasa portada y archivo por window.name hacia hotmart.com/products/add/4/info). Flujo: info (nombre, descripción, portada, categoría) > precio ARS contado (se tipea precio x100) > Contenido (subir archivo) > Finalizar registro.
+Ya estaban: kit (8801370), alquileres (8802451).
+Listas (enviadas a revisión):
+- vendedores ARS 4.999: producto 8803735
+- casas ARS 4.999: producto 8803742
+- vacaciones ARS 4.999: producto 8803746
+- liquidacion ARS 5.999: producto 8803749
+- ganancias ARS 5.999: producto 8803752
+- cole (Gasto Escolar) ARS 2.999: producto 8803756
+- siradig ARS 3.999: producto 8803757
+- guia PDF ARS 2.999: producto 8803759
+- kitguia (Kit + guía, 2 archivos) ARS 8.999: producto 8803762
+- siradigcombo (Ganancias + SIRADIG, 2 xlsx) ARS 7.999: producto 8803766
+Todas enviadas a revisión el 25/10 (Hotmart tarda ~15 min). Hotmart en total: kit, alquileres + 10 de arriba.
+SALTADOS (Hotmart eBook no admite .zip ni .docx): alqpack, frepack, combo (freelancers+kit), reclamos, telegramas, boletoauto, alqtemp, viajemenor, alimentos, alqestud. Alternativas si se quieren: tipo "Curso Online" con los .docx como material adjunto, o PDFs de cada modelo (se pierde la edición). Tampoco van QR (suscripción) ni recibos (créditos).
+
+## Ronda 4: guías PDF (25/10, HUECOS.md #10-#12)
+Infra: `tools/guias_lib.py` (portada, cabecera/pie y elementos visuales Tiles, Barra, Flujo, Checklist, alerta, consejo), un módulo `tools/g_*.py` por guía (META + contenido()), `tools/ronda4.py` (páginas gratis + `python tools/ronda4.py` regenera los PDF en `private/`; solo local, necesita reportlab; commitear los PDF). Producto nuevo = ref en `PRODUCTOS` de index.js + `import ... from "../private/guia-X.pdf"`.
+- **#10 Comprar afuera sin sorpresas** (`exterior`, $2.999, 13 págs): PUBLICADA y verificada en producción (checkout MP $ 2.999, /descargar 403, IndexNow 200). Gratis: `/calculadora-compras-exterior`. Normativa verificada: RG ARCA 5883/2026 (BO 29/07/2026, texto completo leído): 50 kg, USD 3.000 FOB, 3 unidades, 5 envíos/año; ARCA (06/10/2026): franquicia USD 400 x5/año, solo IVA dentro, derechos+tasa por el excedente, consulta en "Envíos Postales Internacionales" (CF nivel 2). NO verificado: % de derechos y tasa de estadística (editables en la calculadora, 20% y 3% son ejemplos), percepción 30% de tarjeta en 2026 (fuentes contradictorias; la guía manda a verificar), plazos del courier.
+- Se subieron también los pendientes de otros hilos (QA de normativa: Disp. 954/2025, topes Ganancias/SIRADIG; formulario /pedidos). Falta crear el secreto `PEDIDOS_KEY` en Cloudflare (sin él /pedidos/admin da 404; el formulario funciona y fue probado en local).
+- Subida a GitHub desde la PC de Franco con relay local (scratchpad/relay: gen.py arma JSON base64, relay.html redirige a github.com/.../upload/main/<dir>#km=..., y un JS pone los archivos en el input con DataTransfer y clickea Commit). Orden: tools, private, src.
+- **#11 Cobrar del exterior siendo freelancer** (`cobrar`, $4.999, 12 págs, `tools/g_cobrar.py`): gratis `/cobrar-del-exterior-freelancer` (calculadora de categoría con dólares). Normativa verificada en fuente oficial: ARCA (exportación de servicios para monotributistas: Factura E, punto de venta de exportación, límite = categoría máxima, exención MiPyME de derechos, tipo de cambio) y BCRA Com. A 8481 (14/09/2026, vigente 15/09/2026) puntos 2.2.1 y 2.2.2.1 (texto leído del PDF del BCRA): liquidar en 20 días hábiles salvo que una persona humana lo acredite en cuenta en moneda extranjera a su nombre en banco local. NO verificado: si los derechos de exportación de servicios siguen vigentes para quien no tiene MiPyME, Ingresos Brutos por provincia, comisiones (3% es un supuesto).
+- **#12 Alquilar sin inmobiliaria** (`alquilar`, $3.999, 11 págs, `tools/g_alquilar.py`): gratis `/alquilar-sin-inmobiliaria` (checklist + costo de entrada y de salida con 10%). Normativa verificada en Infoleg (texto del DNU 70/2023, arts. 249-263: deroga la Ley 27.551; plazo libre, sin plazo en vivienda 2 años; moneda y ajuste libres; salida anticipada con 10% del saldo del canon futuro). NO verificado: que la Ley 27.742 lo consolide (dicho por medios), sellado por provincia, registración en ARCA.
+- Orden de deploy usado: tools, private, src (+ HANDOFF.md). Si cambia el diseño, regenerar con `python tools/ronda4.py`.
