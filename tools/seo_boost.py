@@ -15,10 +15,10 @@ NO_INDEX = {"terminos", "privacidad", "devoluciones", "arrepentimiento", "pedido
 TEMAS = [
     ("casas", "Empleadas domésticas", ["empleada-domestica"]),
     ("alquiler", "Alquileres", ["alquiler", "alquilar"]),
-    ("familia", "Familia y trámites", ["menores", "alimentaria", "cole", "hereda", "sucesion", "auto"]),
+    ("familia", "Familia y trámites", ["menores", "alimentaria", "cole", "hereda", "sucesion", "auto", "progresar"]),
     ("sueldo", "Sueldo, aguinaldo y trabajo", ["aguinaldo", "vacaciones", "liquidacion", "ganancias", "siradig", "telegrama", "jubil", "aportes", "despido", "renuncia", "sueldo"]),
     ("mono", "Monotributo y freelancers", ["monotributo", "escalas", "recategoriz", "freelancer", "recibos", "facturar"]),
-    ("ventas", "Vender y comprar online", ["mercado-libre", "compras", "reclamo", "arrepentimiento", "exterior"]),
+    ("ventas", "Vender y comprar online", ["mercado-libre", "compras", "reclamo", "arrepentimiento", "exterior", "vender-en"]),
 ]
 TEMA_HOME = "mono"
 
