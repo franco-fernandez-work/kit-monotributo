@@ -291,7 +291,8 @@ export async function manejarQR(req, env, ctx) {
     }).catch(() => null);
     if (!r?.ok) {
       const det = r ? (await r.text().catch(() => "")).slice(0, 200) : "sin respuesta";
-      return landing(url.origin, `No pudimos abrir Mercado Pago. Probá de nuevo en unos minutos. [${r?.status || 0} ${det}]`, valores);
+      if (det.includes("guest_site_mismatch")) return landing(url.origin, "Ese email está asociado a una cuenta de Mercado Pago de otro país. Usá el email de tu cuenta de Mercado Pago Argentina.", valores);
+      return landing(url.origin, "No pudimos abrir Mercado Pago. Probá de nuevo en unos minutos.", valores);
     }
     const pre = await r.json();
     await d.prepare("INSERT INTO qr (id, token, email, dest, preapproval, st, st_at, created) VALUES (?,?,?,?,?,?,?,?)").bind(id, token, email, v.url, pre.id, "pending", ahora(), ahora()).run();
