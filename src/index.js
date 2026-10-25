@@ -25,6 +25,7 @@ import guiaAguinaldo from "../private/guia-aguinaldo.pdf";
 import guiaSucesion from "../private/guia-sucesion.pdf";
 import guiaJubilacion from "../private/guia-jubilacion.pdf";
 import guiaSalir from "../private/guia-salir.pdf";
+import guiaMudanza from "../private/guia-mudanza.pdf";
 import cole from "../private/cole.xlsx";
 import siradig from "../private/siradig.xlsx";
 import packAlqEstud from "../private/pack-alqestud.zip";
@@ -107,6 +108,8 @@ const PRODUCTOS = {
     precio: 3999, archivo: guiaJubilacion, filename: "Guia-Jubilacion-ANSES-Paso-A-Paso.pdf", mime: "application/pdf", volver: "/cuantos-aportes-necesito-para-jubilarme" },
   salir: { ref: "salir2026", titulo: "Guía: Salir del monotributo (PDF)", nombre: "Guía: Salir del monotributo",
     precio: 3999, archivo: guiaSalir, filename: "Guia-Salir-Del-Monotributo.pdf", mime: "application/pdf", volver: "/salir-del-monotributo-cuanto-cuesta" },
+  mudanza: { ref: "mudanza2026", titulo: "Guía: Mudanza sin estafas (PDF)", nombre: "Guía: Mudanza sin estafas",
+    precio: 2999, archivo: guiaMudanza, filename: "Guia-Mudanza-Sin-Estafas.pdf", mime: "application/pdf", volver: "/mudanza-calculadora-metros-cubicos" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
     precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
