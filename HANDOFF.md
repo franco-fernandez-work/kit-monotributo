@@ -31,6 +31,14 @@ Publicados y verificados en producción: los checkouts de Mercado Pago muestran 
 - **Generador de recibos y presupuestos** (`/recibos-presupuestos-pdf`, ref `recibos`, $990 = 10 créditos que no vencen). PDF armado en el navegador con jsPDF vendorizado (`public/vendor/jspdf.umd.min.js`). `src/recibos.js`: tabla D1 `creditos` (se crea sola), `/recibos/api/saldo` y `/recibos/api/usar` (descuenta 1 crédito por PDF, atómico). Un pago aprobado de MP (ref recibos2026, ≥ $990) da 10 créditos; los códigos de pago se guardan en localStorage y viajan en `/recibos-presupuestos-pdf?pago=ID` (el enlace de /gracias). Probado en local con MP simulado (10 usos, el 11 falla). Sin probar con un pago real. Código en `tools/guia_recibos_page.py`.
 - Páginas nuevas en el menú y el sitemap (27 URLs). Pendiente: pedir indexación en Search Console.
 
+## Reclamos de consumo y telegramas laborales (25/10, HUECOS.md #3 y #1)
+Publicados y verificados en producción: checkout de Mercado Pago $ 2.999 (`reclamos`) y $ 4.999 (`telegramas`), /descargar 403 sin pago, IndexNow 200.
+- **Reclamos** (`/generador-reclamo-consumidor`, pack `reclamos` $2.999): generador gratis en el navegador con 2 casos (no llegó, arrepentimiento); el pack Word trae 8 cartas con segunda intimación, lista de pruebas y guía (Ventanilla Federal, COPREC, OMIC). Artículo `/boton-de-arrepentimiento-compra-online`.
+- **Telegramas** (`/telegrama-renuncia-modelo`, pack `telegramas` $4.999): generador gratis de renuncia en mayúsculas (con contador de palabras) y pack de 10 modelos, cada uno en versión telegrama TCL y carta documento, más guía de plazos. Enlace cruzado de ida y vuelta con /calculadora-liquidacion-final. Artículo `/telegrama-despido-indirecto-modelo`.
+- Código: `tools/legal_data.py` (todos los textos y normas), `tools/legal_pages.py` (páginas y JS), `tools/build_legal_packs.py` + `tools/packs_lib.py` (arman los zips con python-docx; correr local y commitear `private/pack-reclamos.zip` y `private/pack-telegramas.zip`; NO corren en Cloudflare). Menú con 2 entradas nuevas.
+- Normativa NO verificada en fuente oficial: Res. SCI 424/2020, art. 10 ter, Ley 25.065 (plazo de impugnación), monto y vigencia del COPREC, art. 11 Ley 24.013 y la vigencia de multas tras la Ley 27.802 y la cautelar, plazos de intimación (2 días hábiles / 30 días), art. 220 LCT. Los textos llevan aviso de modelo orientativo. Revisar antes de promocionar fuerte.
+- Pendiente: pedir indexación en Search Console de las 4 URLs nuevas. Armar el combo Telegramas + Liquidación final ($8.999 sugerido en HUECOS.md) si se quiere. Queda el hueco #2 de HUECOS.md (boleto de compraventa de auto, $3.999).
+
 ## Correcciones de QA aplicadas (casas.xlsx › Liquidación final)
 Preaviso `LMeses<=12`; vacaciones con la lógica de la hoja Vacaciones (menos de 6 meses: 1 día cada 20 trabajados); nota de régimen Ley 26.844 y período de prueba Ley 27.802 art. 107. Con nota "VERIFICAR" visible: integración del mes de despido (LCT 233) y zona desfavorable 31%. Topes de Ganancias (intereses hipotecarios, seguro de vida) siguen vacíos en Parámetros, sin inventar valores.
 
@@ -61,3 +69,7 @@ Claude no puede pushear: el GitHub del negocio es franco-fernandez-work y Claude
 - Pedir indexación en Search Console de /calculadora-vacaciones y los 8 artículos nuevos, y reenviar el sitemap.
 - Mejorar el diseño de los xlsx (hoy es básico) y unificar la marca: hoy todo cuelga de "Kit Monotributista".
 - Próximos productos, un hilo por tarea.
+
+## Indexación en Search Console (24/10/2026)
+- Home `/` ya indexada. `/qr` no indexada: la solicitud falló con "Cuota superada" (cuota diaria agotada). Sitemap `/sitemap.xml` ya figura enviado el 24/10 (estado "No se ha podido obtener", reintentar mañana).
+- Pendientes de solicitar indexación (sin inspeccionar, por cuota), en orden: /qr, /precios-mercado-libre, /aumento-alquiler, /aguinaldo, /sueldo-empleada-domestica, /calculadora-vacaciones, /calculadora-liquidacion-final, /calculadora-ganancias-sueldo, /guia-primer-ano-monotributo, /recibos-presupuestos-pdf, /escalas-monotributo-2026, /recategorizacion-monotributo-febrero-2027; luego artículos: /cuanto-se-paga-de-monotributo, /monotributo-servicios-o-venta-de-bienes, /cuanto-puedo-facturar-por-mes-monotributo, /que-pasa-si-me-paso-del-tope-monotributo, /como-calcular-precio-mercado-libre, /mercado-libre-clasica-o-premium, /aguinaldo-cuando-se-paga, /vacaciones-empleada-domestica, /como-calcular-aumento-alquiler-ipc, /deducciones-siradig-ganancias-2026, /contratos-alquiler-modelo-word, /contratos-freelancers-monotributo.
