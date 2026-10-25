@@ -57,7 +57,7 @@ GAN_BODY = """<section class="heroe">
 <h3>¿Qué se puede cargar en el SIRADIG?</h3>
 <ul><li><b>Cargas de familia:</b> cónyuge e hijos, con tope de la ganancia no imponible.</li><li><b>Alquiler:</b> 40% de lo pagado, hasta la ganancia no imponible.</li><li><b>Servicio doméstico:</b> lo pagado, hasta la ganancia no imponible.</li><li><b>Gastos médicos:</b> 40% de lo facturado, hasta el 5% de la ganancia neta.</li><li><b>Donaciones:</b> a entidades reconocidas, hasta el 5% de la ganancia neta.</li><li><b>Intereses hipotecarios y seguro de vida:</b> con los topes que fija ARCA.</li></ul>
 <h3>¿Por qué cargar el SIRADIG?</h3><p>Si no lo cargás, tu empleador no puede descontar esos gastos y te retiene de más. Lo que se paga de más se devuelve en la liquidación anual, pero cargarlo a tiempo te deja la plata en el bolsillo mes a mes.</p>
-<p class="nota">Estimación orientativa. Usa 17% de aportes y no incluye conceptos no remunerativos, horas extra ni topes de aportes. El tope de intereses hipotecarios y seguro de vida cambia cada período: en esta calculadora cargalos ya limitados. Tu recibo puede diferir: verificá con tu empleador o un contador.</p></div>
+<p class="nota">Estimación orientativa. Usa 17% de aportes y no incluye conceptos no remunerativos, horas extra ni topes de aportes. Topes de ARCA: intereses hipotecarios hasta $20.000 al año y seguro de vida hasta $753.472,14 en 2026; en esta calculadora cargalos ya limitados. Tu recibo puede diferir: verificá con tu empleador o un contador.</p></div>
 """ + oferta_gan()
 
 GAN_JS = """<script>

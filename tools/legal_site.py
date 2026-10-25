@@ -15,7 +15,7 @@ CSS = r"""
 .pie .wrap{display:block}
 .pie .legal{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--linea)}
 .pie .legal a{color:var(--tinta-2)}
-.pie .arrep{font-weight:700;color:var(--sello);border:1px solid var(--sello);border-radius:3px;padding:1px 8px}
+.pie .arrep,.menu .arrep{font-weight:700;color:var(--sello);border:1px solid var(--sello);border-radius:3px;padding:1px 8px}
 .pie .vend{margin-top:8px;font-size:13px}
 .legalbody h2{margin-top:30px}
 .legalbody ol,.legalbody ul{padding-left:22px}
@@ -32,7 +32,7 @@ CSS = r"""
 def footer():
     return (f'<footer class="pie"><div class="wrap"><span>Información general actualizada a octubre de 2026. No reemplaza a un contador ni la información oficial de ARCA.</span> <span>Pagos procesados por Mercado Pago</span>'
             f'<div class="legal"><a href="/terminos">Términos y condiciones</a><a href="/privacidad">Política de privacidad</a><a href="/devoluciones">Devoluciones</a>'
-            f'<a class="arrep" href="/arrepentimiento">Botón de arrepentimiento</a><a href="{DC_URL}" rel="noopener" target="_blank">Defensa del Consumidor: reclamos</a></div>'
+            f'<a href="/pedidos">¿No encontrás lo que buscás? Pedilo</a><a class="arrep" href="/arrepentimiento">Botón de arrepentimiento</a><a href="{DC_URL}" rel="noopener" target="_blank">Defensa del Consumidor: reclamos</a></div>'
             f'<div class="vend">Vendedor: {V["nombre"]} · CUIT {V["cuit"]} · {V["domicilio"]} · {V["email"]}</div></div></footer>')
 
 def _pag(titulo, cuerpo):
@@ -84,7 +84,7 @@ PRIVACIDAD = _pag("Política de privacidad", f"""
 
 DEVOLUCIONES = _pag("Política de devoluciones", f"""
 <h2>Derecho de arrepentimiento</h2>
-<p>Podés revocar la compra, sin dar motivos y sin costo, dentro de los <b>10 días corridos</b> desde que el pago fue aprobado (art. 34 de la Ley 24.240, art. 1110 del Código Civil y Comercial y Resolución 424/2020 de la Secretaría de Comercio Interior). Aplica a todos los productos digitales de este sitio, aunque ya los hayas descargado.</p>
+<p>Podés revocar la compra, sin dar motivos y sin costo, dentro de los <b>10 días corridos</b> desde que el pago fue aprobado (art. 34 de la Ley 24.240, art. 1110 del Código Civil y Comercial y Disposición 954/2025 de la Subsecretaría de Defensa del Consumidor y Lealtad Comercial). Aplica a todos los productos digitales de este sitio, aunque ya los hayas descargado.</p>
 <h2>Cómo se hace</h2>
 <ol>
 <li>Entrá al <a href="/arrepentimiento">botón de arrepentimiento</a> (también está en el pie de todas las páginas).</li>
@@ -102,7 +102,7 @@ DEVOLUCIONES = _pag("Política de devoluciones", f"""
 """)
 
 ARREP_BODY = f"""
-<span class="etiqueta">Res. SCI 424/2020</span><h1>Botón de arrepentimiento</h1>
+<span class="etiqueta">Disp. SSDCyLC 954/2025</span><h1>Botón de arrepentimiento</h1>
 <p>Si te arrepentiste de tu compra, completá el formulario. Tenés <b>10 días corridos</b> desde el pago. El sistema es automático: verifica el pago, desactiva la descarga y ordena el reembolso total a tu medio de pago. No hace falta explicar motivos.</p>
 <form class="arr-form" id="arr" novalidate>
 <div><label for="a-pago">Código de pago de Mercado Pago</label><input id="a-pago" name="pago" inputmode="numeric" autocomplete="off" placeholder="Ej.: 123456789012" required></div>

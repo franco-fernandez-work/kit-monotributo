@@ -32,7 +32,7 @@ RECLAMOS = [
   segunda="Reitero mi reclamo del {fecha_primer_reclamo}. Intimo por última vez, en 3 días hábiles, a cumplir con lo solicitado, con costos de traslado a su cargo."),
  dict(id="arrepentimiento", titulo="Arrepentimiento de compra (10 días)", free=True,
   cuando="Compraste por internet, teléfono o fuera del local y querés devolver el producto sin dar motivos.",
-  normas="Ley 24.240 art. 34 · CCyC arts. 1110 a 1116 · Res. SCI 424/2020 (botón de arrepentimiento)",
+  normas="Ley 24.240 art. 34 · CCyC arts. 1110 a 1116 · Disp. SSDCyLC 954/2025 (botón de arrepentimiento)",
   plazo="5 días hábiles",
   pruebas=["Fecha de recepción del producto (remito o seguimiento)", "Comprobante de pago", "Captura del botón de arrepentimiento, si lo usaste", "Producto sin uso y en su embalaje, si es posible"],
   cuerpo=["Me dirijo a Uds. para ejercer mi derecho de revocación de la compra {producto}, pedido {pedido}, por {monto}, realizada el {fecha_compra} y recibida el {fecha_entrega}.",

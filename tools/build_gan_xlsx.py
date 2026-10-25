@@ -56,7 +56,7 @@ lines = [
  "",
  "AVISO",
  "Herramienta de cálculo orientativa que replica el método acumulado de la retención. Tu recibo puede diferir por conceptos no remunerativos, horas extra, topes de aportes,",
- "ajustes del empleador o criterios de liquidación. Los topes de intereses hipotecarios y seguro de vida cambian cada período: cargalos en 'Parámetros'.",
+ "ajustes del empleador o criterios de liquidación. Topes 2026 de ARCA ya cargados en 'Parámetros': intereses hipotecarios $20.000 y seguro de vida $753.472,14.",
  "Verificá con tu empleador o un contador antes de decidir. Para uso propio, prohibida su reventa.",
 ]
 for i, l in enumerate(lines, 4):
@@ -71,8 +71,8 @@ par = [
  ("Alquiler: porcentaje deducible", 0.40, PCT, "Se aplica sobre lo pagado en el año."),
  ("Gastos médicos: porcentaje deducible de lo facturado", 0.40, PCT, ""),
  ("Gastos médicos y donaciones: límite sobre la ganancia neta", 0.05, PCT, "Cada concepto tiene su límite."),
- ("Tope anual de intereses hipotecarios (vacío = sin tope)", None, ARS, "Cargá el tope vigente que informa ARCA para el período."),
- ("Tope anual de primas de seguro de vida (vacío = sin tope)", None, ARS, "Cargá el tope vigente que informa ARCA para el período."),
+ ("Tope anual de intereses hipotecarios (vacío = sin tope)", 20000, ARS, "Tope de ARCA para casa-habitación."),
+ ("Tope anual de primas de seguro de vida (vacío = sin tope)", 753472.14, ARS, "Tope de ARCA para 2026. Actualizalo cada año."),
 ]
 cab(wp, 4, ["Parámetro", "Valor", "Nota"], [66, 18, 62], 24)
 for i, (t, v, f, n) in enumerate(par, 5):

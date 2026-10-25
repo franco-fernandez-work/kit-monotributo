@@ -132,7 +132,7 @@ def layout(slug, title, desc, body, og_type="article", extra_head="", script="")
 <title>{title}</title><meta name="description" content="{desc}"><link rel="canonical" href="{url}">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{url}"><meta property="og:type" content="{og_type}"><meta property="og:locale" content="es_AR"><meta property="og:site_name" content="Kit Monotributista">
 {FONTS}<link rel="stylesheet" href="/estilo.css">{extra_head}</head>
-<body><header class="top"><div class="wrap"><a class="marca" href="/"><i>A–K</i>Kit Monotributista</a><nav class="menu" aria-label="Secciones">{menu}</nav></div></header>
+<body><header class="top"><div class="wrap"><a class="marca" href="/"><i>A–K</i>Kit Monotributista</a><nav class="menu" aria-label="Secciones">{menu}<a class="arrep" href="/arrepentimiento">Botón de arrepentimiento</a></nav></div></header>
 <main class="wrap">
 {body}
 </main>
@@ -599,6 +599,8 @@ def main():
     GR.update(LS.PAGES)
     GR.update(r2.PAGES)
     GR.update(r3.PAGES)
+    GR.update(__import__("ronda4").PAGES)
+    GR.update(__import__("pedidos_page").PAGES)
     for slug, (t, d, b, sc) in GR.items():
         w(f"{slug}.html", layout(slug, t, d, b, "website", script=sc))
     w("index.html", layout("", "Calculadora de categoría de Monotributo 2026", "Calculá gratis tu categoría de Monotributo con las escalas vigentes de agosto 2026 a enero 2027: cuota, tope y margen antes de la recategorización de febrero.", HOME_BODY, "website", script=HOME_JS))
@@ -613,7 +615,7 @@ def main():
         w(f"{slug}.html", layout(slug, t, d, b))
     urls = ["", "qr", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica", "calculadora-vacaciones", "calculadora-liquidacion-final", "calculadora-ganancias-sueldo"] + list(GR) + list(ARTS)
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{BASE}/{u}</loc><lastmod>{HOY}</lastmod></url>\n" for u in urls) + "</urlset>\n")
-    w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nDisallow: /q/\nDisallow: /qr/\nSitemap: {BASE}/sitemap.xml\n")
+    w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nDisallow: /q/\nDisallow: /qr/\nDisallow: /pedidos/\nSitemap: {BASE}/sitemap.xml\n")
     print("ok", len(urls), "páginas")
 
 if __name__ == "__main__":

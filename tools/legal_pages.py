@@ -138,7 +138,7 @@ PAGES = {
 A1 = ('<span class="etiqueta">Compras online · Ley 24.240</span><h1>Botón de arrepentimiento: cómo devolver una compra online</h1>'
  '<p class="bajada">Si compraste por internet, teléfono o fuera del local, tenés 10 días corridos para arrepentirte y que te devuelvan el dinero, sin dar explicaciones.</p>'
  '<div class="lectura"><h2>Las reglas</h2><ul><li>El plazo es de <b>10 días corridos</b> desde que recibís el producto o firmás el contrato, lo que ocurra último (art. 34 de la Ley 24.240 y art. 1110 del Código Civil y Comercial).</li>'
- '<li>Los <b>gastos de devolución</b> corren por cuenta del vendedor.</li><li>El vendedor debe tener un <b>botón de arrepentimiento</b> visible en su sitio (Res. SCI 424/2020). Si no lo tiene, escribile igual: lo que cuenta es avisar a tiempo.</li>'
+ '<li>Los <b>gastos de devolución</b> corren por cuenta del vendedor.</li><li>El vendedor debe tener un <b>botón de arrepentimiento</b> visible en su sitio (Disposición 954/2025 de la Subsecretaría de Defensa del Consumidor, que reemplazó a la Res. 424/2020). Si no lo tiene, escribile igual: lo que cuenta es avisar a tiempo.</li>'
  '<li>No aplica a servicios ya prestados con tu consentimiento ni a productos hechos a medida, entre otros casos que fija la ley (art. 1111 CCyC).</li></ul>'
  '<h2>Qué hacer</h2><ol class="pasos"><li>Avisá dentro de los 10 días, por el mismo medio de la compra o por mail, y guardá la prueba.</li><li>Pedí instrucciones para la devolución y que se haga a cargo del vendedor.</li><li>Exigí el reintegro por el mismo medio de pago.</li></ol>'
  '<p>Armá la carta en un minuto con el <a href="/generador-reclamo-consumidor">generador gratis de reclamo</a>.</p></div>' + AVISO_HTML + oferta_rec())

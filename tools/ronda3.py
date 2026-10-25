@@ -89,7 +89,7 @@ def of_sir():
 
 DED_SIR = [("Alquiler de tu vivienda", "40% de lo pagado, hasta la ganancia no imponible."), ("Servicio doméstico", "Lo pagado, hasta la ganancia no imponible."),
            ("Gastos médicos", "40% de lo facturado, hasta el 5% de tu ganancia neta."), ("Prepaga y seguro médico", "Hasta el 5% de tu ganancia neta."),
-           ("Donaciones", "Hasta el 5% de tu ganancia neta."), ("Intereses de crédito hipotecario", "Tope anual a verificar en ARCA."), ("Seguro de vida", "Tope anual a verificar en ARCA.")]
+           ("Donaciones", "Hasta el 5% de tu ganancia neta."), ("Intereses de crédito hipotecario", "Hasta $20.000 al año (casa-habitación)."), ("Seguro de vida", "Hasta $753.472,14 en 2026 (tope de ARCA).")]
 BODY_S = (head("Gratis · SIRADIG · Formulario 572", "¿Qué puedo deducir en el SIRADIG? Estimá tu ahorro", "Cargá lo que gastaste en el año y te mostramos cuánto podés deducir según el tope de cada gasto y cuánto menos de Ganancias te retienen.")
  + '<div class="r2dos"><div class="comp"><div class="comp-cab"><span>Tus gastos del año</span><span>Gratis</span></div><div class="comp-cuerpo">'
  + field("sd-neta", "Ganancia neta anual estimada (sueldo del año menos descuentos)", 30000000, "$")
@@ -97,10 +97,10 @@ BODY_S = (head("Gratis · SIRADIG · Formulario 572", "¿Qué puedo deducir en e
  + '<div class="fila2">' + field("sd-med", "Gastos médicos facturados", 800000, "$") + field("sd-pre", "Prepaga y seguro médico", 1500000, "$") + "</div>"
  + '<div class="fila2">' + field("sd-don", "Donaciones", 0, "$") + field("sd-hi", "Hijos a cargo", 1, "", "", "1") + "</div>"
  + '</div></div><div><div class="r2res" id="sd-out" aria-live="polite"></div>'
- + '<p class="nota">Estimación con la escala anual 2026 de ARCA a diciembre. Intereses hipotecarios y seguro de vida tienen topes propios: verificalos en ARCA.</p></div></div>'
+ + '<p class="nota">Estimación con la escala anual 2026 de ARCA a diciembre. Intereses hipotecarios (hasta $20.000 al año) y seguro de vida (hasta $753.472,14 en 2026) tienen topes propios fijados por ARCA.</p></div></div>'
  + AVH.replace("Modelos orientativos.", "Cálculo orientativo.").replace(AV, "No reemplaza al contador ni al cálculo de tu empleador. Verificá topes y requisitos vigentes en ARCA.")
  + lec("<h2>Qué se puede cargar y con qué tope</h2><ul>" + "".join(f"<li><b>{t}:</b> {x}</li>" for t, x in DED_SIR) + "</ul>")
- + lec("<h2>Cómo se carga</h2><ol><li>Entrá a arca.gob.ar con Clave Fiscal y abrí SIRADIG - Trabajador.</li><li>Creá o editá el formulario 572 web del período.</li><li>Cargá cada deducción con el CUIT del proveedor y el comprobante.</li><li>Enviá el formulario: tu empleador lo toma para ajustar la retención.</li></ol><p>Tené los comprobantes ordenados antes de que cierre el plazo (la fecha de cierre es en marzo: confirmala en ARCA). Para ver cuánto te cambia cada gasto, probá la <a href=\"/calculadora-ganancias-sueldo\">calculadora de Ganancias</a>.</p>")
+ + lec("<h2>Cómo se carga</h2><ol><li>Entrá a arca.gob.ar con Clave Fiscal y abrí SIRADIG - Trabajador.</li><li>Creá o editá el formulario 572 web del período.</li><li>Cargá cada deducción con el CUIT del proveedor y el comprobante.</li><li>Enviá el formulario: tu empleador lo toma para ajustar la retención.</li></ol><p>Tené los comprobantes ordenados antes de que cierre el plazo (el plazo vence el 31 de marzo del año siguiente, según ARCA). Para ver cuánto te cambia cada gasto, probá la <a href=\"/calculadora-ganancias-sueldo\">calculadora de Ganancias</a>.</p>")
  + lec("<h2>Qué suma el organizador</h2>")
  + LP.modelos_html([dict(titulo="Registro de comprobantes", cuando="Fecha, rubro, CUIT, número, monto y marca «cargado»."), dict(titulo="Topes aplicados", cuando="40%, 5% de la neta y ganancia no imponible, solos."),
                     dict(titulo="Ahorro estimado", cuando="Con la escala 2026 de ARCA y tu ganancia neta."), dict(titulo="Guía de carga", cuando="Paso a paso en SIRADIG.")])
@@ -210,12 +210,12 @@ def build_xlsx():
     titulo(ws, "Organizador SIRADIG 2026", "Registro de comprobantes deducibles, topes y ahorro estimado de Ganancias. Excel y Google Sheets.")
     inicio(ws, ["CÓMO USARLO", "1. Pestaña 'Comprobantes': cargá cada factura o recibo (fecha, rubro, CUIT del proveedor, número, monto). Marcá SI cuando lo cargues en el SIRADIG.",
         "2. Pestaña 'Resumen': poné tu ganancia neta anual estimada y la cantidad de hijos. Te muestra cuánto podés deducir por rubro con su tope y el ahorro estimado.",
-        "3. Pestaña 'Parámetros': escala y deducciones personales de ARCA 2026 (acumulado a diciembre) y los topes que debés completar (hipotecario, seguro de vida).",
+        "3. Pestaña 'Parámetros': escala y deducciones personales de ARCA 2026 (acumulado a diciembre) y los topes de ARCA para intereses hipotecarios ($20.000 al año) y seguro de vida ($753.472,14 en 2026).",
         "4. Pestaña 'Guía de carga': los pasos para cargar el formulario 572 web.", "",
         "Celdas amarillas = las cargás vos. Celdas celestes = se calculan solas. Las filas de ejemplo se pisan o se borran.", "",
         "TOPES QUE APLICA", "Alquiler: 40% de lo pagado, hasta la ganancia no imponible. Servicio doméstico: lo pagado, hasta la ganancia no imponible.",
         "Gastos médicos: 40% de lo facturado, hasta el 5% de la ganancia neta. Prepaga y seguro médico: hasta el 5% de la ganancia neta. Donaciones: hasta el 5% de la ganancia neta.",
-        "Intereses hipotecarios y seguro de vida: completá el tope anual en 'Parámetros' (si queda vacío, no se aplica tope y la hoja avisa).", "",
+        "Intereses hipotecarios y seguro de vida: tope anual en 'Parámetros' ($20.000 y $753.472,14 en 2026, según ARCA). Actualizalo cada año.", "",
         "AVISO", "Estimación orientativa. No reemplaza el cálculo de tu empleador ni el de un contador. Verificá topes, requisitos y la fecha de cierre del SIRADIG en ARCA.", "Para uso propio, prohibida su reventa."])
     wp = wb.create_sheet("Parámetros"); titulo(wp, "Parámetros 2026", "Escala acumulada a diciembre y deducciones personales (fuente: ARCA, art. 30 y 94)")
     wp.column_dimensions["A"].width = 38
@@ -223,8 +223,8 @@ def build_xlsx():
     ded = [("Ganancia no imponible", _ded["gni"]), ("Cónyuge", _ded["conyuge"]), ("Hijo", _ded["hijo"])]
     for r, (nom, v) in enumerate(ded, 4):
         wp.cell(row=r, column=1, value=nom); st(wp.cell(row=r, column=2, value=round(v, 2)), "i", ARS)
-    wp["A8"] = "Tope anual intereses hipotecarios"; wp["A9"] = "Tope anual seguro de vida"
-    for r in (8, 9): st(wp.cell(row=r, column=2), "i", ARS)
+    wp["A8"] = "Tope anual intereses hipotecarios"; wp["A9"] = "Tope anual seguro de vida (2026)"
+    for r, v in ((8, 20000), (9, 753472.14)): st(wp.cell(row=r, column=2, value=v), "i", ARS)
     cab(wp, 11, ["Desde (neta anual)", "Monto fijo", "% sobre excedente"])
     for r, (d, f, p) in enumerate(_esc, 12):
         st(wp.cell(row=r, column=1, value=d), "i", ARS); st(wp.cell(row=r, column=2, value=f), "i", ARS); st(wp.cell(row=r, column=3, value=p), "i", "0")
@@ -274,7 +274,7 @@ def build_xlsx():
     for i, l in enumerate(["1. Entrá a arca.gob.ar con tu CUIT y Clave Fiscal.", "2. Abrí el servicio SIRADIG - Trabajador.", "3. Creá el formulario 572 web del período (o editá el que ya tenés).",
             "4. Cargá cada deducción: elegí el tipo (alquiler, gastos médicos, servicio doméstico, etc.), el CUIT del proveedor, el mes, el número de comprobante y el monto.",
             "5. Controlá contra la pestaña 'Comprobantes' que no falte ninguno y marcá SI en 'Cargado en SIRADIG'.", "6. Enviá el formulario: tu empleador lo toma para ajustar la retención.",
-            "7. Guardá los comprobantes: ARCA puede pedirlos si se controla la declaración.", "", "El cierre del plazo de carga es en marzo del año siguiente: confirmá la fecha exacta en ARCA.", "Los requisitos de cada deducción (por ejemplo, alquiler declarado, médicos con factura a tu nombre) pueden cambiar: verificalos en ARCA."], 4):
+            "7. Guardá los comprobantes: ARCA puede pedirlos si se controla la declaración.", "", "El plazo de carga vence el 31 de marzo del año siguiente (ARCA). Si ARCA lo prorroga, rige la nueva fecha.", "Los requisitos de cada deducción (por ejemplo, alquiler declarado, médicos con factura a tu nombre) pueden cambiar: verificalos en ARCA."], 4):
         wg.cell(row=i, column=1, value=l)
     wb.save(os.path.join(priv, "siradig.xlsx")); print("ok siradig.xlsx")
 
