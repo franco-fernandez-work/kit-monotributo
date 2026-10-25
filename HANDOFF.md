@@ -170,3 +170,9 @@ Top 10 de Google revisado antes de construir (WebSearch): para #21 solo hay nota
 - Publicado y verificado en producción (25/10): /vender-en-la-costa-feria-punto-de-equilibrio y /becas-progresar-requisitos-fechas en 200, /guias en 200, sitemap 55 URLs, checkout MP de `costa` muestra $ 2.999 (verificado en pantalla), /descargar?p=costa 403 sin pago, IndexNow 200.
 - **Hotmart** (borrador, SIN "Finalizar registro"): costa ARS 2.999 (producto 8804890), PDF subido. Falta el botón "Finalizar registro" en el Panel: hacerlo solo con OK escrito de Franco. Datos en `batch\spec_add4.py` (mk.py ya lo incluye).
 - Pendiente: Search Console para las 2 URLs nuevas. Revisar antes de promocionar fuerte: requisitos y cánones por municipio (solo prensa) y comisiones de cobro de la guía de costa.
+
+## SEO, rondas 2 (25/10, deployado y verificado)
+- Search Console: sitemap reenviado el 25/10 ("enviado correctamente"; antes figuraba "No se ha podido obtener"). Pedir indexación falló por cuota diaria agotada ("Cuota superada"): retomar otro día empezando por /guias.
+- `tools/seo_faq.py`: preguntas frecuentes por slug (solo datos que ya están en cada página). seo_boost las agrega como bloque "Preguntas frecuentes" antes de "Seguí leyendo" y arma FAQPage con todos los h2/h3 que terminan en "?". En producción: 30 páginas con FAQPage, 47 Product, 53 BreadcrumbList, 17 Article.
+- seo_extra.py: corregido el texto de servicios vs bienes (la diferencia empieza en la C, no en la D, según la tabla) y títulos/descripciones de 4 artículos con la forma de la búsqueda ("fórmula y ejemplo", "¿Clásica o Premium?", "en 2026").
+- Para sumar FAQ a una página nueva: agregar su slug a FAQ en seo_faq.py con datos verificados.
