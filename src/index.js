@@ -19,6 +19,8 @@ import packAlqTemp from "../private/pack-alqtemp.zip";
 import packViajeMenor from "../private/pack-viajemenor.zip";
 import packAlimentos from "../private/pack-alimentos.zip";
 import guiaExterior from "../private/guia-exterior.pdf";
+import guiaCobrar from "../private/guia-cobrar.pdf";
+import guiaAlquilar from "../private/guia-alquilar.pdf";
 import cole from "../private/cole.xlsx";
 import siradig from "../private/siradig.xlsx";
 import packAlqEstud from "../private/pack-alqestud.zip";
@@ -89,6 +91,10 @@ const PRODUCTOS = {
     precio: 7999, archivo: packSiradigCombo, filename: "Combo-SIRADIG-Ganancias.zip", mime: "application/zip", volver: "/siradig-que-puedo-deducir" },
   exterior: { ref: "exterior2026", titulo: "Guía: Comprar afuera sin sorpresas (PDF)", nombre: "Guía: Comprar afuera sin sorpresas",
     precio: 2999, archivo: guiaExterior, filename: "Guia-Comprar-Afuera-Sin-Sorpresas.pdf", mime: "application/pdf", volver: "/calculadora-compras-exterior" },
+  cobrar: { ref: "cobrar2026", titulo: "Guía: Cobrar del exterior siendo freelancer (PDF)", nombre: "Guía: Cobrar del exterior siendo freelancer",
+    precio: 4999, archivo: guiaCobrar, filename: "Guia-Cobrar-Del-Exterior-Freelancer.pdf", mime: "application/pdf", volver: "/cobrar-del-exterior-freelancer" },
+  alquilar: { ref: "alquilar2026", titulo: "Guía: Alquilar sin inmobiliaria (PDF)", nombre: "Guía: Alquilar sin inmobiliaria",
+    precio: 3999, archivo: guiaAlquilar, filename: "Guia-Alquilar-Sin-Inmobiliaria.pdf", mime: "application/pdf", volver: "/alquilar-sin-inmobiliaria" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
     precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
