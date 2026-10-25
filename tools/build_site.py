@@ -617,6 +617,7 @@ def main():
     urls = ["", "qr", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica", "calculadora-vacaciones", "calculadora-liquidacion-final", "calculadora-ganancias-sueldo"] + list(GR) + list(ARTS)
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{BASE}/{u}</loc><lastmod>{HOY}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nDisallow: /q/\nDisallow: /qr/\nDisallow: /pedidos/\nSitemap: {BASE}/sitemap.xml\n")
+    __import__("seo_boost").post(PUB, BASE, HOY)  # JSON-LD, enlaces relacionados, /guias y fuentes sin bloqueo
     print("ok", len(urls), "páginas")
 
 if __name__ == "__main__":
