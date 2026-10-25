@@ -18,6 +18,10 @@ import packBoletoAuto from "../private/pack-boletoauto.zip";
 import packAlqTemp from "../private/pack-alqtemp.zip";
 import packViajeMenor from "../private/pack-viajemenor.zip";
 import packAlimentos from "../private/pack-alimentos.zip";
+import cole from "../private/cole.xlsx";
+import siradig from "../private/siradig.xlsx";
+import packAlqEstud from "../private/pack-alqestud.zip";
+import packSiradigCombo from "../private/pack-siradigcombo.zip";
 import { manejarQR } from "./qr.js";
 import { manejarRecibos } from "./recibos.js";
 import { manejarLegal, revocado } from "./legal.js";
@@ -73,6 +77,14 @@ const PRODUCTOS = {
     precio: 2999, archivo: packViajeMenor, filename: "Pack-Autorizacion-Viaje-Menores.zip", mime: "application/zip", volver: "/autorizacion-viaje-menores" },
   alimentos: { ref: "alimentos2026", titulo: "Pack Documentos de Cuota Alimentaria (modelos Word)", nombre: "Pack Documentos de Cuota Alimentaria",
     precio: 3999, archivo: packAlimentos, filename: "Pack-Cuota-Alimentaria.zip", mime: "application/zip", volver: "/cuota-alimentaria-aguinaldo" },
+  alqestud: { ref: "alqestud2026", titulo: "Pack Alquiler para Estudiantes (modelos Word)", nombre: "Pack Alquiler para Estudiantes",
+    precio: 2999, archivo: packAlqEstud, filename: "Pack-Alquiler-Estudiantes.zip", mime: "application/zip", volver: "/contrato-alquiler-estudiante" },
+  cole: { ref: "cole2026", titulo: "Planilla Anual del Gasto Escolar (planilla Excel / Google Sheets)", nombre: "Planilla Anual del Gasto Escolar",
+    precio: 2999, archivo: cole, filename: "Planilla-Gasto-Escolar.xlsx", volver: "/presupuesto-vuelta-al-cole" },
+  siradig: { ref: "siradig2026", titulo: "Organizador SIRADIG: comprobantes y deducciones (planilla Excel / Google Sheets)", nombre: "Organizador SIRADIG",
+    precio: 3999, archivo: siradig, filename: "Organizador-SIRADIG-2026.xlsx", volver: "/siradig-que-puedo-deducir" },
+  siradigcombo: { ref: "siradigcombo2026", titulo: "Combo SIRADIG + Ganancias en el Sueldo (dos planillas)", nombre: "Combo Organizador SIRADIG + Ganancias en el Sueldo",
+    precio: 7999, archivo: packSiradigCombo, filename: "Combo-SIRADIG-Ganancias.zip", mime: "application/zip", volver: "/siradig-que-puedo-deducir" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
     precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
