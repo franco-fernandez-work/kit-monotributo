@@ -21,6 +21,10 @@ import packAlimentos from "../private/pack-alimentos.zip";
 import guiaExterior from "../private/guia-exterior.pdf";
 import guiaCobrar from "../private/guia-cobrar.pdf";
 import guiaAlquilar from "../private/guia-alquilar.pdf";
+import guiaAguinaldo from "../private/guia-aguinaldo.pdf";
+import guiaSucesion from "../private/guia-sucesion.pdf";
+import guiaJubilacion from "../private/guia-jubilacion.pdf";
+import guiaSalir from "../private/guia-salir.pdf";
 import cole from "../private/cole.xlsx";
 import siradig from "../private/siradig.xlsx";
 import packAlqEstud from "../private/pack-alqestud.zip";
@@ -95,6 +99,14 @@ const PRODUCTOS = {
     precio: 4999, archivo: guiaCobrar, filename: "Guia-Cobrar-Del-Exterior-Freelancer.pdf", mime: "application/pdf", volver: "/cobrar-del-exterior-freelancer" },
   alquilar: { ref: "alquilar2026", titulo: "Guía: Alquilar sin inmobiliaria (PDF)", nombre: "Guía: Alquilar sin inmobiliaria",
     precio: 3999, archivo: guiaAlquilar, filename: "Guia-Alquilar-Sin-Inmobiliaria.pdf", mime: "application/pdf", volver: "/alquilar-sin-inmobiliaria" },
+  aguinaldo: { ref: "aguinaldo2026", titulo: "Guía: Dónde poner el aguinaldo (PDF)", nombre: "Guía: Dónde poner el aguinaldo",
+    precio: 2999, archivo: guiaAguinaldo, filename: "Guia-Donde-Poner-El-Aguinaldo.pdf", mime: "application/pdf", volver: "/donde-poner-el-aguinaldo" },
+  sucesion: { ref: "sucesion2026", titulo: "Guía: Sucesión sin perder tiempo (PDF)", nombre: "Guía: Sucesión sin perder tiempo",
+    precio: 4999, archivo: guiaSucesion, filename: "Guia-Sucesion-Sin-Perder-Tiempo.pdf", mime: "application/pdf", volver: "/quien-hereda-sucesion-sin-testamento" },
+  jubilacion: { ref: "jubilacion2026", titulo: "Guía: Jubilación ANSES paso a paso (PDF)", nombre: "Guía: Jubilación ANSES paso a paso",
+    precio: 3999, archivo: guiaJubilacion, filename: "Guia-Jubilacion-ANSES-Paso-A-Paso.pdf", mime: "application/pdf", volver: "/cuantos-aportes-necesito-para-jubilarme" },
+  salir: { ref: "salir2026", titulo: "Guía: Salir del monotributo (PDF)", nombre: "Guía: Salir del monotributo",
+    precio: 3999, archivo: guiaSalir, filename: "Guia-Salir-Del-Monotributo.pdf", mime: "application/pdf", volver: "/salir-del-monotributo-cuanto-cuesta" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
     precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
