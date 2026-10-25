@@ -121,7 +121,7 @@ td.cat{font:700 18px var(--f-display);color:var(--celeste)}
 MENU = [("/", "Calculadora monotributo"), ("/escalas-monotributo-2026", "Escalas 2026"),
         ("/recategorizacion-monotributo-febrero-2027", "Recategorización"),
         ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre"), ("/aumento-alquiler", "Aumento de alquiler"),
-        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones"), ("/calculadora-liquidacion-final", "Liquidación final"), ("/calculadora-ganancias-sueldo", "Ganancias en el sueldo"), ("/guia-primer-ano-monotributo", "Guía primer año"), ("/recibos-presupuestos-pdf", "Recibos y presupuestos"), ("/generador-reclamo-consumidor", "Reclamos de consumo"), ("/telegrama-renuncia-modelo", "Telegramas laborales"), ("/boleto-compraventa-auto-usado", "Boleto de auto usado"), ("/alquiler-temporario-verano", "Alquiler de verano"), ("/autorizacion-viaje-menores", "Viaje de menores"), ("/cuota-alimentaria-aguinaldo", "Cuota alimentaria")]
+        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones"), ("/calculadora-liquidacion-final", "Liquidación final"), ("/calculadora-ganancias-sueldo", "Ganancias en el sueldo"), ("/guia-primer-ano-monotributo", "Guía primer año"), ("/recibos-presupuestos-pdf", "Recibos y presupuestos"), ("/generador-reclamo-consumidor", "Reclamos de consumo"), ("/telegrama-renuncia-modelo", "Telegramas laborales"), ("/boleto-compraventa-auto-usado", "Boleto de auto usado"), ("/alquiler-temporario-verano", "Alquiler de verano"), ("/autorizacion-viaje-menores", "Viaje de menores"), ("/cuota-alimentaria-aguinaldo", "Cuota alimentaria"), ("/contrato-alquiler-estudiante", "Alquiler estudiantes"), ("/presupuesto-vuelta-al-cole", "Vuelta al cole"), ("/siradig-que-puedo-deducir", "SIRADIG")]
 
 def layout(slug, title, desc, body, og_type="article", extra_head="", script=""):
     url = f"{BASE}/{slug}" if slug else f"{BASE}/"
@@ -588,7 +588,7 @@ def main():
     ARTS.update(__import__("packs_arts").ARTS_PACKS)
     lg = __import__("legal_pages"); ARTS.update(lg.ARTS_LEGAL)
     au = __import__("auto_pack"); ARTS.update(au.ARTS_AUTO)
-    r2 = __import__("ronda2")
+    r2 = __import__("ronda2"); r3 = __import__("ronda3")
     os.makedirs(PUB, exist_ok=True)
     w = lambda name, s: open(os.path.join(PUB, name), "w", encoding="utf-8").write(s)
     gr = __import__("guia_recibos_page")
@@ -598,6 +598,7 @@ def main():
     GR.update(au.PAGES)
     GR.update(LS.PAGES)
     GR.update(r2.PAGES)
+    GR.update(r3.PAGES)
     for slug, (t, d, b, sc) in GR.items():
         w(f"{slug}.html", layout(slug, t, d, b, "website", script=sc))
     w("index.html", layout("", "Calculadora de categoría de Monotributo 2026", "Calculá gratis tu categoría de Monotributo con las escalas vigentes de agosto 2026 a enero 2027: cuota, tope y margen antes de la recategorización de febrero.", HOME_BODY, "website", script=HOME_JS))
