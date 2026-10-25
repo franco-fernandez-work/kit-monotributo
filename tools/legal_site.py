@@ -30,7 +30,7 @@ CSS = r"""
 """
 
 def footer():
-    return (f'<footer class="pie"><div class="wrap"><span>Información general actualizada a octubre de 2026. No reemplaza a un contador ni la información oficial de ARCA.</span> <span>Pagos procesados por Mercado Pago</span>'
+    return (f'<footer class="pie"><div class="wrap"><span class="nombre"><b>CuentaClara</b> · Tus cuentas, claras. Tus trámites, resueltos.</span><span>Información general actualizada a octubre de 2026. No reemplaza a un contador ni la información oficial de ARCA.</span> <span>Pagos procesados por Mercado Pago</span>'
             f'<div class="legal"><a href="/terminos">Términos y condiciones</a><a href="/privacidad">Política de privacidad</a><a href="/devoluciones">Devoluciones</a><a href="/recuperar">¿Perdiste la descarga?</a>'
             f'<a href="/pedidos">¿No encontrás lo que buscás? Pedilo</a><a class="arrep" href="/arrepentimiento">Botón de arrepentimiento</a><a href="{DC_URL}" rel="noopener" target="_blank">Defensa del Consumidor: reclamos</a></div>'
             '</div></footer>')  # sin datos del vendedor a la vista por decisión de Franco (25/10); VENDEDOR queda por si hace falta
@@ -40,7 +40,7 @@ def _pag(titulo, cuerpo):
 
 TERMINOS = _pag("Términos y condiciones", f"""
 <h2>1. Quién vende</h2>
-<p>Este sitio es operado por su titular (el "Vendedor"). Al comprar o usar los servicios aceptás estos términos.</p>
+<p>CuentaClara es el nombre de este sitio, operado por su titular (el "Vendedor"). Al comprar o usar los servicios aceptás estos términos.</p>
 <h2>2. Qué se vende</h2>
 <p>Productos digitales de entrega inmediata (planillas .xlsx, packs de modelos en Word, guía en PDF, créditos del generador de recibos y presupuestos) y el servicio de QR dinámicos por suscripción mensual. Las calculadoras y generadores gratuitos se ofrecen sin garantía de resultado.</p>
 <h2>3. Precios y pago</h2>
@@ -129,7 +129,7 @@ if(j.codigo){const c=document.createElement("p");c.innerHTML="Código de constan
 </script>"""
 
 PAGES = {
-    "terminos": ("Términos y condiciones", "Términos y condiciones de uso y compra de Kit Monotributista: productos digitales, entrega, precios, arrepentimiento y datos del vendedor.", TERMINOS, ""),
+    "terminos": ("Términos y condiciones", "Términos y condiciones de uso y compra de CuentaClara: productos digitales, entrega, precios, arrepentimiento y datos del vendedor.", TERMINOS, ""),
     "privacidad": ("Política de privacidad", "Cómo tratamos tus datos personales según la Ley 25.326: qué datos guardamos, para qué, con quién se comparten y cómo ejercer tus derechos.", PRIVACIDAD, ""),
     "devoluciones": ("Política de devoluciones", "Política de devoluciones de productos digitales: arrepentimiento de 10 días corridos (reembolso total si todavía no descargaste), cómo se solicita y qué pasa después.", DEVOLUCIONES, ""),
     "arrepentimiento": ("Botón de arrepentimiento", "Formulario automático para arrepentirte de tu compra dentro de los 10 días corridos: verifica el pago, desactiva la descarga y ordena el reembolso si todavía no descargaste.", ARREP_BODY, ARREP_JS),

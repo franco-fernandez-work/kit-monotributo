@@ -85,7 +85,7 @@ def portada(c, doc):
     c.setStrokeColor(CEL); c.setLineWidth(2.4); c.circle(0, 0, 30 * mm); c.setLineWidth(0.8); c.circle(0, 0, 27.5 * mm)
     c.setFillColor(CEL); c.setFont("Helvetica-Bold", 34); c.drawCentredString(0, -4, "A–K"); c.setFont("Courier-Bold", 8); c.drawCentredString(0, -20, "MONOTRIBUTO")
     c.restoreState()
-    c.setFillColor(HexColor("#7ab6e6")); c.setFont("Courier", 9); c.drawString(M, 18 * mm, "Kit Monotributista · kit-monotributo.fernandezfrancowork.workers.dev")
+    c.setFillColor(HexColor("#7ab6e6")); c.setFont("Courier", 9); c.drawString(M, 18 * mm, "CuentaClara · kit-monotributo.fernandezfrancowork.workers.dev")
     c.restoreState()
 
 def interior(c, doc):
@@ -284,7 +284,7 @@ def main():
     os.makedirs(ROOT, exist_ok=True)
     out = os.path.join(ROOT, "guia.pdf")
     doc = BaseDocTemplate(out, pagesize=A4, leftMargin=M, rightMargin=M, topMargin=24 * mm, bottomMargin=22 * mm,
-                          title="Primer año de monotributo", author="Kit Monotributista", subject="Guía práctica de Monotributo 2026")
+                          title="Primer año de monotributo", author="CuentaClara", subject="Guía práctica de Monotributo 2026")
     fr = Frame(M, 22 * mm, W - 2 * M, H - 46 * mm, id="n", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
     doc.addPageTemplates([PageTemplate(id="portada", frames=[fr], onPage=portada), PageTemplate(id="interior", frames=[fr], onPage=interior)])
     doc.build([Spacer(1, 1)] + contenido())

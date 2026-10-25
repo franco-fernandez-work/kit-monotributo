@@ -198,7 +198,7 @@ def post(pub, base, hoy):
     hoy_d = datetime.date.today()
     hoy = hoy_d.isoformat()
     pags = _leer(pub)
-    org = {"@type": "Organization", "name": "Kit Monotributista", "url": f"{base}/", "logo": f"{base}/icon-512.png"}
+    org = {"@type": "Organization", "name": "CuentaClara", "url": f"{base}/", "logo": f"{base}/icon-512.png"}
     plantilla = "terminos" if "terminos" in pags else next(iter(pags))
     nombres = dict((k, t) for k, t, _ in TEMAS)
     nav = re.search(r'<nav class="menu" aria-label="Secciones">(.*?)</nav>', pags.get("", next(iter(pags.values())))["h"] if "" in pags else "", re.S)
@@ -241,7 +241,7 @@ def post(pub, base, hoy):
         main_html = m.group(0) if m else ""
         lds = []
         if slug == "":
-            lds.append({"@context": "https://schema.org", "@type": "WebSite", "name": "Kit Monotributista", "url": f"{base}/", "inLanguage": "es-AR", "publisher": org})
+            lds.append({"@context": "https://schema.org", "@type": "WebSite", "name": "CuentaClara", "url": f"{base}/", "inLanguage": "es-AR", "publisher": org})
             lds.append(dict({"@context": "https://schema.org"}, **org))
         else:
             migas = [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": f"{base}/"}]

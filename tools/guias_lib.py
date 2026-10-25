@@ -29,7 +29,7 @@ def build(archivo, meta, contenido):
         c.setStrokeColor(CEL); c.setLineWidth(2.4); c.circle(0, 0, 30 * mm); c.setLineWidth(0.8); c.circle(0, 0, 27.5 * mm)
         c.setFillColor(CEL); c.setFont("Helvetica-Bold", 30); c.drawCentredString(0, -4, meta["sello"]); c.setFont("Courier-Bold", 8); c.drawCentredString(0, -20, meta["sello2"])
         c.restoreState()
-        c.setFillColor(HexColor("#7ab6e6")); c.setFont("Courier", 9); c.drawString(M, 18 * mm, f"Kit Monotributista · {BASE_URL}")
+        c.setFillColor(HexColor("#7ab6e6")); c.setFont("Courier", 9); c.drawString(M, 18 * mm, f"CuentaClara · {BASE_URL}")
         c.restoreState()
     def interior(c, doc):
         c.saveState()
@@ -42,7 +42,7 @@ def build(archivo, meta, contenido):
     os.makedirs(ROOT, exist_ok=True)
     out = os.path.join(ROOT, archivo)
     doc = BaseDocTemplate(out, pagesize=A4, leftMargin=M, rightMargin=M, topMargin=24 * mm, bottomMargin=22 * mm,
-                          title=meta["nombre"], author="Kit Monotributista", subject=meta["nombre"])
+                          title=meta["nombre"], author="CuentaClara", subject=meta["nombre"])
     fr = Frame(M, 22 * mm, W - 2 * M, H - 46 * mm, id="n", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
     doc.addPageTemplates([PageTemplate(id="portada", frames=[fr], onPage=portada), PageTemplate(id="interior", frames=[fr], onPage=interior)])
     f = [Spacer(1, 1), NextPageTemplate("interior"), PageBreak()] + list(contenido)
