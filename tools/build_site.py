@@ -120,7 +120,7 @@ td.cat{font:700 18px var(--f-display);color:var(--celeste)}
 MENU = [("/", "Calculadora monotributo"), ("/escalas-monotributo-2026", "Escalas 2026"),
         ("/recategorizacion-monotributo-febrero-2027", "Recategorización"),
         ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre"), ("/aumento-alquiler", "Aumento de alquiler"),
-        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones"), ("/calculadora-liquidacion-final", "Liquidación final"), ("/calculadora-ganancias-sueldo", "Ganancias en el sueldo"), ("/guia-primer-ano-monotributo", "Guía primer año"), ("/recibos-presupuestos-pdf", "Recibos y presupuestos")]
+        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones"), ("/calculadora-liquidacion-final", "Liquidación final"), ("/calculadora-ganancias-sueldo", "Ganancias en el sueldo"), ("/guia-primer-ano-monotributo", "Guía primer año"), ("/recibos-presupuestos-pdf", "Recibos y presupuestos"), ("/generador-reclamo-consumidor", "Reclamos de consumo"), ("/telegrama-renuncia-modelo", "Telegramas laborales")]
 
 def layout(slug, title, desc, body, og_type="article", extra_head="", script=""):
     url = f"{BASE}/{slug}" if slug else f"{BASE}/"
@@ -476,7 +476,7 @@ def oferta_liq():
     return """<section class="oferta" aria-labelledby="of-liq"><div><span class="etiqueta">Planilla para Excel y Google Sheets</span><h2 id="of-liq">Planilla de Liquidación Final</h2>
 <p>Para empleadores y PyMEs: cargás fechas y sueldo y la planilla arma toda la liquidación de cada egreso.</p>
 <ul><li>Indemnización del art. 245 con tope del convenio y piso del 67%</li><li>Preaviso, integración del mes, aguinaldo y vacaciones proporcionales</li><li>Despido sin causa o renuncia, y período de prueba configurable</li><li>Recibo de liquidación final listo para imprimir y firmar, hasta 30 personas</li></ul></div>
-<div class="compra"><a class="boton" href="/comprar?p=liquidacion">Comprar la planilla <span class="num">$ 5.999</span></a><span class="nota">Pagás con Mercado Pago y la descargás al instante.</span></div></section>"""
+<div class="compra"><a class="boton" href="/comprar?p=liquidacion">Comprar la planilla <span class="num">$ 5.999</span></a><span class="nota">Pagás con Mercado Pago y la descargás al instante.</span><a class="nota" href="/telegrama-renuncia-modelo">¿Vas a renunciar o intimar? Modelos de telegramas laborales</a></div></section>"""
 
 LIQ_BODY = """<section class="heroe">
 <div><span class="etiqueta">Ley de Contrato de Trabajo y Ley 27.802</span>
@@ -585,11 +585,13 @@ def main():
     ARTS.update(__import__("seo_extra").ARTS_EXTRA)
     gan = __import__("gan_page"); ARTS.update(gan.ARTS_GAN)
     ARTS.update(__import__("packs_arts").ARTS_PACKS)
+    lg = __import__("legal_pages"); ARTS.update(lg.ARTS_LEGAL)
     os.makedirs(PUB, exist_ok=True)
     w = lambda name, s: open(os.path.join(PUB, name), "w", encoding="utf-8").write(s)
     gr = __import__("guia_recibos_page")
-    w("estilo.css", CSS + gr.CSS_EXTRA)
+    w("estilo.css", CSS + gr.CSS_EXTRA + lg.CSS)
     GR = gr.pages()
+    GR.update({k: v for k, v in lg.PAGES.items()})
     for slug, (t, d, b, sc) in GR.items():
         w(f"{slug}.html", layout(slug, t, d, b, "website", script=sc))
     w("index.html", layout("", "Calculadora de categoría de Monotributo 2026", "Calculá gratis tu categoría de Monotributo con las escalas vigentes de agosto 2026 a enero 2027: cuota, tope y margen antes de la recategorización de febrero.", HOME_BODY, "website", script=HOME_JS))
