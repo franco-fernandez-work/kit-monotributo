@@ -1,3 +1,4 @@
+import { revocado } from "./legal.js";
 // Créditos del generador de recibos y presupuestos: cada pago aprobado de Mercado Pago (ref recibos2026) da 10 documentos.
 // D1 guarda cuántos se usaron por pago. El PDF se arma en el navegador; el servidor solo descuenta el crédito.
 const REF = "recibos2026", PRECIO = 990, CREDITOS = 10;
@@ -22,6 +23,7 @@ async function pagoOk(env, id) {
 
 // Devuelve { id, restan } o null si el pago no existe o no está aprobado.
 async function pack(env, d, id) {
+  if (await revocado(env, id)) return null;
   let row = await d.prepare("SELECT total, usados FROM creditos WHERE pago=?").bind(id).first();
   if (!row) {
     if (!(await pagoOk(env, id))) return null;
