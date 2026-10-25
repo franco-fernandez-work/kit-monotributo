@@ -43,6 +43,9 @@ CSS_EXTRA = r"""
 .hoja-prev .tot{font:700 17px var(--f-num);text-align:right;margin-top:10px}
 .hoja-prev .letras{font-size:12px;color:#4b5e72}
 .hoja-prev .pie-doc{margin-top:18px;font-size:10px;color:#6c7d8f;border-top:1px dashed #d6dfe8;padding-top:8px}
+.hoja-prev::after{content:"VISTA PREVIA";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 54px var(--f-display);color:rgba(190,30,30,.14);transform:rotate(-24deg);pointer-events:none}
+.solo-print{display:none}
+@media print{.hoja-prev{display:none!important}.solo-print{display:block;font:700 18px sans-serif;padding:24px}}
 .estado-gen{min-height:1.4em;margin-top:8px}
 """
 
@@ -83,7 +86,7 @@ GEN_BODY = r"""<span class="etiqueta">Generador online · pago por uso</span><h1
 <div><button type="button" class="boton" id="pdf">Descargar PDF <span class="num">1 crédito</span></button><p class="estado-gen estado" id="est" role="status"></p></div>
 <details class="nota"><summary>Ya compré y tengo un código de pago</summary><div class="campo" style="margin-top:10px"><label for="f-cod">Código de pago de Mercado Pago</label><input id="f-cod" inputmode="numeric" placeholder="Ej. 1234567890"><button type="button" class="link" id="cod-ok" style="margin-top:8px">Cargar mis créditos</button></div></details>
 </div></div>
-<div><div class="hoja-prev" id="prev" aria-label="Vista previa"></div><p class="nota" style="margin-top:10px">Vista previa aproximada. El PDF final sale sin marcas ni publicidad.</p></div></div>
+<div><div class="hoja-prev" id="prev" aria-label="Vista previa"></div><p class="solo-print">La vista previa no se imprime: descargá el PDF con tu crédito.</p><p class="nota" style="margin-top:10px">Vista previa aproximada. El PDF final sale sin marcas ni publicidad.</p></div></div>
 <div class="lectura"><h2>Cómo funciona</h2><ol><li>Completás los datos. La vista previa es gratis, sin límite.</li><li>Pagás <b>$ 990</b> con Mercado Pago y recibís <b>10 documentos</b> que no vencen.</li><li>Cada PDF que descargás usa 1 crédito. Los créditos quedan en tu navegador y en el enlace que te damos al pagar.</li></ol>
 <h2>Qué es y qué no es</h2><p>Son comprobantes de gestión: recibos de pago y presupuestos. <b>No son facturas</b> y no reemplazan a la Factura C de ARCA si estás inscripto en el Monotributo. Para un recibo de alquiler no existe una forma oficial única: el documento deja constancia de lo que se pagó, por quién y de qué período.</p>
 <p>Por ejemplo: un propietario entrega un recibo de alquiler por mes, o un electricista envía un presupuesto con validez de 15 días. Si necesitás los modelos de contrato, mirá el <a href="/contratos-alquiler-modelo-word">Pack Contratos de Alquiler</a>.</p></div>

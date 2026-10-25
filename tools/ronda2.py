@@ -118,9 +118,9 @@ $('vm-out').innerHTML='<b class="g">'+h+'</b><p style="margin:0">'+w+'</p><p cla
 
 # ===================================================================== 6. CUOTA ALIMENTARIA
 def of_alim():
-    return LP.oferta("alimentos", "Pack en Word (.docx)", "Pack de Documentos de Cuota Alimentaria",
-        "Los escritos que se usan antes de ir al juzgado y el convenio listo para homologar.",
-        ["Convenio de alimentos para homologar ante el juzgado de familia", "Intimación de pago por cuota atrasada y pedido de aumento", "Planilla de gastos del hijo y recibo de cuota", "Guía: qué se resuelve entre las partes, qué requiere juez y qué plazos conviene respetar"],
+    return LP.oferta("alimentos", "Modelo en Word (.docx)", "Planilla de gastos del hijo",
+        "Una planilla para ordenar y documentar los gastos mensuales del hijo, con una guía breve.",
+        ["Planilla de gastos del hijo por rubro (vivienda, salud, educación, cuidado y más)", "Guía: qué se resuelve entre las partes, qué requiere juez y por qué conviene llevar los comprobantes"],
         "3.999", "Comprar el pack", PAGO, '<a class="nota" href="/aguinaldo">Calculá el aguinaldo (SAC) de diciembre</a>')
 
 BODY_A = (head("Gratis · Cuota alimentaria", "¿La cuota alimentaria incluye el aguinaldo?", "Depende de cómo se fijó. Calculá cuánto corresponde en diciembre y en qué casos el aguinaldo integra la cuota.")
@@ -138,9 +138,7 @@ BODY_A = (head("Gratis · Cuota alimentaria", "¿La cuota alimentaria incluye el
     ("Juzgado, sin atajos", "Aumentar o reducir la cuota, o ejecutar una deuda cuando el otro no cumple, se tramita ante el juzgado. Una intimación escrita ayuda, pero no reemplaza el proceso.", True)])
  + lec("<h2>El aguinaldo y la cuota</h2><ul><li>Si la cuota es un <b>porcentaje de los ingresos</b>, suele incluir lo que cobra el alimentante, también el SAC. Conviene que el convenio lo diga expresamente.</li><li>Si es un <b>monto fijo</b>, el aguinaldo no lo modifica salvo que se haya pactado un monto extra en junio y diciembre.</li><li>El convenio homologado manda: si dice otra cosa, aplicá lo que dice.</li></ul>")
  + lec("<h2>Qué suma el pack</h2>")
- + LP.modelos_html([dict(titulo="Convenio de alimentos", cuando="Para presentar y homologar en el juzgado."), dict(titulo="Intimación de pago", cuando="Cuota atrasada, antes de reclamar."),
-                    dict(titulo="Planilla de gastos del hijo", cuando="Salud, educación, vivienda, útiles y recreación."), dict(titulo="Recibo de cuota", cuando="Constancia de cada pago."),
-                    dict(titulo="Pedido de aumento", cuando="Carta previa al reclamo judicial."), dict(titulo="Guía de plazos", cuando="Qué hace cada parte y cuándo ir al juzgado.")])
+ + LP.modelos_html([dict(titulo="Planilla de gastos del hijo", cuando="Salud, educación, vivienda, útiles y recreación."), dict(titulo="Guía breve", cuando="Qué se resuelve entre las partes y cuándo hace falta el juzgado.")])
  + of_alim())
 
 JS_A = js("""function a(){const f=$('al-f').value,inc=$('al-a').value==='s',s=n('al-s'),p=n('al-p')/100,m=n('al-m');$('al-mw').style.display=f==='m'?'':'none';
@@ -151,7 +149,7 @@ document.querySelectorAll('.gen input,.comp input,.comp select').forEach(e=>e.ad
 PAGES = {
  "alquiler-temporario-verano": ("Alquiler temporario de verano: checklist anti-estafa y modelo de contrato", "Checklist gratis para no caer en estafas al alquilar una casa de verano y calculadora de seña y depósito. Pack con contrato de temporada, recibo de seña y reglamento por $2.999.", BODY_T, JS_T),
  "autorizacion-viaje-menores": ("Autorización de viaje de menores: qué papel necesitás y quién lo emite", "Asistente gratis: dentro del país o al exterior, con uno de los padres o con terceros. Qué exige el escribano, Migraciones o la empresa de micros. Pack de modelos por $2.999.", BODY_V, JS_V),
- "cuota-alimentaria-aguinaldo": ("¿La cuota alimentaria incluye el aguinaldo? Calculá diciembre", "Cuánto corresponde de cuota alimentaria con aguinaldo en diciembre y cuándo el SAC integra la cuota. Pack de documentos (convenio, intimación, planilla de gastos) por $3.999.", BODY_A, JS_A),
+ "cuota-alimentaria-aguinaldo": ("¿La cuota alimentaria incluye el aguinaldo? Calculá diciembre", "Cuánto corresponde de cuota alimentaria con aguinaldo en diciembre y cuándo el SAC integra la cuota. Planilla de gastos del hijo por $3.999.", BODY_A, JS_A),
 }
 # ===================================================================== packs Word
 def build():
@@ -245,45 +243,19 @@ def build():
     save("pack-viajemenor.zip", docs)
 
     # ------------------------------------------------ cuota alimentaria
-    P = "Pack Documentos de Cuota Alimentaria"
-    L = lambda t, s: mk(P, t, s, [AV, "Una intimación o un convenio entre las partes no reemplaza al juez: el convenio se homologa ante el juzgado de familia.", "Completá los campos resaltados en amarillo y borrá lo que no aplique."])
+    P = "Planilla de Gastos del Hijo"
+    L = lambda t, s: mk(P, t, s, [AV, "Planilla orientativa para ordenar gastos: no reemplaza al juez ni a un abogado/a.", "Completá los campos resaltados en amarillo y borrá lo que no aplique."])
     d = Doc(P, "Guía y contenido del pack", "Qué se resuelve entre las partes y qué requiere juez")
     d.box("Importante", [AV, "Riesgo: un mal planteo puede perjudicar al niño o a quien reclama. Ante una situación de violencia o de urgencia, consultá a un abogado/a o a la defensoría de tu jurisdicción."])
-    d.h("Qué incluye"); d.bullets(["01. Convenio de alimentos para homologar", "02. Intimación de pago", "03. Planilla de gastos del hijo", "04. Recibo de cuota", "05. Pedido de aumento"])
+    d.h("Qué incluye"); d.bullets(["01. Planilla de gastos del hijo"])
     d.h("Qué requiere juez")
     d.bullets(["El convenio tiene fuerza ejecutiva cuando lo homologa el juzgado de familia competente.", "Aumentar, reducir o dejar sin efecto la cuota se tramita ante el juzgado.", "Reclamar por vía judicial una deuda de cuotas se hace ante el juzgado. La intimación documentada ayuda a probar la mora.", "El aguinaldo integra la cuota si se fijó como porcentaje de los ingresos y así lo dice el convenio. Si no se aclara, pedirlo por escrito evita discusiones."])
     d.h("Qué se hace entre las partes"); d.bullets(["Acordar la cuota, la fecha y la forma de pago, y los gastos extra (salud, útiles, colegio).", "Documentar cada pago con recibo o transferencia.", "Llevar la planilla de gastos para fundar cualquier pedido de actualización."])
     docs = [("00-LEEME-Guia-del-pack.docx", d)]
-    d = L("Convenio de alimentos", "Para homologar ante el juzgado de familia")
-    d.p("En [[ciudad]], a los [[fecha]], entre [[progenitor/a que cuida]], DNI [[dni]], domicilio en [[domicilio]] (en adelante, EL/LA PROGENITOR/A CONVIVIENTE) y [[progenitor/a alimentante]], DNI [[dni]], domicilio en [[domicilio]] (en adelante, EL/LA ALIMENTANTE), padres de [[nombre del hijo]], DNI [[dni]], nacido/a el [[fecha]], convienen lo siguiente:")
-    d.clauses([("Cuota", "EL/LA ALIMENTANTE abonará una cuota mensual de [[monto fijo en pesos / porcentaje de sus ingresos]], dentro de los primeros [[5]] días de cada mes, mediante [[transferencia a la cuenta CBU]]."),
-               ("Aguinaldo", "Si la cuota se fija como porcentaje de los ingresos, esta incluye lo percibido por [[aguinaldo / SAC]], que se abonará adicionalmente en los meses de [[junio y diciembre]]."),
-               ("Gastos extraordinarios", "Los gastos de [[salud no cubiertos / educación / útiles]] se pagan [[por mitades / en proporción a los ingresos]], con presentación de comprobantes."),
-               ("Actualización", "La cuota se actualizará [[cada tres meses / según el índice acordado]]."),
-               ("Obra social", "El hijo continuará con la cobertura de [[obra social o prepaga]], a cargo de [[parte]]."),
-               ("Homologación", "Las partes se obligan a presentar este convenio ante el juzgado de familia competente para su homologación, y reconocen que solo tendrá fuerza ejecutiva una vez homologado."),
-               ("Duración", "La obligación subsiste mientras el hijo sea menor de edad y, luego, en los supuestos previstos por la ley (estudios o incapacidad).")])
-    d.firmas(["Progenitor/a conviviente", "Alimentante"]); docs.append(("01-Convenio-de-alimentos.docx", d))
-    d = L("Intimación de pago de cuota alimentaria", "Carta documento o medio fehaciente")
-    d.p("[[Ciudad]], [[fecha]]", False)
-    d.p("Señor/a [[nombre del alimentante]]\nDomicilio: [[domicilio]]", False)
-    d.p("Por la presente le informo que a la fecha adeuda las cuotas alimentarias de [[meses]], por un total de $ [[monto]], conforme al [[convenio de fecha / sentencia]]. Lo intimo a que, dentro de [[5]] días hábiles de recibida esta comunicación, abone la suma adeudada mediante [[forma de pago]].")
-    d.p("Caso contrario, iniciaré las acciones judiciales correspondientes, con costas a su cargo, incluidos el reclamo de las cuotas impagas y los intereses. Saludo a Ud. atentamente.")
-    d.firmas(["Firma"]); docs.append(("02-Intimacion-de-pago.docx", d))
     d = L("Planilla de gastos del hijo", "Base para fundar la cuota")
     d.table(["Rubro", "Monto mensual ($)", "Observaciones"], [[r, "[[ ]]", "[[ ]]"] for r in ["Vivienda (proporción)", "Alimentación", "Salud y obra social", "Educación (cuota, útiles, transporte)", "Vestimenta", "Recreación y deporte", "Cuidado (niñera, guardería)", "Otros"]] + [["TOTAL", "[[ ]]", ""]], [7, 4, 4])
     d.p("Guardá los comprobantes de cada gasto: los va a pedir el juzgado si se discute el monto.")
-    docs.append(("03-Planilla-de-gastos-del-hijo.docx", d))
-    d = L("Recibo de cuota alimentaria", "Constancia de pago")
-    d.p("[[Ciudad]], [[fecha]]", False)
-    d.p("Recibí de [[alimentante]], DNI [[dni]], la suma de $ [[monto]] ([[monto en letras]]) correspondiente a la cuota alimentaria del mes de [[mes y año]] de mi hijo/a [[nombre]], pagada por [[efectivo / transferencia N.º operación]]. [[Incluye / No incluye]] aguinaldo.")
-    d.firmas(["Quien recibe"]); docs.append(("04-Recibo-de-cuota.docx", d))
-    d = L("Pedido de aumento de la cuota", "Carta previa al reclamo judicial")
-    d.p("[[Ciudad]], [[fecha]]", False)
-    d.p("Señor/a [[nombre del alimentante]]\nDomicilio: [[domicilio]]", False)
-    d.p("Por la presente solicito la actualización de la cuota alimentaria de nuestro/a hijo/a [[nombre]], actualmente de [[monto]], a [[monto]] a partir del [[fecha]]. Fundo el pedido en el aumento del costo de vida y de los gastos del niño/a, que se detallan en la planilla adjunta ([[total]] por mes), y en [[cambio de ingresos o necesidades]].")
-    d.p("Quedo a disposición para acordarlo por escrito dentro de [[15]] días. De no haber acuerdo, solicitaré la fijación judicial de la cuota.")
-    d.firmas(["Firma"]); docs.append(("05-Pedido-de-aumento.docx", d))
+    docs.append(("01-Planilla-de-gastos-del-hijo.docx", d))
     save("pack-alimentos.zip", docs)
 
 if __name__ == "__main__":

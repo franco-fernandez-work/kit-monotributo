@@ -31,7 +31,7 @@ CSS = r"""
 
 def footer():
     return (f'<footer class="pie"><div class="wrap"><span>Información general actualizada a octubre de 2026. No reemplaza a un contador ni la información oficial de ARCA.</span> <span>Pagos procesados por Mercado Pago</span>'
-            f'<div class="legal"><a href="/terminos">Términos y condiciones</a><a href="/privacidad">Política de privacidad</a><a href="/devoluciones">Devoluciones</a>'
+            f'<div class="legal"><a href="/terminos">Términos y condiciones</a><a href="/privacidad">Política de privacidad</a><a href="/devoluciones">Devoluciones</a><a href="/recuperar">¿Perdiste la descarga?</a>'
             f'<a href="/pedidos">¿No encontrás lo que buscás? Pedilo</a><a class="arrep" href="/arrepentimiento">Botón de arrepentimiento</a><a href="{DC_URL}" rel="noopener" target="_blank">Defensa del Consumidor: reclamos</a></div>'
             '</div></footer>')  # sin datos del vendedor a la vista por decisión de Franco (25/10); VENDEDOR queda por si hace falta
 
@@ -46,13 +46,14 @@ TERMINOS = _pag("Términos y condiciones", f"""
 <h2>3. Precios y pago</h2>
 <p>Los precios están en pesos argentinos, con impuestos incluidos, y se muestran antes de pagar. El pago se procesa por Mercado Pago; el Vendedor no recibe ni guarda datos de tu tarjeta. La suscripción de QR se renueva cada mes hasta que la cancelés desde tu cuenta de Mercado Pago.</p>
 <h2>4. Entrega</h2>
-<p>Con el pago aprobado, el sitio habilita la descarga en la página de agradecimiento, durante 30 días con el mismo enlace. Guardá ese enlace: no hay cuentas ni envío por mail, y el enlace no se recupera si lo perdés. Los créditos de recibos no vencen y se asocian al código de pago.</p>
+<p>Con el pago aprobado, el sitio habilita la descarga en la página de agradecimiento, durante 30 días con el mismo enlace, hasta 5 descargas por pago. No hay cuentas ni envío por mail: si perdés el enlace, lo recuperás en <a href="/recuperar">/recuperar</a> con el número de operación de tu comprobante de Mercado Pago (los pagos en efectivo quedan disponibles cuando se acreditan). Los créditos de recibos no vencen y se asocian al código de pago.</p>
+<p><b>Entrega inmediata.</b> La entrega es inmediata y el archivo es de uso permanente: una vez descargado el archivo (o usado un crédito de recibos) se aplica la excepción del art. 1116 inc. c del Código Civil y Comercial, prevista en el art. 3 inc. a de la Disposición 954/2025, y no corresponde el reembolso por arrepentimiento. Te lo avisamos antes de pagar.</p>
 <h2>5. Naturaleza del contenido</h2>
 <p>Todo el material es información general y modelos orientativos, actualizados a octubre de 2026. No es asesoramiento contable, legal ni impositivo y no reemplaza a un profesional ni a la información oficial (ARCA, Boletín Oficial). Las normas cambian: verificá los valores vigentes antes de decidir. El Vendedor no responde por decisiones tomadas solo con base en el material, sin perjuicio de los derechos que la Ley 24.240 te reconoce como consumidor.</p>
 <h2>6. Uso permitido y propiedad</h2>
 <p>La compra te da una licencia personal, no exclusiva e intransferible para usar el material. Podés adaptar los modelos a tus propios casos. No podés revenderlo ni redistribuirlo. El servicio de QR no puede usarse para destinos ilícitos, engañosos, de phishing o malware; el sistema bloquea destinos peligrosos y el Vendedor puede desactivar un QR que los incumpla.</p>
 <h2>7. Arrepentimiento y devoluciones</h2>
-<p>Tenés derecho a arrepentirte de la compra dentro de los 10 días corridos de pagada, con reembolso total, desde el <a href="/arrepentimiento">botón de arrepentimiento</a>. Detalle en la <a href="/devoluciones">política de devoluciones</a>.</p>
+<p>Tenés derecho a arrepentirte de la compra dentro de los 10 días corridos de pagada, desde el <a href="/arrepentimiento">botón de arrepentimiento</a>, con reembolso total mientras no hayas descargado el archivo ni usado créditos (excepción del art. 1116 inc. c del Código Civil y Comercial). El botón siempre registra tu solicitud. Detalle en la <a href="/devoluciones">política de devoluciones</a>.</p>
 <h2>8. Disponibilidad</h2>
 <p>El servicio es automático y se ofrece "tal cual está". Puede haber interrupciones por mantenimiento o de proveedores (Mercado Pago, Cloudflare). El Vendedor no atiende consultas personalizadas: toda gestión se hace desde el sitio.</p>
 <h2>9. Defensa del consumidor</h2>
@@ -82,7 +83,9 @@ PRIVACIDAD = _pag("Política de privacidad", f"""
 
 DEVOLUCIONES = _pag("Política de devoluciones", f"""
 <h2>Derecho de arrepentimiento</h2>
-<p>Podés revocar la compra, sin dar motivos y sin costo, dentro de los <b>10 días corridos</b> desde que el pago fue aprobado (art. 34 de la Ley 24.240, art. 1110 del Código Civil y Comercial y Disposición 954/2025 de la Subsecretaría de Defensa del Consumidor y Lealtad Comercial). Aplica a todos los productos digitales de este sitio, aunque ya los hayas descargado.</p>
+<p>Podés revocar la compra, sin dar motivos y sin costo, dentro de los <b>10 días corridos</b> desde que el pago fue aprobado (art. 34 de la Ley 24.240, art. 1110 del Código Civil y Comercial y Disposición 954/2025 de la Subsecretaría de Defensa del Consumidor y Lealtad Comercial). El botón de arrepentimiento aplica a todos los productos de este sitio y siempre registra tu solicitud.</p>
+<h2>Productos digitales ya descargados</h2>
+<p>Los archivos son de entrega inmediata y uso permanente. El art. 1116 inc. c del Código Civil y Comercial excluye del arrepentimiento los archivos informáticos descargados de inmediato para uso permanente, y el art. 3 inc. a de la Disposición 954/2025 mantiene esa excepción. Por eso te lo avisamos <b>antes de pagar</b>: <b>si todavía no descargaste el archivo (ni usaste créditos del generador de recibos), el reembolso es total y automático; si ya lo descargaste, registramos la solicitud, desactivamos el enlace y no hay reembolso automático</b>. Si el archivo no se puede abrir o llega dañado, tenés derecho a que se te entregue uno en condiciones: volvé a abrir el enlace de descarga.</p>
 <h2>Cómo se hace</h2>
 <ol>
 <li>Entrá al <a href="/arrepentimiento">botón de arrepentimiento</a> (también está en el pie de todas las páginas).</li>
@@ -128,6 +131,6 @@ if(j.codigo){const c=document.createElement("p");c.innerHTML="Código de constan
 PAGES = {
     "terminos": ("Términos y condiciones", "Términos y condiciones de uso y compra de Kit Monotributista: productos digitales, entrega, precios, arrepentimiento y datos del vendedor.", TERMINOS, ""),
     "privacidad": ("Política de privacidad", "Cómo tratamos tus datos personales según la Ley 25.326: qué datos guardamos, para qué, con quién se comparten y cómo ejercer tus derechos.", PRIVACIDAD, ""),
-    "devoluciones": ("Política de devoluciones", "Política de devoluciones de productos digitales: arrepentimiento de 10 días corridos con reembolso total, cómo se solicita y qué pasa después.", DEVOLUCIONES, ""),
-    "arrepentimiento": ("Botón de arrepentimiento", "Formulario automático para arrepentirte de tu compra dentro de los 10 días corridos: verifica el pago, desactiva la descarga y ordena el reembolso.", ARREP_BODY, ARREP_JS),
+    "devoluciones": ("Política de devoluciones", "Política de devoluciones de productos digitales: arrepentimiento de 10 días corridos (reembolso total si todavía no descargaste), cómo se solicita y qué pasa después.", DEVOLUCIONES, ""),
+    "arrepentimiento": ("Botón de arrepentimiento", "Formulario automático para arrepentirte de tu compra dentro de los 10 días corridos: verifica el pago, desactiva la descarga y ordena el reembolso si todavía no descargaste.", ARREP_BODY, ARREP_JS),
 }

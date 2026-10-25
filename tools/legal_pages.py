@@ -41,9 +41,9 @@ def oferta_rec():
         "2.999", "Comprar el pack", "Pagás con Mercado Pago y lo descargás al instante. Modelos orientativos: no reemplazan asesoramiento legal.")
 
 def oferta_tel():
-    return oferta("telegramas", "Pack en Word (.docx)", "Pack de 10 telegramas y cartas documento laborales",
+    return oferta("telegramas", "Pack en Word (.docx)", "Pack de 9 telegramas y cartas documento laborales",
         "Cada modelo viene en versión telegrama gratuito del Correo y en carta documento completa, con la norma citada.",
-        ["Renuncia, intimación de pago, registración, aportes y vacaciones", "Despido indirecto, rechazo de sanción, respuesta a carta documento", "Pedido de certificados (art. 80) y rechazo de cambio de condiciones", "Guía de plazos y de cómo enviarlo gratis"],
+        ["Renuncia, intimación de pago, registración, aportes y vacaciones", "Rechazo de sanción y respuesta a carta documento", "Pedido de certificados (art. 80) y rechazo de cambio de condiciones", "Guía de plazos y de cómo enviarlo gratis"],
         "4.999", "Comprar el pack", "Pagás con Mercado Pago y lo descargás al instante. Modelos orientativos: no reemplazan asesoramiento legal.",
         '<a class="nota" href="/calculadora-liquidacion-final">¿Cuánto te corresponde cobrar? Calculá tu liquidación final gratis</a>')
 
@@ -131,7 +131,7 @@ draw();""")
 
 PAGES = {
  "generador-reclamo-consumidor": ("Generador de reclamo de consumo gratis: carta para compras online", "Armá gratis tu carta de reclamo de consumo: compra online que no llegó o arrepentimiento, con la Ley 24.240 citada. Copiala y enviala; pack con 8 cartas por $2.999.", REC_BODY, REC_JS),
- "telegrama-renuncia-modelo": ("Telegrama de renuncia: modelo gratis para enviar por el Correo", "Generador gratis de telegrama de renuncia (art. 240 LCT) en mayúsculas, listo para el Correo Argentino. Pack de 10 telegramas laborales por $4.999.", TEL_BODY, TEL_JS),
+ "telegrama-renuncia-modelo": ("Telegrama de renuncia: modelo gratis para enviar por el Correo", "Generador gratis de telegrama de renuncia (art. 240 LCT) en mayúsculas, listo para el Correo Argentino. Pack de 9 telegramas laborales por $4.999.", TEL_BODY, TEL_JS),
 }
 
 # --------------------------------------------------------------------------------- artículos
@@ -143,14 +143,6 @@ A1 = ('<span class="etiqueta">Compras online · Ley 24.240</span><h1>Botón de a
  '<h2>Qué hacer</h2><ol class="pasos"><li>Avisá dentro de los 10 días, por el mismo medio de la compra o por mail, y guardá la prueba.</li><li>Pedí instrucciones para la devolución y que se haga a cargo del vendedor.</li><li>Exigí el reintegro por el mismo medio de pago.</li></ol>'
  '<p>Armá la carta en un minuto con el <a href="/generador-reclamo-consumidor">generador gratis de reclamo</a>.</p></div>' + AVISO_HTML + oferta_rec())
 
-A2 = ('<span class="etiqueta">Despido indirecto · LCT</span><h1>Telegrama de despido indirecto: cuándo y cómo se manda</h1>'
- '<p class="bajada">Darte por despedido por culpa del empleador es una decisión seria: solo corresponde si hubo un incumplimiento grave y después de intimarlo a que lo corrija.</p>'
- '<div class="lectura"><h2>Cuándo corresponde</h2><ul><li>Falta de pago de sueldo o SAC, trabajo no registrado o mal registrado, aportes retenidos y no depositados, cambios perjudiciales de condiciones.</li>'
- '<li>Antes hay que <b>intimar</b> por escrito, con plazo (2 días hábiles para el pago, 30 días corridos para la registración) y el apercibimiento (arts. 242 y 246 LCT).</li><li>La comunicación debe expresar con claridad la causa (art. 243).</li></ul>'
- '<h2>Orden</h2><ol class="pasos"><li>Intimá con telegrama colacionado laboral, que es gratuito.</li><li>Esperá el plazo y guardá todo.</li><li>Si no cumple, comunicá el despido indirecto y reclamá la liquidación y las indemnizaciones.</li><li>Calculá lo que te corresponde con la <a href="/calculadora-liquidacion-final">calculadora de liquidación final</a>.</li></ol>'
- '<p>Si lo que querés es dejar el trabajo sin culpa del empleador, usá el <a href="/telegrama-renuncia-modelo">modelo de renuncia</a>: no da indemnización.</p></div>' + AVISO_HTML + oferta_tel())
-
 ARTS_LEGAL = {
  "boton-de-arrepentimiento-compra-online": ("Botón de arrepentimiento: cómo devolver una compra online (10 días)", "Cómo ejercer el arrepentimiento de compra en 10 días corridos (art. 34 Ley 24.240): plazos, quién paga la devolución y qué hacer si no hay botón.", A1),
- "telegrama-despido-indirecto-modelo": ("Telegrama de despido indirecto: cuándo se manda y cómo", "Cuándo corresponde darte por despedido por culpa del empleador, cómo intimar antes y qué reclamar: arts. 242, 243 y 246 de la LCT.", A2),
 }
