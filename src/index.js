@@ -26,6 +26,8 @@ import guiaSucesion from "../private/guia-sucesion.pdf";
 import guiaJubilacion from "../private/guia-jubilacion.pdf";
 import guiaSalir from "../private/guia-salir.pdf";
 import guiaMudanza from "../private/guia-mudanza.pdf";
+import guiaRenovar from "../private/guia-renovar.pdf";
+import presupuesto from "../private/presupuesto.xlsx";
 import cole from "../private/cole.xlsx";
 import siradig from "../private/siradig.xlsx";
 import packAlqEstud from "../private/pack-alqestud.zip";
@@ -110,6 +112,10 @@ const PRODUCTOS = {
     precio: 3999, archivo: guiaSalir, filename: "Guia-Salir-Del-Monotributo.pdf", mime: "application/pdf", volver: "/salir-del-monotributo-cuanto-cuesta" },
   mudanza: { ref: "mudanza2026", titulo: "Guía: Mudanza sin estafas (PDF)", nombre: "Guía: Mudanza sin estafas",
     precio: 2999, archivo: guiaMudanza, filename: "Guia-Mudanza-Sin-Estafas.pdf", mime: "application/pdf", volver: "/mudanza-calculadora-metros-cubicos" },
+  renovar: { ref: "renovar2026", titulo: "Guía: Se vence tu alquiler (PDF)", nombre: "Guía: Se vence tu alquiler",
+    precio: 2999, archivo: guiaRenovar, filename: "Guia-Se-Vence-Tu-Alquiler.pdf", mime: "application/pdf", volver: "/renovar-alquiler-o-mudarse" },
+  presupuesto: { ref: "presupuesto2026", titulo: "Presupuesto Familiar 2027 con IPC (planilla Excel / Google Sheets)", nombre: "Presupuesto Familiar 2027 con IPC",
+    precio: 3999, archivo: presupuesto, filename: "Presupuesto-Familiar-2027-IPC.xlsx", volver: "/presupuesto-familiar-2027-inflacion" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
     precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
