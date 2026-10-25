@@ -33,14 +33,14 @@ def footer():
     return (f'<footer class="pie"><div class="wrap"><span>Información general actualizada a octubre de 2026. No reemplaza a un contador ni la información oficial de ARCA.</span> <span>Pagos procesados por Mercado Pago</span>'
             f'<div class="legal"><a href="/terminos">Términos y condiciones</a><a href="/privacidad">Política de privacidad</a><a href="/devoluciones">Devoluciones</a>'
             f'<a href="/pedidos">¿No encontrás lo que buscás? Pedilo</a><a class="arrep" href="/arrepentimiento">Botón de arrepentimiento</a><a href="{DC_URL}" rel="noopener" target="_blank">Defensa del Consumidor: reclamos</a></div>'
-            f'<div class="vend">Vendedor: {V["nombre"]} · CUIT {V["cuit"]} · {V["domicilio"]} · {V["email"]}</div></div></footer>')
+            '</div></footer>')  # sin datos del vendedor a la vista por decisión de Franco (25/10); VENDEDOR queda por si hace falta
 
 def _pag(titulo, cuerpo):
     return f'<article class="legalbody"><span class="etiqueta">Legales</span><h1>{titulo}</h1><p class="nota">Última actualización: 25 de octubre de 2026.</p>{cuerpo}</article>'
 
 TERMINOS = _pag("Términos y condiciones", f"""
 <h2>1. Quién vende</h2>
-<p>Este sitio es operado por {V["nombre"]}, CUIT {V["cuit"]}, con domicilio en {V["domicilio"]} (el "Vendedor"). Contacto: {V["email"]}. Al comprar o usar los servicios aceptás estos términos.</p>
+<p>Este sitio es operado por su titular (el "Vendedor"). Al comprar o usar los servicios aceptás estos términos.</p>
 <h2>2. Qué se vende</h2>
 <p>Productos digitales de entrega inmediata (planillas .xlsx, packs de modelos en Word, guía en PDF, créditos del generador de recibos y presupuestos) y el servicio de QR dinámicos por suscripción mensual. Las calculadoras y generadores gratuitos se ofrecen sin garantía de resultado.</p>
 <h2>3. Precios y pago</h2>
@@ -59,12 +59,10 @@ TERMINOS = _pag("Términos y condiciones", f"""
 <p>Como consumidor podés presentar reclamos ante la autoridad de aplicación de tu jurisdicción o en la <a href="{DC_URL}" rel="noopener" target="_blank">Ventanilla Federal de Defensa del Consumidor</a>.</p>
 <h2>10. Ley y jurisdicción</h2>
 <p>Rige la ley argentina. Para conflictos de consumo, es competente la justicia del domicilio real del consumidor (art. 36 de la Ley 24.240).</p>
-<h2>Datos del vendedor</h2>
-<ul><li>Titular: {V["nombre"]}</li><li>CUIT: {V["cuit"]}</li><li>Domicilio: {V["domicilio"]}</li><li>Email: {V["email"]}</li></ul>
 """)
 
 PRIVACIDAD = _pag("Política de privacidad", f"""
-<p>Responsable de la base de datos: {V["nombre"]}, CUIT {V["cuit"]}, {V["domicilio"]}, {V["email"]}. Cumplimos la Ley 25.326 de Protección de los Datos Personales.</p>
+<p>Responsable de la base de datos: el titular del sitio. Cumplimos la Ley 25.326 de Protección de los Datos Personales.</p>
 <h2>Qué datos tratamos</h2>
 <ul>
 <li><b>Compras:</b> el pago lo procesa Mercado Pago. Recibimos solo el código de pago, el producto y el estado. No vemos ni guardamos datos de tarjeta.</li>
@@ -78,7 +76,7 @@ PRIVACIDAD = _pag("Política de privacidad", f"""
 <h2>Cuánto tiempo</h2>
 <p>Los datos de compras y arrepentimientos se conservan el tiempo que exigen las obligaciones fiscales y de defensa del consumidor. Los de un QR se conservan mientras la suscripción esté activa.</p>
 <h2>Tus derechos</h2>
-<p>Podés pedir acceso, rectificación, actualización o supresión de tus datos escribiendo a {V["email"]}. El acceso es gratuito a intervalos no inferiores a seis meses, salvo interés legítimo (art. 14 Ley 25.326). Podés cancelar el QR desde Mercado Pago y pedir su baja.</p>
+<p>Podés pedir acceso, rectificación, actualización o supresión de tus datos desde el formulario de <a href="/pedidos">pedidos</a>. El acceso es gratuito a intervalos no inferiores a seis meses, salvo interés legítimo (art. 14 Ley 25.326). Podés cancelar el QR desde Mercado Pago y pedir su baja.</p>
 <p>La <b>Agencia de Acceso a la Información Pública</b>, órgano de control de la Ley 25.326, tiene la atribución de atender las denuncias y reclamos de quienes vean afectados sus derechos por incumplimiento de las normas de protección de datos personales.</p>
 """)
 
