@@ -121,7 +121,7 @@ def of_alim():
     return LP.oferta("alimentos", "Modelo en Word (.docx)", "Planilla de gastos del hijo",
         "Una planilla para ordenar y documentar los gastos mensuales del hijo, con una guía breve.",
         ["Planilla de gastos del hijo por rubro (vivienda, salud, educación, cuidado y más)", "Guía: qué se resuelve entre las partes, qué requiere juez y por qué conviene llevar los comprobantes"],
-        "3.999", "Comprar el pack", PAGO, '<a class="nota" href="/aguinaldo">Calculá el aguinaldo (SAC) de diciembre</a>')
+        "2.999", "Comprar el pack", PAGO, '<a class="nota" href="/aguinaldo">Calculá el aguinaldo (SAC) de diciembre</a>')
 
 BODY_A = (head("Gratis · Cuota alimentaria", "¿La cuota alimentaria incluye el aguinaldo?", "Depende de cómo se fijó. Calculá cuánto corresponde en diciembre y en qué casos el aguinaldo integra la cuota.")
  + '<div class="r2dos"><div class="comp"><div class="comp-cab"><span>Tu cuota</span><span>Gratis</span></div><div class="comp-cuerpo">'
@@ -149,7 +149,7 @@ document.querySelectorAll('.gen input,.comp input,.comp select').forEach(e=>e.ad
 PAGES = {
  "alquiler-temporario-verano": ("Alquiler temporario de verano: checklist anti-estafa y modelo de contrato", "Checklist gratis para no caer en estafas al alquilar una casa de verano y calculadora de seña y depósito. Pack con contrato de temporada, recibo de seña y reglamento por $2.999.", BODY_T, JS_T),
  "autorizacion-viaje-menores": ("Autorización de viaje de menores: qué papel necesitás y quién lo emite", "Asistente gratis: dentro del país o al exterior, con uno de los padres o con terceros. Qué exige el escribano, Migraciones o la empresa de micros. Pack de modelos por $2.999.", BODY_V, JS_V),
- "cuota-alimentaria-aguinaldo": ("¿La cuota alimentaria incluye el aguinaldo? Calculá diciembre", "Cuánto corresponde de cuota alimentaria con aguinaldo en diciembre y cuándo el SAC integra la cuota. Planilla de gastos del hijo por $3.999.", BODY_A, JS_A),
+ "cuota-alimentaria-aguinaldo": ("¿La cuota alimentaria incluye el aguinaldo? Calculá diciembre", "Cuánto corresponde de cuota alimentaria con aguinaldo en diciembre y cuándo el SAC integra la cuota. Planilla de gastos del hijo por $2.999.", BODY_A, JS_A),
 }
 # ===================================================================== packs Word
 def build():
