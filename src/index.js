@@ -7,6 +7,9 @@ import casas from "../private/casas.xlsx";
 import vacaciones from "../private/vacaciones.xlsx";
 import liquidacion from "../private/liquidacion.xlsx";
 import ganancias from "../private/ganancias.xlsx";
+import packAlq from "../private/pack-alquiler.zip";
+import packFre from "../private/pack-freelancers.zip";
+import packCombo from "../private/pack-combo.zip";
 import { manejarQR } from "./qr.js";
 
 const PRODUCTOS = {
@@ -34,6 +37,12 @@ const PRODUCTOS = {
     ref: "liquidacion2026", titulo: "Planilla de Liquidación Final e Indemnización (planilla Excel / Google Sheets)",
     nombre: "Planilla de Liquidación Final", precio: 5999, archivo: liquidacion, filename: "Planilla-Liquidacion-Final.xlsx", volver: "/calculadora-liquidacion-final",
   },
+  alqpack: { ref: "alqpack2026", titulo: "Pack Contratos de Alquiler 2026 (modelos Word)", nombre: "Pack Contratos de Alquiler 2026",
+    precio: 4999, archivo: packAlq, filename: "Pack-Contratos-Alquiler-2026.zip", mime: "application/zip", volver: "/contratos-alquiler-modelo-word" },
+  frepack: { ref: "frepack2026", titulo: "Pack Contratos para Freelancers 2026 (modelos Word)", nombre: "Pack Contratos para Freelancers 2026",
+    precio: 5999, archivo: packFre, filename: "Pack-Contratos-Freelancers-2026.zip", mime: "application/zip", volver: "/contratos-freelancers-monotributo" },
+  combo: { ref: "combo2026", titulo: "Combo Freelancers + Kit Monotributista 2026", nombre: "Combo Contratos Freelancers + Kit Monotributista",
+    precio: 9999, archivo: packCombo, filename: "Combo-Freelancer-Monotributista-2026.zip", mime: "application/zip", volver: "/contratos-freelancers-monotributo" },
   ganancias: {
     ref: "ganancias2026", titulo: "Planilla de Ganancias en el Sueldo 2026 (planilla Excel / Google Sheets)",
     nombre: "Planilla de Ganancias en el Sueldo", precio: 5999, archivo: ganancias, filename: "Planilla-Ganancias-Sueldo-2026.xlsx", volver: "/calculadora-ganancias-sueldo",
@@ -112,7 +121,7 @@ export default {
       const status = url.searchParams.get("status") || url.searchParams.get("collection_status");
       const prod = await pagoValido(env, id);
       if (prod)
-        return html(`<span class="etiqueta">Pago aprobado</span><h1>Gracias por tu compra</h1><p>Ya podés descargar <b>${prod.nombre}</b>.</p><p><a class="boton" href="/descargar?payment_id=${id}">Descargar la planilla</a></p><p class="nota">Guardá esta página: el enlace funciona durante ${DIAS_DESCARGA} días. Para abrirla en Google Sheets: Archivo, Importar, Subir.</p>`);
+        return html(`<span class="etiqueta">Pago aprobado</span><h1>Gracias por tu compra</h1><p>Ya podés descargar <b>${prod.nombre}</b>.</p><p><a class="boton" href="/descargar?payment_id=${id}">${prod.mime ? "Descargar el pack (ZIP)" : "Descargar la planilla"}</a></p><p class="nota">Guardá esta página: el enlace funciona durante ${DIAS_DESCARGA} días.${prod.mime ? "" : " Para abrirla en Google Sheets: Archivo, Importar, Subir."}</p>`);
       if (status === "pending" || status === "in_process")
         return html(`<span class="etiqueta">Pago en proceso</span><h1>Tu pago se está acreditando</h1><p>Cuando Mercado Pago lo apruebe, volvé a abrir esta misma página y vas a ver el botón de descarga. Guardala en favoritos.</p>`);
       return html(`<h1>No encontramos un pago aprobado</h1><p>Si acabás de pagar, recargá esta página en un minuto.</p><p><a class="boton" href="/">Volver al inicio</a></p>`, 404);
@@ -123,7 +132,7 @@ export default {
       if (!prod) return html("<h1>Enlace no válido o vencido</h1><p>El enlace de descarga funciona solo con un pago aprobado y durante 30 días.</p>", 403);
       return new Response(prod.archivo, {
         headers: {
-          "content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "content-type": prod.mime || "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "content-disposition": `attachment; filename="${prod.filename}"`,
           "cache-control": "private, no-store",
         },
