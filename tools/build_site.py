@@ -600,6 +600,7 @@ def main():
     GR.update(r2.PAGES)
     GR.update(r3.PAGES)
     GR.update(__import__("ronda4").PAGES)
+    GR.update(__import__("ronda5").PAGES)
     GR.update(__import__("pedidos_page").PAGES)
     for slug, (t, d, b, sc) in GR.items():
         w(f"{slug}.html", layout(slug, t, d, b, "website", script=sc))
