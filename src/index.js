@@ -15,6 +15,9 @@ import packKitGuia from "../private/pack-kitguia.zip";
 import packReclamos from "../private/pack-reclamos.zip";
 import packTelegramas from "../private/pack-telegramas.zip";
 import packBoletoAuto from "../private/pack-boletoauto.zip";
+import packAlqTemp from "../private/pack-alqtemp.zip";
+import packViajeMenor from "../private/pack-viajemenor.zip";
+import packAlimentos from "../private/pack-alimentos.zip";
 import { manejarQR } from "./qr.js";
 import { manejarRecibos } from "./recibos.js";
 import { manejarLegal, revocado } from "./legal.js";
@@ -64,6 +67,12 @@ const PRODUCTOS = {
     precio: 4999, archivo: packTelegramas, filename: "Pack-Telegramas-Laborales.zip", mime: "application/zip", volver: "/telegrama-renuncia-modelo" },
   boletoauto: { ref: "boletoauto2026", titulo: "Pack Compraventa de Auto Usado: boleto, recibos y checklists (modelos Word)", nombre: "Pack Compraventa de Auto Usado",
     precio: 3999, archivo: packBoletoAuto, filename: "Pack-Compraventa-Auto-Usado.zip", mime: "application/zip", volver: "/boleto-compraventa-auto-usado" },
+  alqtemp: { ref: "alqtemp2026", titulo: "Pack Alquiler Temporario de Verano (modelos Word)", nombre: "Pack Alquiler Temporario de Verano",
+    precio: 2999, archivo: packAlqTemp, filename: "Pack-Alquiler-Temporario-Verano.zip", mime: "application/zip", volver: "/alquiler-temporario-verano" },
+  viajemenor: { ref: "viajemenor2026", titulo: "Pack Autorización de Viaje de Menores (modelos Word)", nombre: "Pack Autorización de Viaje de Menores",
+    precio: 2999, archivo: packViajeMenor, filename: "Pack-Autorizacion-Viaje-Menores.zip", mime: "application/zip", volver: "/autorizacion-viaje-menores" },
+  alimentos: { ref: "alimentos2026", titulo: "Pack Documentos de Cuota Alimentaria (modelos Word)", nombre: "Pack Documentos de Cuota Alimentaria",
+    precio: 3999, archivo: packAlimentos, filename: "Pack-Cuota-Alimentaria.zip", mime: "application/zip", volver: "/cuota-alimentaria-aguinaldo" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
     precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
