@@ -10,7 +10,10 @@ import ganancias from "../private/ganancias.xlsx";
 import packAlq from "../private/pack-alquiler.zip";
 import packFre from "../private/pack-freelancers.zip";
 import packCombo from "../private/pack-combo.zip";
+import guia from "../private/guia.pdf";
+import packKitGuia from "../private/pack-kitguia.zip";
 import { manejarQR } from "./qr.js";
+import { manejarRecibos } from "./recibos.js";
 
 const PRODUCTOS = {
   kit: {
@@ -47,6 +50,12 @@ const PRODUCTOS = {
     ref: "ganancias2026", titulo: "Planilla de Ganancias en el Sueldo 2026 (planilla Excel / Google Sheets)",
     nombre: "Planilla de Ganancias en el Sueldo", precio: 5999, archivo: ganancias, filename: "Planilla-Ganancias-Sueldo-2026.xlsx", volver: "/calculadora-ganancias-sueldo",
   },
+  guia: { ref: "guia2026", titulo: "Guía: Primer año de monotributo (PDF)", nombre: "Guía: Primer año de monotributo",
+    precio: 2999, archivo: guia, filename: "Guia-Primer-Anio-Monotributo.pdf", mime: "application/pdf", volver: "/guia-primer-ano-monotributo" },
+  kitguia: { ref: "kitguia2026", titulo: "Kit Monotributista 2026 + Guía Primer año (planilla y PDF)", nombre: "Kit Monotributista 2026 + Guía Primer año",
+    precio: 8999, archivo: packKitGuia, filename: "Kit-Monotributista-y-Guia.zip", mime: "application/zip", volver: "/guia-primer-ano-monotributo" },
+  recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
+    precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
 const IPC_URL = "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&format=json&limit=120&sort=desc";
 const porRef = (ref) => Object.values(PRODUCTOS).find((p) => p.ref === ref);
@@ -84,6 +93,8 @@ export default {
 
     const qr = await manejarQR(req, env, ctx);
     if (qr) return qr;
+    const rc = await manejarRecibos(req, env);
+    if (rc) return rc;
 
     if (url.pathname === "/api/ipc") {
       // Proxy con caché de la serie oficial del INDEC para la calculadora de alquileres.
@@ -120,8 +131,10 @@ export default {
       const id = url.searchParams.get("payment_id");
       const status = url.searchParams.get("status") || url.searchParams.get("collection_status");
       const prod = await pagoValido(env, id);
+      if (prod?.app)
+        return html(`<span class="etiqueta">Pago aprobado</span><h1>Ya tenés 10 documentos</h1><p>Se cargaron en tu navegador. Si cambiás de dispositivo, usá siempre este enlace.</p><p><a class="boton" href="${prod.app}?pago=${id}">Crear mis documentos</a></p><p class="nota">Guardá esta página: el código ${id} es tu llave y no se recupera.</p>`);
       if (prod)
-        return html(`<span class="etiqueta">Pago aprobado</span><h1>Gracias por tu compra</h1><p>Ya podés descargar <b>${prod.nombre}</b>.</p><p><a class="boton" href="/descargar?payment_id=${id}">${prod.mime ? "Descargar el pack (ZIP)" : "Descargar la planilla"}</a></p><p class="nota">Guardá esta página: el enlace funciona durante ${DIAS_DESCARGA} días.${prod.mime ? "" : " Para abrirla en Google Sheets: Archivo, Importar, Subir."}</p>`);
+        return html(`<span class="etiqueta">Pago aprobado</span><h1>Gracias por tu compra</h1><p>Ya podés descargar <b>${prod.nombre}</b>.</p><p><a class="boton" href="/descargar?payment_id=${id}">${prod.mime === "application/pdf" ? "Descargar la guía (PDF)" : prod.mime ? "Descargar el pack (ZIP)" : "Descargar la planilla"}</a></p><p class="nota">Guardá esta página: el enlace funciona durante ${DIAS_DESCARGA} días.${prod.mime ? "" : " Para abrirla en Google Sheets: Archivo, Importar, Subir."}</p>`);
       if (status === "pending" || status === "in_process")
         return html(`<span class="etiqueta">Pago en proceso</span><h1>Tu pago se está acreditando</h1><p>Cuando Mercado Pago lo apruebe, volvé a abrir esta misma página y vas a ver el botón de descarga. Guardala en favoritos.</p>`);
       return html(`<h1>No encontramos un pago aprobado</h1><p>Si acabás de pagar, recargá esta página en un minuto.</p><p><a class="boton" href="/">Volver al inicio</a></p>`, 404);
@@ -129,7 +142,7 @@ export default {
 
     if (url.pathname === "/descargar") {
       const prod = await pagoValido(env, url.searchParams.get("payment_id"));
-      if (!prod) return html("<h1>Enlace no válido o vencido</h1><p>El enlace de descarga funciona solo con un pago aprobado y durante 30 días.</p>", 403);
+      if (!prod || !prod.archivo) return html("<h1>Enlace no válido o vencido</h1><p>El enlace de descarga funciona solo con un pago aprobado y durante 30 días.</p>", 403);
       return new Response(prod.archivo, {
         headers: {
           "content-type": prod.mime || "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
