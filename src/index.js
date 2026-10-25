@@ -15,8 +15,12 @@ import packKitGuia from "../private/pack-kitguia.zip";
 import packReclamos from "../private/pack-reclamos.zip";
 import packTelegramas from "../private/pack-telegramas.zip";
 import packBoletoAuto from "../private/pack-boletoauto.zip";
+import packAlqTemp from "../private/pack-alqtemp.zip";
+import packViajeMenor from "../private/pack-viajemenor.zip";
+import packAlimentos from "../private/pack-alimentos.zip";
 import { manejarQR } from "./qr.js";
 import { manejarRecibos } from "./recibos.js";
+import { manejarLegal, revocado } from "./legal.js";
 
 const PRODUCTOS = {
   kit: {
@@ -63,6 +67,12 @@ const PRODUCTOS = {
     precio: 4999, archivo: packTelegramas, filename: "Pack-Telegramas-Laborales.zip", mime: "application/zip", volver: "/telegrama-renuncia-modelo" },
   boletoauto: { ref: "boletoauto2026", titulo: "Pack Compraventa de Auto Usado: boleto, recibos y checklists (modelos Word)", nombre: "Pack Compraventa de Auto Usado",
     precio: 3999, archivo: packBoletoAuto, filename: "Pack-Compraventa-Auto-Usado.zip", mime: "application/zip", volver: "/boleto-compraventa-auto-usado" },
+  alqtemp: { ref: "alqtemp2026", titulo: "Pack Alquiler Temporario de Verano (modelos Word)", nombre: "Pack Alquiler Temporario de Verano",
+    precio: 2999, archivo: packAlqTemp, filename: "Pack-Alquiler-Temporario-Verano.zip", mime: "application/zip", volver: "/alquiler-temporario-verano" },
+  viajemenor: { ref: "viajemenor2026", titulo: "Pack Autorización de Viaje de Menores (modelos Word)", nombre: "Pack Autorización de Viaje de Menores",
+    precio: 2999, archivo: packViajeMenor, filename: "Pack-Autorizacion-Viaje-Menores.zip", mime: "application/zip", volver: "/autorizacion-viaje-menores" },
+  alimentos: { ref: "alimentos2026", titulo: "Pack Documentos de Cuota Alimentaria (modelos Word)", nombre: "Pack Documentos de Cuota Alimentaria",
+    precio: 3999, archivo: packAlimentos, filename: "Pack-Cuota-Alimentaria.zip", mime: "application/zip", volver: "/cuota-alimentaria-aguinaldo" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
     precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
@@ -74,12 +84,13 @@ const api = (env) => env.MP_API || "https://api.mercadopago.com";
 const FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700&family=JetBrains+Mono:wght@600&display=swap">';
 const html = (body, status = 200) =>
   new Response(
-    `<!doctype html><html lang="es-AR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kit Monotributista</title><meta name="robots" content="noindex">${FONTS}<link rel="stylesheet" href="/estilo.css"></head><body><header class="top"><div class="wrap"><a class="marca" href="/"><i>A–K</i>Kit Monotributista</a></div></header><main class="wrap"><div class="mensaje">${body}</div></main></body></html>`,
+    `<!doctype html><html lang="es-AR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kit Monotributista</title><meta name="robots" content="noindex">${FONTS}<link rel="stylesheet" href="/estilo.css"></head><body><header class="top"><div class="wrap"><a class="marca" href="/"><i>A–K</i>Kit Monotributista</a></div></header><main class="wrap"><div class="mensaje">${body}</div></main><footer class="pie"><div class="wrap"><div class="legal"><a href="/terminos">Términos y condiciones</a><a href="/privacidad">Política de privacidad</a><a href="/devoluciones">Devoluciones</a><a class="arrep" href="/arrepentimiento">Botón de arrepentimiento</a></div></div></footer></body></html>`,
     { status, headers: { "content-type": "text/html; charset=utf-8" } }
   );
 
 async function pagoValido(env, id) {
   if (!/^\d{1,20}$/.test(id || "")) return null;
+  if (await revocado(env, id)) return null;
   let p;
   try {
     const r = await fetch(`${api(env)}/v1/payments/${id}`, {
@@ -102,6 +113,8 @@ export default {
 
     const qr = await manejarQR(req, env, ctx);
     if (qr) return qr;
+    const lg = await manejarLegal(req, env, Object.values(PRODUCTOS).map((p) => p.ref));
+    if (lg) return lg;
     const rc = await manejarRecibos(req, env);
     if (rc) return rc;
 
