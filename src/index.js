@@ -18,12 +18,14 @@ import packBoletoAuto from "../private/pack-boletoauto.zip";
 import packAlqTemp from "../private/pack-alqtemp.zip";
 import packViajeMenor from "../private/pack-viajemenor.zip";
 import packAlimentos from "../private/pack-alimentos.zip";
+import guiaExterior from "../private/guia-exterior.pdf";
 import cole from "../private/cole.xlsx";
 import siradig from "../private/siradig.xlsx";
 import packAlqEstud from "../private/pack-alqestud.zip";
 import packSiradigCombo from "../private/pack-siradigcombo.zip";
 import { manejarQR } from "./qr.js";
 import { manejarRecibos } from "./recibos.js";
+import { manejarPedidos } from "./pedidos.js";
 import { manejarLegal, revocado } from "./legal.js";
 
 const PRODUCTOS = {
@@ -85,6 +87,8 @@ const PRODUCTOS = {
     precio: 3999, archivo: siradig, filename: "Organizador-SIRADIG-2026.xlsx", volver: "/siradig-que-puedo-deducir" },
   siradigcombo: { ref: "siradigcombo2026", titulo: "Combo SIRADIG + Ganancias en el Sueldo (dos planillas)", nombre: "Combo Organizador SIRADIG + Ganancias en el Sueldo",
     precio: 7999, archivo: packSiradigCombo, filename: "Combo-SIRADIG-Ganancias.zip", mime: "application/zip", volver: "/siradig-que-puedo-deducir" },
+  exterior: { ref: "exterior2026", titulo: "Guía: Comprar afuera sin sorpresas (PDF)", nombre: "Guía: Comprar afuera sin sorpresas",
+    precio: 2999, archivo: guiaExterior, filename: "Guia-Comprar-Afuera-Sin-Sorpresas.pdf", mime: "application/pdf", volver: "/calculadora-compras-exterior" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
     precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
@@ -129,6 +133,8 @@ export default {
     if (lg) return lg;
     const rc = await manejarRecibos(req, env);
     if (rc) return rc;
+    const pd = await manejarPedidos(req, env);
+    if (pd) return pd;
 
     if (url.pathname === "/api/ipc") {
       // Proxy con caché de la serie oficial del INDEC para la calculadora de alquileres.
