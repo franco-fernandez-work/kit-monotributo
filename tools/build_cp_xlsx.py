@@ -111,7 +111,7 @@ filas = [
  ("Forma de pago", "Forma", "Por hora", None, True, None),
  ("Horas trabajadas en el mes", "Horas", 48, "0.0", True, "Solo si paga por hora."),
  ("Fecha de ingreso", "Ingreso", datetime.date(2022, 3, 1), FECHA, True, None),
- ("Zona desfavorable", "Zona", "No", None, True, "31% adicional en Patagonia y Patagones."),
+ ("Zona desfavorable", "Zona", "No", None, True, "31% adicional en Patagonia y Patagones. VERIFICAR el porcentaje y las zonas vigentes en la resolución de la CNTCP."),
  ("Otros adicionales (horas extra, etc.)", "Extra", 0, ARS, True, None),
  ("Descuentos (adelantos, etc.)", "Desc", 0, ARS, True, None),
  (None, None, None, None, None, None),
@@ -191,7 +191,7 @@ form(v, [
 
 # Liquidación final
 l = wb.create_sheet("Liquidación final", 4)
-title(l, "Liquidación final", "Despido sin causa o renuncia. Orientativa: ante un conflicto consultá a un profesional.")
+title(l, "Liquidación final", "Despido sin causa o renuncia. Régimen Ley 26.844 (casas particulares): no contempla el período de prueba ampliado de la Ley 27.802 (art. 107) ni cambios al régimen general (LCT). Orientativa: verificá con un profesional.")
 form(l, [
  ("Fecha de ingreso", "LIng", datetime.date(2022, 3, 1), FECHA, True, None),
  ("Fecha de egreso", "LEg", datetime.date(2026, 10, 20), FECHA, True, None),
@@ -204,10 +204,10 @@ form(l, [
  ("Antigüedad (meses)", "LMeses", "=DATEDIF(LIng,LEg,\"m\")", "0", False, None),
  ("Sueldo por los días trabajados del mes", "LHab", "=LSueldo/DAY(EOMONTH(LEg,0))*DAY(LEg)", ARS, False, None),
  ("Indemnización por antigüedad", "LInd", '=IF(LMot="Despido sin causa",LMejor*MAX(1,INT(LMeses/12)+IF(MOD(LMeses,12)>3,1,0)),0)', ARS, False, "1 sueldo por año o fracción mayor a 3 meses."),
- ("Preaviso", "LPrev", '=IF(AND(LMot="Despido sin causa",LPre="No"),IF(LMeses<12,LSueldo/30*10,LSueldo),0)', ARS, False, "10 días con menos de 1 año, 1 mes con más."),
- ("Integración del mes de despido", "LInt", '=IF(AND(LMot="Despido sin causa",LPre="No"),LSueldo/DAY(EOMONTH(LEg,0))*(DAY(EOMONTH(LEg,0))-DAY(LEg)),0)', ARS, False, None),
+ ("Preaviso", "LPrev", '=IF(AND(LMot="Despido sin causa",LPre="No"),IF(LMeses<=12,LSueldo/30*10,LSueldo),0)', ARS, False, "10 días hasta 1 año de antigüedad inclusive, 1 mes con más."),
+ ("Integración del mes de despido", "LInt", '=IF(AND(LMot="Despido sin causa",LPre="No"),LSueldo/DAY(EOMONTH(LEg,0))*(DAY(EOMONTH(LEg,0))-DAY(LEg)),0)', ARS, False, "VERIFICAR: la integración del mes de despido (LCT art. 233) no está confirmada para la Ley 26.844. Si no corresponde, ponela en cero."),
  ("Aguinaldo proporcional", "LSAC", "=LMejor/2*(LEg-IF(MONTH(LEg)<=6,DATE(YEAR(LEg),1,1),DATE(YEAR(LEg),7,1))+1)/IF(MONTH(LEg)<=6,181,184)", ARS, False, None),
- ("Vacaciones no gozadas", "LVac", "=MAX(0,IF(DATEDIF(LIng,DATE(YEAR(LEg),12,31),\"y\")<5,14,IF(DATEDIF(LIng,DATE(YEAR(LEg),12,31),\"y\")<10,21,IF(DATEDIF(LIng,DATE(YEAR(LEg),12,31),\"y\")<20,28,35)))*(LEg-DATE(YEAR(LEg),1,1)+1)/365-LVTom)*LSueldo/25", ARS, False, "Proporcionales al tiempo trabajado en el año."),
+ ("Vacaciones no gozadas", "LVac", "=MAX(0,IF(LMeses<6,INT(NETWORKDAYS(LIng,LEg)/20),IF(DATEDIF(LIng,DATE(YEAR(LEg),12,31),\"y\")<5,14,IF(DATEDIF(LIng,DATE(YEAR(LEg),12,31),\"y\")<10,21,IF(DATEDIF(LIng,DATE(YEAR(LEg),12,31),\"y\")<20,28,35)))*(LEg-DATE(YEAR(LEg),1,1)+1)/365)-LVTom)*LSueldo/25", ARS, False, "Mismo criterio que la hoja Vacaciones. Con menos de 6 meses: 1 día cada 20 trabajados."),
  ("SAC sobre preaviso e integración", "LSAC2", "=(LPrev+LInt)/12", ARS, False, None),
  ("TOTAL", "LTot", "=LHab+LInd+LPrev+LInt+LSAC+LVac+LSAC2", ARS, False, None),
 ])

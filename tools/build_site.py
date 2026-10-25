@@ -120,7 +120,7 @@ td.cat{font:700 18px var(--f-display);color:var(--celeste)}
 MENU = [("/", "Calculadora monotributo"), ("/escalas-monotributo-2026", "Escalas 2026"),
         ("/recategorizacion-monotributo-febrero-2027", "Recategorización"),
         ("/cuanto-se-paga-de-monotributo", "Cuánto se paga"), ("/precios-mercado-libre", "Precios Mercado Libre"), ("/aumento-alquiler", "Aumento de alquiler"),
-        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones"), ("/calculadora-liquidacion-final", "Liquidación final"), ("/calculadora-ganancias-sueldo", "Ganancias en el sueldo")]
+        ("/aguinaldo", "Aguinaldo"), ("/sueldo-empleada-domestica", "Sueldo empleada doméstica"), ("/calculadora-vacaciones", "Vacaciones"), ("/calculadora-liquidacion-final", "Liquidación final"), ("/calculadora-ganancias-sueldo", "Ganancias en el sueldo"), ("/guia-primer-ano-monotributo", "Guía primer año"), ("/recibos-presupuestos-pdf", "Recibos y presupuestos")]
 
 def layout(slug, title, desc, body, og_type="article", extra_head="", script=""):
     url = f"{BASE}/{slug}" if slug else f"{BASE}/"
@@ -143,7 +143,7 @@ def oferta_kit():
     return """<section class="oferta" aria-labelledby="of-kit"><div><span class="etiqueta">Planilla para Excel y Google Sheets</span><h2 id="of-kit">Kit Monotributista 2026</h2>
 <p>Cargás cada factura con fecha e importe. La planilla hace el resto, mes a mes.</p>
 <ul><li>Facturación de los últimos 12 meses y categoría que te corresponde</li><li>Margen antes de subir de categoría y antes de la exclusión</li><li>Proyección al ritmo de tus últimos 3 meses, con alerta</li><li>Tablero de gastos y ahorro en pesos y en dólares</li></ul></div>
-<div class="compra"><a class="boton" href="/comprar?p=kit">Comprar el Kit <span class="num">$ 6.999</span></a><span class="nota">Pagás con Mercado Pago y lo descargás al instante. Escalas editables para cuando cambien.</span></div></section>"""
+<div class="compra"><a class="boton" href="/comprar?p=kit">Comprar el Kit <span class="num">$ 6.999</span></a><span class="nota">Pagás con Mercado Pago y lo descargás al instante. Escalas editables para cuando cambien.</span><a class="nota" href="/comprar?p=kitguia">Con la guía \"Primer año de monotributo\": $ 8.999</a></div></section>"""
 
 def oferta_ml():
     return """<section class="oferta" aria-labelledby="of-ml"><div><span class="etiqueta">Planilla para Excel y Google Sheets</span><h2 id="of-ml">Calculadora de Precios para Vendedores</h2>
@@ -587,7 +587,11 @@ def main():
     ARTS.update(__import__("packs_arts").ARTS_PACKS)
     os.makedirs(PUB, exist_ok=True)
     w = lambda name, s: open(os.path.join(PUB, name), "w", encoding="utf-8").write(s)
-    w("estilo.css", CSS)
+    gr = __import__("guia_recibos_page")
+    w("estilo.css", CSS + gr.CSS_EXTRA)
+    GR = gr.pages()
+    for slug, (t, d, b, sc) in GR.items():
+        w(f"{slug}.html", layout(slug, t, d, b, "website", script=sc))
     w("index.html", layout("", "Calculadora de categoría de Monotributo 2026", "Calculá gratis tu categoría de Monotributo con las escalas vigentes de agosto 2026 a enero 2027: cuota, tope y margen antes de la recategorización de febrero.", HOME_BODY, "website", script=HOME_JS))
     w("precios-mercado-libre.html", layout("precios-mercado-libre", "Calculadora de precios para Mercado Libre 2026", "Calculá a cuánto publicar en Mercado Libre Clásica, Premium y venta directa para ganar el margen que querés, con comisiones, costo fijo e Ingresos Brutos.", ML_BODY, "website", script=ML_JS))
     w("aumento-alquiler.html", layout("aumento-alquiler", "Calculadora de aumento de alquiler por IPC 2026", "Calculá cuánto te aumenta el alquiler con el IPC oficial del INDEC: alquiler de hoy, todos los ajustes y la fecha del próximo, para contratos que se actualizan cada 3, 4, 6 o 12 meses.", ALQ_BODY, "website", script=ALQ_JS))
@@ -598,7 +602,7 @@ def main():
     w("sueldo-empleada-domestica.html", layout("sueldo-empleada-domestica", "Sueldo de empleada doméstica noviembre y diciembre 2026", "Cuánto pagarle a tu empleada doméstica en noviembre y diciembre 2026: valor hora y mensual de cada categoría, con antigüedad y zona desfavorable. Escala oficial Resolución 6/2026.", SUE_BODY, "website", script=SUE_JS))
     for slug, (t, d, b) in ARTS.items():
         w(f"{slug}.html", layout(slug, t, d, b))
-    urls = ["", "qr", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica", "calculadora-vacaciones", "calculadora-liquidacion-final", "calculadora-ganancias-sueldo"] + list(ARTS)
+    urls = ["", "qr", "precios-mercado-libre", "aumento-alquiler", "aguinaldo", "sueldo-empleada-domestica", "calculadora-vacaciones", "calculadora-liquidacion-final", "calculadora-ganancias-sueldo"] + list(GR) + list(ARTS)
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{BASE}/{u}</loc><lastmod>{HOY}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w("robots.txt", f"User-agent: *\nDisallow: /comprar\nDisallow: /gracias\nDisallow: /descargar\nDisallow: /q/\nDisallow: /qr/\nSitemap: {BASE}/sitemap.xml\n")
     print("ok", len(urls), "páginas")
