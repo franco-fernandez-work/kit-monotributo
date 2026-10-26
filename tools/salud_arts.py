@@ -10,7 +10,7 @@ REC = ("Reclamo a la obra social o prepaga: pasos, formularios y plazos",
  '<h2>Qué se suele pedir</h2><ul><li>DNI y carnet de la obra social o prepaga, original y copia.</li><li>CUIL/CUIT y, si corresponde, último recibo.</li><li>Orden médica o informe del profesional y prueba de la negativa.</li></ul>'
  '<h2>Canales de la Superintendencia</h2><p>0800-222-SALUD (72583), Centro de Atención Virtual y “Trámites y servicios” en argentina.gob.ar/sssalud.</p>'
  '<h2>Reintegros</h2><p>No hay un único procedimiento nacional: depende de tu entidad y plan. Como referencia, el reembolso de gastos médicos de PAMI pide presentar dentro de los 180 días de la prestación, con factura original detallada y documentación clínica.</p>' + FSS + '</div>'
- + _oferta("reclamos", "Guía PDF + planilla", "Guía y carpeta de reclamos y reintegros", "Todo ordenado para reclamar sin perder plazos.",
+ + _oferta("reclamosos", "Guía PDF + planilla", "Guía y carpeta de reclamos y reintegros", "Todo ordenado para reclamar sin perder plazos.",
    ["Guía PDF de 5 páginas: cuándo reclamar, Formulario A y B, canales y checklist", "Planilla Excel con registro de gastos, fecha límite y estado de cada reintegro", "Seguimiento de reclamos con plazos calculados solos", "Checklist de documentación para imprimir"],
    "2.999", "Comprar la guía", "Pagás con Mercado Pago y la descargás al instante."))
 
