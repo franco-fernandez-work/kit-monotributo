@@ -116,7 +116,7 @@ CSS = ('.mas-leer{margin-top:56px;padding-top:20px;border-top:1px solid var(--li
        '.submenu{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:14px;margin-top:8px}.submenu a{color:var(--tinta-2)}'
        '.pie,.mas-leer{content-visibility:auto;contain-intrinsic-size:auto 320px}'
        '@media print{.top,.pie,.oferta,.mas-leer,.migas,.faq,.fuentes,.boton{display:none!important}body{background:#fff;color:#000}}'
-       '@media (max-width:760px){.mas-leer ul{columns:1}}.indice h2{margin-top:36px}.indice ul{padding-left:20px}.indice li{margin:8px 0}.indice li span{display:block;color:var(--tinta-2);font-size:15px}')
+       '@media (max-width:760px){.mas-leer ul{columns:1}}.indice-guias h2{margin-top:36px}.indice-guias ul{padding-left:20px}.indice-guias li{margin:8px 0}.indice-guias li span{display:block;color:var(--tinta-2);font-size:15px}')
 
 def _fuentes(h):
     m = re.search(r'<link rel="stylesheet" href="(https://fonts\.googleapis\.com/[^"]+)">', h)
@@ -162,7 +162,7 @@ def _pagina(pags, base, plantilla_slug, slug, title, desc, cuerpo):
 
 def _indice(pags):
     grupos = [(k, t) for k, t, _ in TEMAS] + [("otros", "Más herramientas")]
-    cuerpo = ['<span class="etiqueta">Índice</span><h1>Todas las calculadoras y guías</h1><p class="bajada">Herramientas gratis y guías para trámites y cuentas de Argentina, ordenadas por tema. También podés ver el <a href="/glosario">glosario</a> y las <a href="/fechas-clave">fechas clave</a>.</p><div class="lectura indice">']
+    cuerpo = ['<span class="etiqueta">Índice</span><h1>Todas las calculadoras y guías</h1><p class="bajada">Herramientas gratis y guías para trámites y cuentas de Argentina, ordenadas por tema. También podés ver el <a href="/glosario">glosario</a> y las <a href="/fechas-clave">fechas clave</a>.</p><div class="lectura indice-guias">']
     for k, t in grupos:
         ss = sorted((s for s in pags if pags[s]["tema"] == k and s not in NO_INDEX and not pags[s].get("consolidada")), key=lambda s: (pags[s]["og"] != "website", s))
         if not ss:
