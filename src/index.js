@@ -28,8 +28,6 @@ import packFiesta from "../private/Pack-Fiesta-Casamiento-2026.zip";
 import packVeraneo from "../private/Pack-Vacaciones-Verano-2026.zip";
 import packFiestas from "../private/Pack-Fiestas-Fin-de-Anio-2026.zip";
 import packEmprend from "../private/Pack-Emprendedores-Stock-Costos-2026.zip";
-import packDep10 from "../private/Pack-Recuperar-Deposito-2026.zip";
-import packCole27 from "../private/Pack-Vuelta-al-Cole-2027.zip";
 import guiaExterior from "../private/guia-exterior.pdf";
 import guiaCobrar from "../private/guia-cobrar.pdf";
 import guiaAlquilar from "../private/guia-alquilar.pdf";
@@ -42,9 +40,9 @@ import guiaRenovar from "../private/guia-renovar.pdf";
 import guiaCosta from "../private/guia-costa.pdf";
 import presupuesto from "../private/presupuesto.xlsx";
 import stock from "../private/stock.xlsx";
-import guiaDeposito from "../private/guia-deposito.pdf";
+import packDeposito from "../private/pack-deposito.zip";
 import packTemporada from "../private/pack-temporada.zip";
-import cole from "../private/cole.xlsx";
+import packCole from "../private/pack-cole.zip";
 import siradig from "../private/siradig.xlsx";
 import packAlqEstud from "../private/pack-alqestud.zip";
 import packSiradigCombo from "../private/pack-siradigcombo.zip";
@@ -107,8 +105,8 @@ const PRODUCTOS = {
     precio: 3999, archivo: packAlimentos, filename: "Planilla-Gastos-del-Hijo.zip", mime: "application/zip", volver: "/cuota-alimentaria-aguinaldo" },
   alqestud: { ref: "alqestud2026", titulo: "Pack Alquiler para Estudiantes (modelos Word)", nombre: "Pack Alquiler para Estudiantes",
     precio: 2999, archivo: packAlqEstud, filename: "Pack-Alquiler-Estudiantes.zip", mime: "application/zip", volver: "/contrato-alquiler-estudiante" },
-  cole: { ref: "cole2026", titulo: "Planilla Anual del Gasto Escolar (planilla Excel / Google Sheets)", nombre: "Planilla Anual del Gasto Escolar",
-    precio: 2999, archivo: cole, filename: "Planilla-Gasto-Escolar.xlsx", volver: "/presupuesto-vuelta-al-cole" },
+  cole: { ref: "cole2026", titulo: "Pack Vuelta al Cole: planilla anual, guía de ahorro y lista de útiles (planillas Excel + PDF)", nombre: "Pack Vuelta al Cole: planilla, guía y lista de útiles",
+    precio: 2999, archivo: packCole, filename: "Pack-Vuelta-al-Cole.zip", mime: "application/zip", volver: "/presupuesto-vuelta-al-cole" },
   siradig: { ref: "siradig2026", titulo: "Organizador SIRADIG: comprobantes y deducciones (planilla Excel / Google Sheets)", nombre: "Organizador SIRADIG",
     precio: 3999, archivo: siradig, filename: "Organizador-SIRADIG-2026.xlsx", volver: "/siradig-que-puedo-deducir" },
   siradigcombo: { ref: "siradigcombo2026", titulo: "Combo SIRADIG + Ganancias en el Sueldo (dos planillas)", nombre: "Combo Organizador SIRADIG + Ganancias en el Sueldo",
@@ -143,10 +141,10 @@ const PRODUCTOS = {
     precio: 1999, archivo: packFiestas, filename: "Pack-Fiestas-Fin-de-Anio-2026.zip", mime: "application/zip", volver: "/presupuesto-navidad-fin-de-anio" },
   emprendedor: { ref: "emprendedor2026", titulo: "Stock, costos y ventas para emprendedores: guía y planilla (PDF + planilla Excel)", nombre: "Stock, costos y ventas para emprendedores",
     precio: 2999, archivo: packEmprend, filename: "Pack-Emprendedores-Stock-Costos-2026.zip", mime: "application/zip", volver: "/calculadora-precio-margen-emprendedores" },
-  deposito10: { ref: "deposito10_2026", titulo: "Recuperar el depósito del alquiler: guía, cartas y planilla (PDF + planilla Excel)", nombre: "Recuperar el depósito: guía, cartas y planilla",
-    precio: 2999, archivo: packDep10, filename: "Pack-Recuperar-Deposito-2026.zip", mime: "application/zip", volver: "/pack-cartas-recuperar-deposito-alquiler" },
-  cole27: { ref: "cole27_2026", titulo: "Vuelta al cole 2027: guía y planilla de ahorro (PDF + planilla Excel)", nombre: "Vuelta al cole 2027: guía y planilla",
-    precio: 2499, archivo: packCole27, filename: "Pack-Vuelta-al-Cole-2027.zip", mime: "application/zip", volver: "/ahorro-vuelta-al-cole-2027" },
+  deposito10: { ref: "deposito10_2026", titulo: "Pack Recuperá tu depósito de alquiler: guía, cartas y planilla (PDF + planilla Excel)", nombre: "Pack Recuperá tu depósito de alquiler",
+    precio: 2999, archivo: packDeposito, filename: "Pack-Recuperar-Deposito.zip", mime: "application/zip", volver: "/recuperar-deposito-alquiler" },
+  cole27: { ref: "cole27_2026", titulo: "Pack Vuelta al Cole: planilla anual, guía de ahorro y lista de útiles (planillas Excel + PDF)", nombre: "Pack Vuelta al Cole: planilla, guía y lista de útiles",
+    precio: 2999, archivo: packCole, filename: "Pack-Vuelta-al-Cole.zip", mime: "application/zip", volver: "/presupuesto-vuelta-al-cole" },
   jubilacion: { ref: "jubilacion2026", titulo: "Guía: Jubilación ANSES paso a paso (PDF)", nombre: "Guía: Jubilación ANSES paso a paso",
     precio: 3999, archivo: guiaJubilacion, filename: "Guia-Jubilacion-ANSES-Paso-A-Paso.pdf", mime: "application/pdf", volver: "/cuantos-aportes-necesito-para-jubilarme" },
   salir: { ref: "salir2026", titulo: "Guía: Salir del monotributo (PDF)", nombre: "Guía: Salir del monotributo",
@@ -163,8 +161,8 @@ const PRODUCTOS = {
     precio: 3999, archivo: packTemporada, filename: "Pack-Personal-de-Temporada.zip", mime: "application/zip", volver: "/contratar-personal-de-temporada-verano" },
   stock: { ref: "stock2026", titulo: "Planilla de Stock, Costos y Ventas para Emprendedores (planilla Excel / Google Sheets)", nombre: "Planilla de Stock, Costos y Ventas",
     precio: 2999, archivo: stock, filename: "Planilla-Stock-Costos-Ventas.xlsx", volver: "/vender-en-navidad-margen-precio-stock" },
-  deposito: { ref: "deposito2026", titulo: "Guía: Recuperá tu depósito de alquiler (PDF)", nombre: "Guía: Recuperá tu depósito de alquiler",
-    precio: 2999, archivo: guiaDeposito, filename: "Guia-Recuperar-Deposito-Alquiler.pdf", mime: "application/pdf", volver: "/recuperar-deposito-alquiler" },
+  deposito: { ref: "deposito2026", titulo: "Pack Recuperá tu depósito de alquiler: guía, cartas y planilla (PDF + planilla Excel)", nombre: "Pack Recuperá tu depósito de alquiler",
+    precio: 2999, archivo: packDeposito, filename: "Pack-Recuperar-Deposito.zip", mime: "application/zip", volver: "/recuperar-deposito-alquiler" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
     precio: 990, app: "/recibos-presupuestos-pdf", volver: "/recibos-presupuestos-pdf" },
 };
