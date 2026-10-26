@@ -9,3 +9,4 @@ python3 tools/build_liq_xlsx.py
 python3 tools/build_gan_xlsx.py
 python3 tools/build_site.py
 python3 tools/marca.py
+python3 tools/en_page.py
