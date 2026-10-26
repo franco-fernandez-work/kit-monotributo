@@ -20,7 +20,7 @@ TEMAS = [
     ("familia", "Familia y trámites", ["menores", "alimentaria", "cole", "hereda", "sucesion", "auto", "progresar", "libreta-auh", "cud-", "reclamo-obra-social", "vacunacion", "escolar", "fiesta-15", "vacaciones-verano", "navidad"]),
     ("sueldo", "Sueldo, aguinaldo y trabajo", ["aguinaldo", "vacaciones", "liquidacion", "ganancias", "siradig", "telegrama", "jubil", "aportes", "despido", "renuncia", "sueldo", "personal-de-temporada"]),
     ("mono", "Monotributo y freelancers", ["monotributo", "escalas", "recategoriz", "freelancer", "recibos", "facturar"]),
-    ("ventas", "Vender y comprar online", ["mercado-libre", "compras", "reclamo", "arrepentimiento", "exterior", "vender-en"]),
+    ("ventas", "Vender y comprar online", ["mercado-libre", "compras", "reclamo", "arrepentimiento", "exterior", "vender-en", "emprendedores"]),
 ]
 TEMA_HOME = "mono"
 
