@@ -21,6 +21,9 @@ import packAlimentos from "../private/pack-alimentos.zip";
 import packLibretaAuh from "../private/Pack-Libreta-AUH-2026.zip";
 import packJubila from "../private/Pack-Jubilacion-2026.zip";
 import packCud from "../private/Pack-CUD-2026.zip";
+import packReclamosRei from "../private/Pack-Reclamos-Reintegros-2026.zip";
+import packSaludFam from "../private/Pack-Salud-Familiar-2026.zip";
+import packEscolar from "../private/Pack-Ayuda-Escolar-2026.zip";
 import guiaExterior from "../private/guia-exterior.pdf";
 import guiaCobrar from "../private/guia-cobrar.pdf";
 import guiaAlquilar from "../private/guia-alquilar.pdf";
@@ -120,6 +123,12 @@ const PRODUCTOS = {
     precio: 3999, archivo: packJubila, filename: "Pack-Jubilacion-2026.zip", mime: "application/zip", volver: "/me-puedo-jubilar-calculadora" },
   cud: { ref: "cud2026", titulo: "CUD: guía y carpeta de documentación (PDF + planilla Excel)", nombre: "CUD: guía y carpeta de documentación",
     precio: 2999, archivo: packCud, filename: "Pack-CUD-2026.zip", mime: "application/zip", volver: "/cud-documentacion-y-pasos" },
+  reclamos: { ref: "reclamos2026", titulo: "Reclamos y reintegros a tu obra social o prepaga: guía y carpeta (PDF + planilla Excel)", nombre: "Reclamos y reintegros a tu obra social o prepaga",
+    precio: 2999, archivo: packReclamosRei, filename: "Pack-Reclamos-Reintegros-2026.zip", mime: "application/zip", volver: "/reclamo-obra-social-prepaga-paso-a-paso" },
+  saludfam: { ref: "saludfam2026", titulo: "Carpeta de salud familiar: vacunas, controles y turnos (PDF + planilla Excel)", nombre: "Carpeta de salud familiar",
+    precio: 2999, archivo: packSaludFam, filename: "Pack-Salud-Familiar-2026.zip", mime: "application/zip", volver: "/calendario-vacunacion-turnos-hospital-publico" },
+  escolar: { ref: "escolar2026", titulo: "Ayuda Escolar Anual: guía y carpeta (PDF + planilla Excel)", nombre: "Ayuda Escolar Anual: guía y carpeta",
+    precio: 1999, archivo: packEscolar, filename: "Pack-Ayuda-Escolar-2026.zip", mime: "application/zip", volver: "/ayuda-escolar-anual-certificado-escolar" },
   jubilacion: { ref: "jubilacion2026", titulo: "Guía: Jubilación ANSES paso a paso (PDF)", nombre: "Guía: Jubilación ANSES paso a paso",
     precio: 3999, archivo: guiaJubilacion, filename: "Guia-Jubilacion-ANSES-Paso-A-Paso.pdf", mime: "application/pdf", volver: "/cuantos-aportes-necesito-para-jubilarme" },
   salir: { ref: "salir2026", titulo: "Guía: Salir del monotributo (PDF)", nombre: "Guía: Salir del monotributo",
