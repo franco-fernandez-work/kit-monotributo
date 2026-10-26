@@ -27,6 +27,9 @@ import packEscolar from "../private/Pack-Ayuda-Escolar-2026.zip";
 import packFiesta from "../private/Pack-Fiesta-Casamiento-2026.zip";
 import packVeraneo from "../private/Pack-Vacaciones-Verano-2026.zip";
 import packFiestas from "../private/Pack-Fiestas-Fin-de-Anio-2026.zip";
+import packEmprend from "../private/Pack-Emprendedores-Stock-Costos-2026.zip";
+import packDep10 from "../private/Pack-Recuperar-Deposito-2026.zip";
+import packCole27 from "../private/Pack-Vuelta-al-Cole-2027.zip";
 import guiaExterior from "../private/guia-exterior.pdf";
 import guiaCobrar from "../private/guia-cobrar.pdf";
 import guiaAlquilar from "../private/guia-alquilar.pdf";
@@ -138,6 +141,12 @@ const PRODUCTOS = {
     precio: 2999, archivo: packVeraneo, filename: "Pack-Vacaciones-Verano-2026.zip", mime: "application/zip", volver: "/presupuesto-vacaciones-verano" },
   fiestas: { ref: "fiestas2026", titulo: "Fiestas de fin de año: guía y planilla de regalos y cena (PDF + planilla Excel)", nombre: "Fiestas de fin de año: regalos, cena y reparto",
     precio: 1999, archivo: packFiestas, filename: "Pack-Fiestas-Fin-de-Anio-2026.zip", mime: "application/zip", volver: "/presupuesto-navidad-fin-de-anio" },
+  emprendedor: { ref: "emprendedor2026", titulo: "Stock, costos y ventas para emprendedores: guía y planilla (PDF + planilla Excel)", nombre: "Stock, costos y ventas para emprendedores",
+    precio: 2999, archivo: packEmprend, filename: "Pack-Emprendedores-Stock-Costos-2026.zip", mime: "application/zip", volver: "/calculadora-precio-margen-emprendedores" },
+  deposito10: { ref: "deposito10_2026", titulo: "Recuperar el depósito del alquiler: guía, cartas y planilla (PDF + planilla Excel)", nombre: "Recuperar el depósito: guía, cartas y planilla",
+    precio: 2999, archivo: packDep10, filename: "Pack-Recuperar-Deposito-2026.zip", mime: "application/zip", volver: "/pack-cartas-recuperar-deposito-alquiler" },
+  cole27: { ref: "cole27_2026", titulo: "Vuelta al cole 2027: guía y planilla de ahorro (PDF + planilla Excel)", nombre: "Vuelta al cole 2027: guía y planilla",
+    precio: 2499, archivo: packCole27, filename: "Pack-Vuelta-al-Cole-2027.zip", mime: "application/zip", volver: "/ahorro-vuelta-al-cole-2027" },
   jubilacion: { ref: "jubilacion2026", titulo: "Guía: Jubilación ANSES paso a paso (PDF)", nombre: "Guía: Jubilación ANSES paso a paso",
     precio: 3999, archivo: guiaJubilacion, filename: "Guia-Jubilacion-ANSES-Paso-A-Paso.pdf", mime: "application/pdf", volver: "/cuantos-aportes-necesito-para-jubilarme" },
   salir: { ref: "salir2026", titulo: "Guía: Salir del monotributo (PDF)", nombre: "Guía: Salir del monotributo",
