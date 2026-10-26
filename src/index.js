@@ -18,6 +18,9 @@ import packBoletoAuto from "../private/pack-boletoauto.zip";
 import packAlqTemp from "../private/pack-alqtemp.zip";
 import packViajeMenor from "../private/pack-viajemenor.zip";
 import packAlimentos from "../private/pack-alimentos.zip";
+import packLibretaAuh from "../private/Pack-Libreta-AUH-2026.zip";
+import packJubila from "../private/Pack-Jubilacion-2026.zip";
+import packCud from "../private/Pack-CUD-2026.zip";
 import guiaExterior from "../private/guia-exterior.pdf";
 import guiaCobrar from "../private/guia-cobrar.pdf";
 import guiaAlquilar from "../private/guia-alquilar.pdf";
@@ -111,6 +114,12 @@ const PRODUCTOS = {
     precio: 2999, archivo: guiaAguinaldo, filename: "Guia-Donde-Poner-El-Aguinaldo.pdf", mime: "application/pdf", volver: "/donde-poner-el-aguinaldo" },
   sucesion: { ref: "sucesion2026", titulo: "Guía: Sucesión sin perder tiempo (PDF)", nombre: "Guía: Sucesión sin perder tiempo",
     precio: 4999, archivo: guiaSucesion, filename: "Guia-Sucesion-Sin-Perder-Tiempo.pdf", mime: "application/pdf", volver: "/quien-hereda-sucesion-sin-testamento" },
+  libreta: { ref: "libreta2026", titulo: "Libreta AUH 2026: guía y carpeta (PDF + planilla Excel)", nombre: "Libreta AUH 2026: guía y carpeta",
+    precio: 2999, archivo: packLibretaAuh, filename: "Pack-Libreta-AUH-2026.zip", mime: "application/zip", volver: "/libreta-auh-como-presentar" },
+  jubila: { ref: "jubila2026", titulo: "Mi camino a la jubilación: guía y planilla (PDF + planilla Excel)", nombre: "Mi camino a la jubilación: guía y planilla",
+    precio: 3999, archivo: packJubila, filename: "Pack-Jubilacion-2026.zip", mime: "application/zip", volver: "/me-puedo-jubilar-calculadora" },
+  cud: { ref: "cud2026", titulo: "CUD: guía y carpeta de documentación (PDF + planilla Excel)", nombre: "CUD: guía y carpeta de documentación",
+    precio: 2999, archivo: packCud, filename: "Pack-CUD-2026.zip", mime: "application/zip", volver: "/cud-documentacion-y-pasos" },
   jubilacion: { ref: "jubilacion2026", titulo: "Guía: Jubilación ANSES paso a paso (PDF)", nombre: "Guía: Jubilación ANSES paso a paso",
     precio: 3999, archivo: guiaJubilacion, filename: "Guia-Jubilacion-ANSES-Paso-A-Paso.pdf", mime: "application/pdf", volver: "/cuantos-aportes-necesito-para-jubilarme" },
   salir: { ref: "salir2026", titulo: "Guía: Salir del monotributo (PDF)", nombre: "Guía: Salir del monotributo",
