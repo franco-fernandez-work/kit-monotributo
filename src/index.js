@@ -37,13 +37,11 @@ import guiaCobrar from "../private/guia-cobrar.pdf";
 import guiaAlquilar from "../private/guia-alquilar.pdf";
 import guiaAguinaldo from "../private/guia-aguinaldo.pdf";
 import guiaSucesion from "../private/guia-sucesion.pdf";
-import guiaJubilacion from "../private/guia-jubilacion.pdf";
 import guiaSalir from "../private/guia-salir.pdf";
 import guiaMudanza from "../private/guia-mudanza.pdf";
 import guiaRenovar from "../private/guia-renovar.pdf";
 import guiaCosta from "../private/guia-costa.pdf";
 import presupuesto from "../private/presupuesto.xlsx";
-import stock from "../private/stock.xlsx";
 import packDeposito from "../private/pack-deposito.zip";
 import packTemporada from "../private/pack-temporada.zip";
 import packCole from "../private/pack-cole.zip";
@@ -158,7 +156,7 @@ const PRODUCTOS = {
   cole27: { ref: "cole27_2026", titulo: "Pack Vuelta al Cole: planilla anual, guía de ahorro y lista de útiles (planillas Excel + PDF)", nombre: "Pack Vuelta al Cole: planilla, guía y lista de útiles",
     precio: 2999, archivo: packCole, filename: "Pack-Vuelta-al-Cole.zip", mime: "application/zip", volver: "/presupuesto-vuelta-al-cole" },
   jubilacion: { ref: "jubilacion2026", titulo: "Guía: Jubilación ANSES paso a paso (PDF)", nombre: "Guía: Jubilación ANSES paso a paso",
-    precio: 3999, archivo: guiaJubilacion, filename: "Guia-Jubilacion-ANSES-Paso-A-Paso.pdf", mime: "application/pdf", volver: "/cuantos-aportes-necesito-para-jubilarme" },
+    precio: 3999, archivo: packJubila, filename: "Pack-Jubilacion-2026.zip", mime: "application/zip", volver: "/me-puedo-jubilar-calculadora" },
   salir: { ref: "salir2026", titulo: "Guía: Salir del monotributo (PDF)", nombre: "Guía: Salir del monotributo",
     precio: 3999, archivo: guiaSalir, filename: "Guia-Salir-Del-Monotributo.pdf", mime: "application/pdf", volver: "/salir-del-monotributo-cuanto-cuesta" },
   mudanza: { ref: "mudanza2026", titulo: "Guía: Mudanza sin estafas (PDF)", nombre: "Guía: Mudanza sin estafas",
@@ -172,7 +170,7 @@ const PRODUCTOS = {
   temporada: { ref: "temporada2026", titulo: "Pack Personal de Temporada (modelos Word)", nombre: "Pack Personal de Temporada",
     precio: 3999, archivo: packTemporada, filename: "Pack-Personal-de-Temporada.zip", mime: "application/zip", volver: "/contratar-personal-de-temporada-verano" },
   stock: { ref: "stock2026", titulo: "Planilla de Stock, Costos y Ventas para Emprendedores (planilla Excel / Google Sheets)", nombre: "Planilla de Stock, Costos y Ventas",
-    precio: 2999, archivo: stock, filename: "Planilla-Stock-Costos-Ventas.xlsx", volver: "/vender-en-navidad-margen-precio-stock" },
+    precio: 2999, archivo: packEmprend, filename: "Pack-Emprendedores-Stock-Costos-2026.zip", mime: "application/zip", volver: "/calculadora-precio-margen-emprendedores" },
   deposito: { ref: "deposito2026", titulo: "Pack Recuperá tu depósito de alquiler: guía, cartas y planilla (PDF + planilla Excel)", nombre: "Pack Recuperá tu depósito de alquiler",
     precio: 2999, archivo: packDeposito, filename: "Pack-Recuperar-Deposito.zip", mime: "application/zip", volver: "/recuperar-deposito-alquiler" },
   recibos: { ref: "recibos2026", titulo: "Generador de recibos y presupuestos en PDF: 10 documentos", nombre: "10 documentos del generador de recibos y presupuestos",
