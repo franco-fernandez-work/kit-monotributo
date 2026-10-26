@@ -52,10 +52,10 @@ NIVELES = {"i": ("Inicial", [35000, 45000, 60000, 0]), "p": ("Primaria", [60000,
 RUB_C = ["Útiles y mochila", "Uniforme y ropa", "Calzado", "Libros"]
 
 def of_cole():
-    return LP.oferta("cole", "Planilla (Excel / Google Sheets)", "Planilla Anual del Gasto Escolar",
-        "Presupuestá el año completo por hijo, con la cuota ajustada por IPC, y compará lo presupuestado con lo que gastás de verdad.",
-        ["Hasta 3 hijos: útiles, uniforme, cuota, transporte, comedor, libros y actividades", "Cuota y transporte con ajuste mensual por IPC que cargás vos", "Presupuesto vs. gasto real, mes por mes", "Resumen familiar con totales y diferencia"],
-        "2.999", "Comprar la planilla", "Pagás con Mercado Pago y la descargás al instante. Funciona en Excel y en Google Sheets.",
+    return LP.oferta("cole", "Pack: planillas Excel / Google Sheets + guía PDF", "Pack Vuelta al Cole: planilla anual, guía y lista de útiles",
+        "Presupuestá el año completo por hijo, con la cuota ajustada por IPC, y armá la vuelta al cole con una guía de ahorro y una lista de útiles.",
+        ["Hasta 3 hijos: útiles, uniforme, cuota, transporte, comedor, libros y actividades", "Cuota y transporte con ajuste mensual por IPC que cargás vos", "Presupuesto vs. gasto real, mes por mes y resumen familiar", "Guía PDF de ahorro: presupuesto, útiles, precios y beneficios con fecha límite", "Planilla de ahorro mensual: lista de útiles por hijo con lo que ya tenés y comparador de precios entre tres comercios"],
+        "2.999", "Comprar el pack", "Pagás con Mercado Pago y lo descargás al instante. Las planillas funcionan en Excel y en Google Sheets.",
         '<a class="nota" href="/cuota-alimentaria-aguinaldo">¿Compartís gastos con el otro progenitor? Documentos de cuota alimentaria</a>')
 
 BODY_C = (head("Gratis · Vuelta al cole", "¿Cuánto me sale la vuelta al cole? Calculá la mochila", "Elegí el nivel, editá los precios con los de tu lista y fijá cuántos hijos tenés. Comparamos pagar de contado y en cuotas.")

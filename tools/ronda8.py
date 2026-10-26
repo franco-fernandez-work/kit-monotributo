@@ -84,9 +84,9 @@ document.querySelectorAll('.comp input').forEach(e=>e.addEventListener('input',a
 
 # ===================================================================== 24. DEPÓSITO DEL ALQUILER
 def of_dep():
-    return of_guia("deposito", "Guía: Recuperá tu depósito de alquiler",
-        "11 páginas con el cronograma de salida, qué pueden descontar, cuánto te corresponde según tu contrato y 4 cartas listas.",
-        ["Qué dice el Código hoy sobre el depósito y qué cláusulas leer en tu contrato", "Cronograma de 60 días a la entrega de llaves, con checklist de pruebas", "Qué descuentos son razonables y cómo defenderte de los que no", "Escalera de reclamo y cartas: aviso de entrega, acta, intimación y pedido de liquidación"],
+    return of_guia("deposito", "Pack: Recuperá tu depósito de alquiler",
+        "Guía de 11 páginas con cronograma de salida y 4 cartas listas, más una planilla para calcular cuánto recuperar.",
+        ["Qué dice el Código hoy sobre el depósito y qué cláusulas leer en tu contrato", "Cronograma de 60 días a la entrega de llaves, con checklist de pruebas", "Qué descuentos son razonables y cómo defenderte de los que no", "Escalera de reclamo y cartas: aviso de entrega, acta, intimación y pedido de liquidación", "Planilla Excel: depósito actualizado, plazo de devolución, monto a recuperar y estado de ingreso vs. salida"],
         "2.999", '<a class="nota" href="/renovar-alquiler-o-mudarse">¿Se vence el contrato? Renovar o mudarte: hacé la cuenta</a>')
 
 BODY_D = (head("Gratis · Alquileres", "Depósito del alquiler: ¿cuánto te tienen que devolver?", "Cargá lo que pagaste de depósito, los alquileres y cómo dice tu contrato que se devuelve. Calculamos el monto, los descuentos justificados y el interés por demora.")
@@ -100,7 +100,7 @@ BODY_D = (head("Gratis · Alquileres", "Depósito del alquiler: ¿cuánto te tie
  + '</div></div><div><div class="r2res" id="d-out" aria-live="polite"></div>'
  + '<p class="nota">Estimación orientativa.</p></div></div>'
  + AVH
- + lec("<h2>Lo que conviene saber antes de entregar las llaves</h2><ul><li><b>Manda tu contrato</b>: desde el DNU 70/2023, las partes pactan libremente el monto, la moneda y la forma de devolución del depósito (art. 1196 del Código Civil y Comercial).</li><li><b>Devolvés la propiedad como la recibiste</b>, salvo el desgaste por el paso del tiempo y el uso regular (art. 1210). Por eso el inventario y las fotos del inicio valen oro.</li><li><b>Dejá todo por escrito</b>: acta de entrega con fecha, libre deuda de servicios y una carta si no te devuelven en el plazo.</li></ul><p>La guía en PDF trae el cronograma de salida, la lista de descuentos que sí y no corresponden, y 4 cartas modelo.</p>")
+ + lec("<h2>Lo que conviene saber antes de entregar las llaves</h2><ul><li><b>Manda tu contrato</b>: desde el DNU 70/2023, las partes pactan libremente el monto, la moneda y la forma de devolución del depósito (art. 1196 del Código Civil y Comercial).</li><li><b>Devolvés la propiedad como la recibiste</b>, salvo el desgaste por el paso del tiempo y el uso regular (art. 1210). Por eso el inventario y las fotos del inicio valen oro.</li><li><b>Dejá todo por escrito</b>: acta de entrega con fecha, libre deuda de servicios y una carta si no te devuelven en el plazo.</li></ul><p>Antes de irte: buscá el inventario y las fotos del día que entraste, sacá fotos y video con fecha de cada ambiente, guardá los comprobantes de servicios y expensas y firmá un acta de restitución de llaves. El pack trae la guía en PDF con el cronograma de salida, la lista de descuentos que sí y no corresponden y 4 cartas modelo, más una planilla con el cálculo y el estado de ingreso vs. salida.</p>")
  + of_dep())
 
 JS_D = js("""function a(){const f=document.getElementById('d-f').value,dep=n('d-dep'),ai=Math.max(1,n('d-ai')),af=n('d-af'),ix=n('d-ix')/100,desc=n('d-desc'),dias=n('d-dias'),tasa=n('d-tasa')/100;

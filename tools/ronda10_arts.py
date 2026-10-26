@@ -54,4 +54,4 @@ COLE = ("Vuelta al cole 2027: presupuesto, lista de útiles y ahorro mensual",
    ["Guía PDF de 4 páginas: presupuesto, útiles, precios y beneficios", "Planilla Excel con presupuesto por rubro y ahorro mensual", "Lista de útiles por hijo con lo que ya tenés", "Comparador de precios entre tres comercios y cronograma"],
    "2.499", "Comprar la guía", "Pagás con Mercado Pago y la descargás al instante."))
 
-ARTS_R10 = {"calculadora-precio-margen-emprendedores": EMP, "pack-cartas-recuperar-deposito-alquiler": DEP, "ahorro-vuelta-al-cole-2027": COLE}
+ARTS_R10 = {"calculadora-precio-margen-emprendedores": EMP}  # DEP y COLE se unificaron con /recuperar-deposito-alquiler y /presupuesto-vuelta-al-cole (301 en public/_redirects)
