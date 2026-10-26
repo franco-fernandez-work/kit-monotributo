@@ -590,6 +590,7 @@ def main():
     ARTS.update(__import__("salud_arts").ARTS_SALUD)
     ARTS.update(__import__("ronda9_arts").ARTS_R9)
     ARTS.update(__import__("ronda10_arts").ARTS_R10)
+    ARTS.update(__import__("ronda11_arts").ARTS_R11)
     lg = __import__("legal_pages"); ARTS.update(lg.ARTS_LEGAL)
     au = __import__("auto_pack"); ARTS.update(au.ARTS_AUTO)
     r2 = __import__("ronda2"); r3 = __import__("ronda3")

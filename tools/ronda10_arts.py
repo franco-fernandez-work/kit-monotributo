@@ -21,7 +21,7 @@ EMP = ("Calculadora de precio y margen para emprendedores: stock, costos y venta
  '<div class="lectura"><h2>La fórmula</h2><p><b>Precio = (costo + envío) ÷ (1 − comisión − margen)</b>. El margen se calcula sobre el precio de venta, no sobre el costo.</p>'
  '<h2>Tres errores que se repiten</h2><ul><li>Olvidar la comisión de Mercado Libre o de la pasarela de pago.</li><li>No actualizar el costo cuando sube la mercadería.</li><li>Quedarse sin stock del producto más vendido en el pico de diciembre.</li></ul>' + NOTA + '</div>'
  + _oferta("emprendedor", "Guía PDF + planilla", "Guía y planilla de stock, costos y ventas", "Precio sugerido, stock automático con alerta de reposición y ganancia del mes.",
-   ["Guía PDF de 4 páginas: costo real, precio y margen, stock, cierre del mes", "Planilla Excel con precio sugerido por producto y margen real", "Registro de ventas y compras con stock que se calcula solo", "Resumen de ganancia neta aproximada y checklist de Navidad"],
+   ["Guía PDF de 4 páginas: costo real, precio y margen, stock, cierre del mes", "Planilla Excel con precio sugerido por producto y margen real", "Registro de ventas y compras con stock que se calcula solo", "Presupuesto mensual (plan vs. real) y Panel conectados al stock y a las ventas, más checklist de Navidad"],
    "2.999", "Comprar la guía", "Pagás con Mercado Pago y la descargás al instante."))
 
 DEP_CALC = _calc("d","¿Cuánto te corresponde recuperar?",
