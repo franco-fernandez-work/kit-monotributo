@@ -587,6 +587,7 @@ def main():
     gan = __import__("gan_page"); ARTS.update(gan.ARTS_GAN)
     ARTS.update(__import__("packs_arts").ARTS_PACKS)
     ARTS.update(__import__("anses_arts").ARTS_ANSES)
+    ARTS.update(__import__("salud_arts").ARTS_SALUD)
     lg = __import__("legal_pages"); ARTS.update(lg.ARTS_LEGAL)
     au = __import__("auto_pack"); ARTS.update(au.ARTS_AUTO)
     r2 = __import__("ronda2"); r3 = __import__("ronda3")
