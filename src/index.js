@@ -28,6 +28,10 @@ import packFiesta from "../private/Pack-Fiesta-Casamiento-2026.zip";
 import packVeraneo from "../private/Pack-Vacaciones-Verano-2026.zip";
 import packFiestas from "../private/Pack-Fiestas-Fin-de-Anio-2026.zip";
 import packEmprend from "../private/Pack-Emprendedores-Stock-Costos-2026.zip";
+import horasExtra from "../private/horasextra.xlsx";
+import hogar from "../private/hogar.xlsx";
+import viajeChecklist from "../private/viaje-checklist.xlsx";
+import packViajeBundle from "../private/pack-viaje-bundle.zip";
 import guiaExterior from "../private/guia-exterior.pdf";
 import guiaCobrar from "../private/guia-cobrar.pdf";
 import guiaAlquilar from "../private/guia-alquilar.pdf";
@@ -141,6 +145,14 @@ const PRODUCTOS = {
     precio: 1999, archivo: packFiestas, filename: "Pack-Fiestas-Fin-de-Anio-2026.zip", mime: "application/zip", volver: "/presupuesto-navidad-fin-de-anio" },
   emprendedor: { ref: "emprendedor2026", titulo: "Stock, costos y ventas para emprendedores: guía y planilla (PDF + planilla Excel)", nombre: "Stock, costos y ventas para emprendedores",
     precio: 2999, archivo: packEmprend, filename: "Pack-Emprendedores-Stock-Costos-2026.zip", mime: "application/zip", volver: "/calculadora-precio-margen-emprendedores" },
+  horasextra: { ref: "horasextra2026", titulo: "Control de Horas Extra y Francos (planilla Excel / Google Sheets)", nombre: "Control de Horas Extra y Francos",
+    precio: 4999, archivo: horasExtra, filename: "Control-Horas-Extra-y-Francos.xlsx", volver: "/planilla-control-horas-extra-francos" },
+  hogar: { ref: "hogar2026", titulo: "Organizador del Hogar y Tareas (planilla Excel / Google Sheets)", nombre: "Organizador del Hogar y Tareas",
+    precio: 4999, archivo: hogar, filename: "Organizador-del-Hogar.xlsx", volver: "/tareas-del-hogar-por-frecuencia-lista-imprimible" },
+  viaje: { ref: "viaje2026", titulo: "Checklist de Viaje por Plazos + Equipaje (planilla Excel / Google Sheets)", nombre: "Checklist de Viaje por Plazos + Equipaje",
+    precio: 1999, archivo: viajeChecklist, filename: "Checklist-de-Viaje-por-Plazos.xlsx", volver: "/checklist-viaje-exterior-que-hacer-y-cuando" },
+  viajebundle: { ref: "viajebundle2026", titulo: "Pack Viaje: Checklist + Presupuesto de Viaje (2 planillas Excel / Google Sheets)", nombre: "Pack Viaje: Checklist + Presupuesto",
+    precio: 3499, archivo: packViajeBundle, filename: "Pack-Viaje-Checklist-Presupuesto.zip", mime: "application/zip", volver: "/checklist-viaje-exterior-que-hacer-y-cuando" },
   deposito10: { ref: "deposito10_2026", titulo: "Pack Recuperá tu depósito de alquiler: guía, cartas y planilla (PDF + planilla Excel)", nombre: "Pack Recuperá tu depósito de alquiler",
     precio: 2999, archivo: packDeposito, filename: "Pack-Recuperar-Deposito.zip", mime: "application/zip", volver: "/recuperar-deposito-alquiler" },
   cole27: { ref: "cole27_2026", titulo: "Pack Vuelta al Cole: planilla anual, guía de ahorro y lista de útiles (planillas Excel + PDF)", nombre: "Pack Vuelta al Cole: planilla, guía y lista de útiles",
