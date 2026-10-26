@@ -112,6 +112,7 @@ th:first-child,td:first-child{position:sticky;left:0;z-index:1;background:var(--
   .copiar{gap:12px}
   .copiar .boton{width:100%}
   .hoja-carta,.hoja-prev{position:static;min-height:0;padding:18px 16px}
+  .hoja-prev{position:relative}
   .hoja-carta{font-size:14.5px}
   .r2chk label{padding:14px;font-size:16px;min-height:52px}
   .r2chk input{width:24px;height:24px;margin-top:1px}
