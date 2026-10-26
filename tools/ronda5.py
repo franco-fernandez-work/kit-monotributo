@@ -102,9 +102,6 @@ h+='<p class="nota" style="margin:0">'+v+'</p>';
 $('j-out').innerHTML=h}
 document.querySelectorAll('.comp input,.comp select').forEach(e=>e.addEventListener('input',a));a();""")
 
-PAGES.update({
- "cuantos-aportes-necesito-para-jubilarme": ("Cuántos años de aportes necesito para jubilarme: calculadora ANSES y guía", "Calculadora gratis: edad y años de aportes para jubilarte según la Ley 24.241, con compensación por edad y años por hijos. Guía en PDF del trámite en ANSES por $3.999.", BODY_J, JS_J),
-})
 
 # ===================================================================== 16. SALIR DEL MONOTRIBUTO
 def of_sal():

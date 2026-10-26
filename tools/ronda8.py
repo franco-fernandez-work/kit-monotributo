@@ -115,7 +115,6 @@ document.querySelectorAll('.comp input,.comp select').forEach(e=>e.addEventListe
 
 PAGES = {
  "contratar-personal-de-temporada-verano": ("Personal de temporada en verano: qué contrato usar y cuánto cuesta cerrar", "Elegí entre contrato de temporada, eventual o plazo fijo según la Ley de Contrato de Trabajo y calculá aguinaldo y vacaciones proporcionales. Pack de modelos en Word por $3.999.", BODY_T, JS_T),
- "vender-en-navidad-margen-precio-stock": ("Vender en Navidad: calculá precio, margen y stock + planilla para emprendedores", "Calculá gratis el precio de venta, la ganancia por unidad y cuánto stock comprar para la temporada. Planilla de stock, costos y ventas en Excel por $2.999.", BODY_S, JS_S),
  "recuperar-deposito-alquiler": ("Recuperar el depósito del alquiler: calculadora, cartas y guía", "Calculá cuánto te tienen que devolver del depósito según tu contrato, con descuentos e interés por demora. Guía en PDF con cronograma y 4 cartas modelo por $2.999.", BODY_D, JS_D),
 }
 
