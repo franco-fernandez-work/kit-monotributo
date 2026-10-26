@@ -131,7 +131,7 @@ const PRODUCTOS = {
     precio: 3999, archivo: packJubila, filename: "Pack-Jubilacion-2026.zip", mime: "application/zip", volver: "/me-puedo-jubilar-calculadora" },
   cud: { ref: "cud2026", titulo: "CUD: guía y carpeta de documentación (PDF + planilla Excel)", nombre: "CUD: guía y carpeta de documentación",
     precio: 2999, archivo: packCud, filename: "Pack-CUD-2026.zip", mime: "application/zip", volver: "/cud-documentacion-y-pasos" },
-  reclamos: { ref: "reclamos2026", titulo: "Reclamos y reintegros a tu obra social o prepaga: guía y carpeta (PDF + planilla Excel)", nombre: "Reclamos y reintegros a tu obra social o prepaga",
+  reclamosos: { ref: "reclamosos2026", titulo: "Reclamos y reintegros a tu obra social o prepaga: guía y carpeta (PDF + planilla Excel)", nombre: "Reclamos y reintegros a tu obra social o prepaga",
     precio: 2999, archivo: packReclamosRei, filename: "Pack-Reclamos-Reintegros-2026.zip", mime: "application/zip", volver: "/reclamo-obra-social-prepaga-paso-a-paso" },
   saludfam: { ref: "saludfam2026", titulo: "Carpeta de salud familiar: vacunas, controles y turnos (PDF + planilla Excel)", nombre: "Carpeta de salud familiar",
     precio: 2999, archivo: packSaludFam, filename: "Pack-Salud-Familiar-2026.zip", mime: "application/zip", volver: "/calendario-vacunacion-turnos-hospital-publico" },
