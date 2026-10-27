@@ -18,17 +18,17 @@ PRODUCTOS = [
     ("rsshp", "Freelancer Invoice Tracker", "Flags open and overdue invoices, ages late payments and shows how much to set aside for taxes.", 14),
     ("pxfhxf", "Subscription Tracker", "List everything that renews and see your monthly and yearly cost, with alerts before each renewal.", 9),
     # En cola (Gumroad deja crear 10 por día): al completar el slug aparecen solos.
-    (None, "Stock & Inventory Planner", "Track stock, reorder points and margins for a small online shop.", 19),
-    (None, "Overtime & Time-Off Tracker", "Log extra hours and turn them into days off, with running balances.", 12),
-    (None, "Household Chores Organizer", "Split recurring chores by frequency and person, with a printable weekly view.", 12),
-    (None, "Trip Checklist", "What to do and pack, by deadline, before you travel.", 6),
-    (None, "Trip Bundle: Checklist + Budget", "The trip checklist plus the travel budget planner in one pack.", 12),
-    (None, "Travel Budget Planner", "Plan the cost of a trip by category and compare it with what you actually spend.", 10),
-    (None, "Wedding & Party Planner", "Guest list, budget and task timeline for weddings and parties.", 12),
-    (None, "Holiday Gift & Dinner Planner", "Gift list, budget and dinner shopping list for the holidays.", 8),
+    ("vozscb", "Stock, Budget & Sales Tracker", "Every sale lowers stock and every purchase counts as spending, with reorder alerts, plan vs. actual by month and a dashboard.", 19),
+    ("hzzmlv", "Overtime & Time-Off Tracker", "Log extra hours and see each person's balance of hours and days to take, kept apart from official leave.", 12),
+    ("cccxxs", "Household Chore & Routine Planner", "List every recurring chore once and see what is overdue, due today and coming this week, with a printable weekly checklist.", 12),
+    ("zouxkr", "Trip Checklist + Packing List", "Enter your departure date and see what to do and by when, plus a packing list that adapts to your trip.", 6),
+    ("ugllza", "Trip Planner Bundle", "The trip checklist and packing list plus the travel budget planner, all sharing the same trip details.", 12),
+    ("btrtuu", "Travel Budget Planner", "Plan trip costs in any currency, compare planned vs. actual and track daily spending.", 10),
+    ("jfnhwq", "Wedding & Party Budget Planner", "Budget, vendors, payment dates and guest list for a wedding or party, with overdue payments highlighted.", 12),
+    ("dlkhx", "Holiday Gift & Dinner Planner", "Track gifts, scale the dinner shopping list to your guests and see who owes whom.", 8),
     (None, "Back-to-School Budget", "Supplies, uniforms and fees per child against a school-year budget.", 8),
-    (None, "Rental Property Rent Tracker", "Rent due, paid and late per tenant, with yearly income totals.", 12),
-    (None, "Family Health & Medical Claims Organizer", "Appointments, receipts and insurance claims for the whole family.", 12),
+    ("cuclu", "Rental Property Rent Tracker", "Track leases, scheduled rent increases and payments, see who is late and compare expected vs. collected rent.", 12),
+    ("baqopqi", "Family Health & Medical Claims Organizer", "Vaccines, appointments, expiring documents and insurance claims for the whole family in one workbook.", 12),
     (None, "Moving Planner & Cost Calculator", "Moving timeline, packing list and cost estimate in one workbook.", 9),
     (None, "Market Stall & Pop-Up Break-Even Planner", "Find how many sales cover your stall costs, and what to price each item.", 8),
 ]
@@ -43,14 +43,14 @@ CSS = """
 .en-lista h2{font-size:21px;margin:0}
 .en-lista p{margin:0;color:var(--tinta-2);font-size:16px;flex:1}
 .en-lista .pie-prod{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:6px}
-.en-lista .precio{font:700 20px var(--f-num)}
+.en-lista .precio{font:700 20px var(--f-num);white-space:nowrap}
 .en-nota{margin-top:40px;color:var(--tinta-2);font-size:15px}
 .lang{white-space:nowrap}
 """
 
 def items():
     return "".join(
-        f'<li><h2>{n}</h2><p>{d}</p><div class="pie-prod"><span class="precio">US$ {p}</span>'
+        f'<li><h2>{n}</h2><p>{d}</p><div class="pie-prod"><span class="precio">US$&nbsp;{p}</span>'
         f'<a class="boton" href="{TIENDA}{s}" rel="noopener">Get it on Gumroad</a></div></li>'
         for s, n, d, p in PRODUCTOS if s)
 
